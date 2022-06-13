@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<info>
+    <id>integration_nuiteq</id>
+    <name>Nuiteq Stage integration</name>
+    <summary>Quickly create Nuiteq Stage boards in Nextcloud</summary>
+    <description><![CDATA[This app provides a simple interface to list and create Nuiteq Stage boards.]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author>Julien Veyssier</author>
+    <namespace>Nuiteq</namespace>
+    <documentation>
+        <developer>https://github.com/eneiluj/integration_nuiteq</developer>
+    </documentation>
+    <category>integration</category>
+    <website>https://github.com/eneiluj/integration_nuiteq</website>
+    <bugs>https://github.com/eneiluj/integration_nuiteq/issues</bugs>
+    <screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot1.jpg</screenshot>
+    <dependencies>
+        <nextcloud min-version="22" max-version="25"/>
+    </dependencies>
+	<settings>
+        <admin>OCA\Nuiteq\Settings\Admin</admin>
+        <admin-section>OCA\Nuiteq\Settings\AdminSection</admin-section>
+    </settings>
+	<navigations>
+		<navigation>
+			<id>integration_nuiteq</id>
+			<name>Nuiteq</name>
+			<route>integration_nuiteq.page.index</route>
+			<icon>app.svg</icon>
+			<order>8</order>
+		</navigation>
+	</navigations>
+</info>
