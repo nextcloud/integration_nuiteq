@@ -69,8 +69,6 @@ export default {
 .option {
 	display: flex;
 	align-items: center;
-	min-height: 44px;
-	padding: 0 14px;
 	border: 2px solid var(--color-border-dark);
 	// no bottom borders to avoid double borders between elements
 	border-bottom: 0;
@@ -87,32 +85,37 @@ export default {
 		// last element must have a border
 		border-bottom: 2px solid var(--color-border-dark);
 	}
-	&:focus,
-	&:hover {
-		background: var(--color-primary-light);
+	input:focus + label,
+	input:hover + label {
+		background-color: var(--color-primary-light);
 	}
 	&.selected {
 		font-weight: bold;
-		background: var(--color-primary-light);
 		// selected element has a bottom border and we remove the one of the following element
 		border: 2px solid var(--color-primary-element-light);
 		&:hover {
-			background: var(--color-primary-light-hover);
 			border: 2px solid var(--color-primary);
+		}
+		label {
+			background-color: var(--color-background-dark);
 		}
 		& + .option {
 			border-top: 0;
 		}
 	}
 	> input {
-		// display: none;
+		position: fixed;
+		z-index: -1;
+		top: -5000px;
+		left: -5000px;
 		opacity: 0;
-		width: 0;
-		margin: 0;
 	}
 	> label {
 		display: flex;
 		align-items: center;
+		width: 100%;
+		min-height: 44px;
+		padding: 0 14px;
 		.option-icon {
 			margin: 0 12px 0 0;
 		}
