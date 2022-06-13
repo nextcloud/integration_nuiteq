@@ -179,10 +179,10 @@ export default {
 
 	computed: {
 		publicLink() {
-			return 'https://public/' + this.board.name + '/PUBLIC_TOKEN'
+			return 'https://nuiteqstage.se/board/PUBLIC_TOKEN'
 		},
 		adminLink() {
-			return 'https://admin/' + this.board.name + '/ADMIN_TOKEN'
+			return 'https://nuiteqstage.se/board/ADMIN_TOKEN'
 		},
 	},
 
