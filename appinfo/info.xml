@@ -21,6 +21,8 @@
 	<settings>
         <admin>OCA\Nuiteq\Settings\Admin</admin>
         <admin-section>OCA\Nuiteq\Settings\AdminSection</admin-section>
+		<personal>OCA\Nuiteq\Settings\Personal</personal>
+        <personal-section>OCA\Nuiteq\Settings\PersonalSection</personal-section>
     </settings>
 	<navigations>
 		<navigation>

@@ -1,33 +1,37 @@
 <template>
 	<div id="nuiteq_prefs" class="section">
 		<h2>
-			<a class="icon icon-nuiteq" />
-			{{ t('integration_nuiteq', 'Nuiteq integration') }}
+			<NuiteqIcon />
+			<label>
+				{{ t('integration_nuiteq', 'Nuiteq integration') }}
+			</label>
 		</h2>
 		<div class="fields">
 			<div class="field">
 				<ServerIcon :size="20" />
 				<label for="base-url">
-					{{ t('integration_nuiteq', 'Base API URL') }}
+					{{ t('integration_nuiteq', 'Default NUITEQ Stage URL for users') }}
 				</label>
 				<input id="base-url"
 					v-model="state.base_url"
 					type="text"
-					:placeholder="t('integration_nuiteq', 'https://...')"
+					placeholder="https://nuiteqstage.se"
 					@input="onInput">
 			</div>
 			<div class="field">
-				<LockIcon :size="20" />
-				<label for="api-key">
-					{{ t('integration_nuiteq', 'API key') }}
+				<KeyIcon :size="20" />
+				<label for="base-url">
+					{{ t('integration_nuiteq', 'Default NUITEQ Stage client ID for users') }}
 				</label>
-				<input id="api-key"
-					v-model="state.api_key"
-					type="password"
-					:readonly="readonly"
-					:placeholder="t('integration_nuiteq', '...')"
-					@input="onInput"
-					@focus="readonly = false">
+				<input id="base-url"
+					v-model="state.client_id"
+					type="text"
+					:placeholder="t('integration_nuiteq', 'client ID')"
+					@input="onInput">
+				<p class="settings-hint">
+					<InformationOutlineIcon :size="20" />
+					{{ t('integration_nuiteq', 'Leave this empty to use the default client ID.') }}
+				</p>
 			</div>
 		</div>
 	</div>
@@ -39,17 +43,20 @@ import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { delay } from '../utils'
 import { showSuccess, showError } from '@nextcloud/dialogs'
-// import '@nextcloud/dialogs/styles/toast.scss'
 
 import ServerIcon from 'vue-material-design-icons/Server'
-import LockIcon from 'vue-material-design-icons/Lock'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline'
+import KeyIcon from 'vue-material-design-icons/Key'
+import NuiteqIcon from './NuiteqIcon'
 
 export default {
 	name: 'AdminSettings',
 
 	components: {
+		NuiteqIcon,
 		ServerIcon,
-		LockIcon,
+		InformationOutlineIcon,
+		KeyIcon,
 	},
 
 	props: [],
@@ -57,8 +64,6 @@ export default {
 	data() {
 		return {
 			state: loadState('integration_nuiteq', 'admin-config'),
-			// to prevent some browsers to fill fields with remembered passwords
-			readonly: true,
 		}
 	},
 
@@ -78,8 +83,8 @@ export default {
 		saveOptions() {
 			const req = {
 				values: {
-					api_key: this.state.api_key,
 					base_url: this.state.base_url,
+					client_id: this.state.client_id,
 				},
 			}
 			const url = generateUrl('/apps/integration_nuiteq/admin-config')
@@ -91,7 +96,6 @@ export default {
 						+ ': ' + (error.response?.request?.responseText ?? '')
 				)
 				console.debug(error)
-			}).then(() => {
 			})
 		},
 	},
@@ -99,35 +103,42 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.fields {
-	display: flex;
-	flex-direction: column;
-	.field {
+#nuiteq_prefs {
+	h2 {
 		display: flex;
-		align-items: center;
-		margin: 5px 0 5px 0;
-		> * {
-			margin: 0 5px 0 5px;
-		}
 		label {
-			width: 150px;
-		}
-		input {
-			width: 200px;
+			margin-left: 8px;
 		}
 	}
-}
 
-.icon-nuiteq {
-	background-image: url(./../../img/app-dark.svg);
-	background-size: 23px 23px;
-	height: 23px;
-	margin-bottom: -4px;
-	filter: var(--background-invert-if-dark);
-}
+	.fields {
+		display: flex;
+		flex-direction: column;
 
-body.theme--dark .icon-nuiteq {
-	background-image: url(./../../img/app.svg);
+		.field {
+			display: flex;
+			align-items: center;
+			margin: 5px 0 5px 0;
+
+			> * {
+				margin: 0 5px 0 5px;
+			}
+
+			label {
+				width: 300px;
+			}
+
+			input {
+				width: 200px;
+			}
+		}
+	}
+	.settings-hint {
+		display: flex;
+		> * {
+			margin: 0 4px;
+		}
+	}
 }
 
 </style>

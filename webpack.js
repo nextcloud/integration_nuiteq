@@ -12,9 +12,11 @@ webpackConfig.stats = {
 	modules: false,
 }
 
+const appId = 'integration_nuiteq'
 webpackConfig.entry = {
-	main: { import: path.join(__dirname, 'src', 'main.js'), filename: 'integration_nuiteq-main.js' },
-	adminSettings: { import: path.join(__dirname, 'src', 'adminSettings.js'), filename: 'integration_nuiteq-adminSettings.js' },
+	main: { import: path.join(__dirname, 'src', 'main.js'), filename: appId + '-main.js' },
+	adminSettings: { import: path.join(__dirname, 'src', 'adminSettings.js'), filename: appId + '-adminSettings.js' },
+	personalSettings: { import: path.join(__dirname, 'src', 'personalSettings.js'), filename: appId + '-personalSettings.js' },
 }
 
 webpackConfig.plugins.push(

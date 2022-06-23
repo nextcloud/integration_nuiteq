@@ -11,13 +11,16 @@
 
 namespace OCA\Nuiteq\Service;
 
-use DateInterval;
-use Datetime;
-use DateTimeImmutable;
 use Exception;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use OCA\Nuiteq\AppInfo\Application;
+use OCP\AppFramework\Http;
+use OCP\IConfig;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 use OCP\Http\Client\IClientService;
+use Throwable;
 
 class NuiteqAPIService {
 	/**
@@ -36,6 +39,7 @@ class NuiteqAPIService {
 	 * @var \OCP\Http\Client\IClient
 	 */
 	private $client;
+	private IConfig $config;
 
 	/**
 	 * Service to make requests to Nuiteq Stage API
@@ -43,11 +47,13 @@ class NuiteqAPIService {
 	public function __construct (string $appName,
 								LoggerInterface $logger,
 								IL10N $l10n,
+								IConfig $config,
 								IClientService $clientService) {
 		$this->appName = $appName;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
 		$this->client = $clientService->newClient();
+		$this->config = $config;
 	}
 
 	/**
@@ -110,6 +116,54 @@ class NuiteqAPIService {
 			}
 		} catch (Exception $e) {
 			$this->logger->warning('Nuiteq API error : '.$e->getMessage(), array('app' => $this->appName));
+			return ['error' => $e->getMessage()];
+		}
+	}
+
+	public function login(string $baseUrl, string $login, string $password): array {
+		try {
+			$url = $baseUrl . '/api/v1/login';
+			$defaultClientKey = 'EJZBdijln5TcgjAbzxDwm8Ms0AQa99RsBPiWVEhoMMg0dnsLYZiCS0R4C6pmspt';
+			$adminClientKey = $this->config->getAppValue(Application::APP_ID, 'client_id', $defaultClientKey) ?: $defaultClientKey;
+			$clientKey = $this->config->getAppValue(Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
+			$options = [
+				'headers' => [
+					'User-Agent'  => 'Nextcloud NUITEQ integration',
+//					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Content-Type' => 'application/json',
+				],
+				'json' => [
+					'username' => $login,
+					'password' => $password,
+					'clientKey' => $clientKey,
+				],
+			];
+			$response = $this->client->post($url, $options);
+			$body = $response->getBody();
+			$respCode = $response->getStatusCode();
+
+			if ($respCode >= 400) {
+				return ['error' => $this->l10n->t('Invalid credentials')];
+			} else {
+				try {
+					return json_decode($body, true);
+				} catch (Exception | Throwable $e) {
+					$this->logger->warning('NUITEQ invalid login response : '.$e->getMessage(), ['app' => $this->appName]);
+					return ['error' => $this->l10n->t('Invalid response')];
+				}
+			}
+		} catch (ClientException | ServerException $e) {
+			$response = $e->getResponse();
+			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
+				$body = $response->getBody();
+				try {
+					return json_decode($body, true);
+				} catch (Exception | Throwable $e2) {
+				}
+			}
+			return ['error' => $e->getMessage()];
+		} catch (Exception $e) {
+			$this->logger->warning('NUITEQ login error : '.$e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
 	}

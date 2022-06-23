@@ -57,8 +57,9 @@ class PageController extends Controller {
 	 * @return TemplateResponse
 	 */
 	public function index(): TemplateResponse {
-		$apiKey = $this->config->getAppValue(Application::APP_ID, 'api_key');
-		$baseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url');
+		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
+		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url');
+		$baseUrl = $this->config->getUserValue($this->userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 		$pageInitialState = [
 			'is_configured' => ($apiKey && $baseUrl),
 		];
