@@ -20,6 +20,21 @@
 					@input="onInput">
 			</div>
 			<div v-show="!connected" class="field">
+				<KeyIcon :size="20" />
+				<label for="base-url">
+					{{ t('integration_nuiteq', 'Client key') }}
+				</label>
+				<input id="base-url"
+					v-model="state.client_key"
+					type="text"
+					:placeholder="t('integration_nuiteq', 'client key')"
+					@input="onInput">
+				<p class="settings-hint">
+					<InformationOutlineIcon :size="20" />
+					{{ t('integration_nuiteq', 'Leave this empty to use the default client key.') }}
+				</p>
+			</div>
+			<div v-show="!connected" class="field">
 				<AccountIcon :size="20" />
 				<label
 					for="nuiteq-login">
@@ -89,6 +104,8 @@ import CloseIcon from 'vue-material-design-icons/Close'
 import AccountIcon from 'vue-material-design-icons/Account'
 import LockIcon from 'vue-material-design-icons/Lock'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline'
+import KeyIcon from 'vue-material-design-icons/Key'
 
 export default {
 	name: 'PersonalSettings',
@@ -102,6 +119,8 @@ export default {
 		AccountIcon,
 		LockIcon,
 		CloseIcon,
+		KeyIcon,
+		InformationOutlineIcon,
 	},
 
 	props: {
@@ -138,6 +157,7 @@ export default {
 			delay(() => {
 				that.saveOptions({
 					base_url: this.state.base_url,
+					client_key: this.state.client_key,
 				})
 			}, 2000)()
 		},
@@ -229,6 +249,14 @@ export default {
 			> label {
 				margin-left: 8px;
 			}
+		}
+	}
+
+	.settings-hint {
+		display: flex;
+		opacity: 0.7;
+		> * {
+			margin: 0 4px;
 		}
 	}
 }

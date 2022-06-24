@@ -61,11 +61,13 @@ class PageController extends Controller {
 	 * @return TemplateResponse
 	 */
 	public function index(): TemplateResponse {
+		$clientKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'client_key');
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
 		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
 		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
 		$talkEnabled = $this->appManager->isEnabledForUser('spreed', $this->userId);
 		$pageInitialState = [
+			'client_key' => $clientKey,
 			'api_key' => $apiKey !== '',
 			'base_url' => $baseUrl,
 			'user_name' => $apiKey ? $userName : '',

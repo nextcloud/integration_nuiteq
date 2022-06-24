@@ -36,11 +36,13 @@ class Personal implements ISettings {
 		$baseUrl = $this->config->getUserValue($this->userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
+		$clientKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'client_key');
 		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
 
 		$userConfig = [
 			'base_url' => $baseUrl,
 			'user_name' => $apiKey ? $userName : '',
+			'client_key' => $clientKey,
 		];
 		$this->initialStateService->provideInitialState('nuiteq-state', $userConfig);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');

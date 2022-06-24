@@ -21,16 +21,16 @@
 			<div class="field">
 				<KeyIcon :size="20" />
 				<label for="base-url">
-					{{ t('integration_nuiteq', 'Default NUITEQ Stage client ID for users') }}
+					{{ t('integration_nuiteq', 'Default NUITEQ Stage client key for users') }}
 				</label>
 				<input id="base-url"
 					v-model="state.client_key"
 					type="text"
-					:placeholder="t('integration_nuiteq', 'client ID')"
+					:placeholder="t('integration_nuiteq', 'Client key')"
 					@input="onInput">
 				<p class="settings-hint">
 					<InformationOutlineIcon :size="20" />
-					{{ t('integration_nuiteq', 'Leave this empty to use the default client ID.') }}
+					{{ t('integration_nuiteq', 'Leave this empty to use the default client key.') }}
 				</p>
 			</div>
 		</div>
