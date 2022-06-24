@@ -31,23 +31,23 @@ class PageController extends Controller {
 	 * @var LoggerInterface
 	 */
 	private $logger;
-	private NuiteqAPIService $NuiteqAPIService;
 	private IConfig $config;
 	private IInitialState $initialStateService;
+	private NuiteqAPIService $nuiteqAPIService;
 
 	public function __construct(string            $appName,
 								IRequest          $request,
 								IConfig           $config,
 								IInitialState     $initialStateService,
 								LoggerInterface   $logger,
-								NuiteqAPIService $NuiteqAPIService,
+								NuiteqAPIService  $nuiteqAPIService,
 								?string           $userId) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->logger = $logger;
-		$this->NuiteqAPIService = $NuiteqAPIService;
 		$this->config = $config;
 		$this->initialStateService = $initialStateService;
+		$this->nuiteqAPIService = $nuiteqAPIService;
 	}
 
 	/**
@@ -58,11 +58,16 @@ class PageController extends Controller {
 	 */
 	public function index(): TemplateResponse {
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
-		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url');
-		$baseUrl = $this->config->getUserValue($this->userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
+		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
+		$isConfigured = ($apiKey && $baseUrl);
 		$pageInitialState = [
-			'is_configured' => ($apiKey && $baseUrl),
+			'is_configured' => $isConfigured,
 		];
+		if ($isConfigured) {
+			$pageInitialState['base_url'] = $baseUrl;
+			$boards = $this->nuiteqAPIService->getBoards($this->userId);
+			$pageInitialState['boards'] = $boards;
+		}
 		$this->initialStateService->provideInitialState('page-state', $pageInitialState);
 		return new TemplateResponse(Application::APP_ID, 'main', []);
 	}

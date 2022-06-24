@@ -148,13 +148,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="footer">
+		<div class="nuiteq-footer">
 			<Button @click="$emit('cancel-clicked')">
 				<template #icon>
 					<UndoIcon />
 				</template>
 				{{ t('integration_nuiteq', 'Cancel') }}
 			</Button>
+			<div class="spacer" />
 			<Button type="primary" @click="onOkClick">
 				<template #icon>
 					<CheckIcon />
@@ -242,7 +243,6 @@ export default {
 			if (isFormValid) {
 				this.$emit('ok-clicked', {
 					...this.newBoard,
-					type: this.newBoard.type.id,
 				})
 			}
 		},
@@ -331,12 +331,16 @@ export default {
 		}
 	}
 
-	.footer {
+	.nuiteq-footer {
+		width: 100%;
 		display: flex;
 		align-items: center;
 		margin-top: 12px;
 		> * {
 			margin: 0 10px 0 10px;
+		}
+		.spacer {
+			flex-grow: 1;
 		}
 	}
 }

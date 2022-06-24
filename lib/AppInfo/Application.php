@@ -20,6 +20,8 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
  */
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'integration_nuiteq';
+	public const DEFAULT_BASE_URL = 'https://nuiteqstage.se';
+	public const DEFAULT_CLIENT_KEY = 'EJZBdijln5TcgjAbzxDwm8Ms0AQa99RsBPiWVEhoMMg0dnsLYZiCS0R4C6pmspt';
 
 	/**
 	 * Constructor

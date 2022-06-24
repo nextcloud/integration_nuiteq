@@ -29,12 +29,12 @@ class Admin implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$baseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url');
-		$clientId = $this->config->getAppValue(Application::APP_ID, 'client_id');
+		$baseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', 'https://nuiteqstage.se');
+		$clientKey = $this->config->getAppValue(Application::APP_ID, 'client_key');
 
 		$adminConfig = [
 			'base_url' => $baseUrl,
-			'client_id' => $clientId,
+			'client_key' => $clientKey,
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 		return new TemplateResponse(Application::APP_ID, 'adminSettings');

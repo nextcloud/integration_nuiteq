@@ -1,15 +1,16 @@
-import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline'
-import ShareVariantIcon from 'vue-material-design-icons/ShareVariant'
-import HomeGroupIcon from 'vue-material-design-icons/HomeGroup'
-import AccountGroupIcon from 'vue-material-design-icons/AccountGroup'
-import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline'
+// import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline'
+// import ShareVariantIcon from 'vue-material-design-icons/ShareVariant'
+// import HomeGroupIcon from 'vue-material-design-icons/HomeGroup'
+// import AccountGroupIcon from 'vue-material-design-icons/AccountGroup'
+// import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline'
 import TextIcon from 'vue-material-design-icons/Text'
-import PaletteIcon from 'vue-material-design-icons/Palette'
-import PaletteSwatchIcon from 'vue-material-design-icons/PaletteSwatch'
-import PaletteSwatchOutlineIcon from 'vue-material-design-icons/PaletteSwatchOutline'
-import TextLongIcon from 'vue-material-design-icons/TextLong'
-import CalendarMonthIcon from 'vue-material-design-icons/CalendarMonth'
-import FormatListBulletedTypeIcon from 'vue-material-design-icons/FormatListBulletedType'
+import LockIcon from 'vue-material-design-icons/Lock'
+// import PaletteIcon from 'vue-material-design-icons/Palette'
+// import PaletteSwatchIcon from 'vue-material-design-icons/PaletteSwatch'
+// import PaletteSwatchOutlineIcon from 'vue-material-design-icons/PaletteSwatchOutline'
+// import TextLongIcon from 'vue-material-design-icons/TextLong'
+// import CalendarMonthIcon from 'vue-material-design-icons/CalendarMonth'
+// import FormatListBulletedTypeIcon from 'vue-material-design-icons/FormatListBulletedType'
 
 export function Timer(callback, mydelay) {
 	let timerId
@@ -46,11 +47,19 @@ export function delay(callback, ms) {
 export const fields = {
 	name: {
 		icon: TextIcon,
-		label: t('integration_nuiteq', 'Simple text'),
+		label: t('integration_nuiteq', 'Board name'),
 		type: 'text',
-		placeholder: t('integration_nuiteq', 'text placeholder'),
-		default: 'optional default value',
+		placeholder: t('integration_nuiteq', 'board name'),
+		default: 'Unnamed',
 	},
+	password: {
+		icon: LockIcon,
+		label: t('integration_nuiteq', 'Password'),
+		type: 'text',
+		placeholder: t('integration_nuiteq', 'Password'),
+		default: '',
+	},
+	/*
 	comment: {
 		icon: TextLongIcon,
 		label: t('integration_nuiteq', 'Text area'),
@@ -155,4 +164,5 @@ export const fields = {
 		},
 		default: ['one', 'three'],
 	},
+	*/
 }

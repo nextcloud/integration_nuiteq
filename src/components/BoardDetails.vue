@@ -24,26 +24,6 @@
 					</a>
 				</div>
 			</div>
-			<div class="link">
-				<ShieldLinkVariantIcon :size="20" />
-				<label>
-					{{ t('integration_nuiteq', 'Admin board link') }}
-				</label>
-				<div class="linkInputWrapper">
-					<input type="text" :readonly="true" :value="adminLink">
-					<a :href="adminLink" @click.prevent.stop="copyLink(true)">
-						<Button v-tooltip.bottom="{ content: t('integration_nuiteq', 'Copy to clipboard') }">
-							<template #icon>
-								<ClipboardCheckOutlineIcon v-if="adminLinkCopied"
-									class="copiedIcon"
-									:size="20" />
-								<ClipboardArrowLeftOutlineIcon v-else
-									:size="20" />
-							</template>
-						</Button>
-					</a>
-				</div>
-			</div>
 		</div>
 		<div class="fields">
 			<div v-for="(field, fieldId) in fields"
@@ -167,6 +147,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		nuiteqUrl: {
+			type: String,
+			required: true,
+		},
 	},
 
 	data() {
@@ -179,10 +163,7 @@ export default {
 
 	computed: {
 		publicLink() {
-			return 'https://nuiteqstage.se/board/PUBLIC_TOKEN'
-		},
-		adminLink() {
-			return 'https://nuiteqstage.se/board/ADMIN_TOKEN'
+			return this.nuiteqUrl + '/board/' + this.board.id
 		},
 	},
 
@@ -193,26 +174,15 @@ export default {
 	},
 
 	methods: {
-		async copyLink(admin = false) {
-			const link = admin
-				? this.adminLink
-				: this.publicLink
+		async copyLink() {
+			const link = this.publicLink
 			try {
 				await this.$copyText(link)
-				if (admin) {
-					this.adminLinkCopied = true
-					showSuccess(t('integration_nuiteq', 'Admin link copied!'))
-				} else {
-					this.publicLinkCopied = true
-					showSuccess(t('integration_nuiteq', 'Public link copied!'))
-				}
+				this.publicLinkCopied = true
+				showSuccess(t('integration_nuiteq', 'Public link copied!'))
 				// eslint-disable-next-line
 				new Timer(() => {
-					if (admin) {
-						this.adminLinkCopied = false
-					} else {
-						this.publicLinkCopied = false
-					}
+					this.publicLinkCopied = false
 				}, 5000)
 			} catch (error) {
 				console.error(error)
@@ -260,6 +230,7 @@ export default {
 				width: 250px;
 			}
 			.fieldValue {
+				width: 300px;
 				&.multiple {
 					display: flex;
 					> * {
@@ -307,6 +278,9 @@ export default {
 				width: 300px;
 				input {
 					flex-grow: 1;
+				}
+				a {
+					margin-left: 8px;
 				}
 			}
 			.copiedIcon {

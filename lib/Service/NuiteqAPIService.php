@@ -57,21 +57,49 @@ class NuiteqAPIService {
 	}
 
 	/**
-	 * @param string $url
-	 * @param string $accessToken
+	 * @param string $userId
+	 * @return string
+	 */
+	private function getClientKey(string $userId): string {
+		$adminClientKey = $this->config->getAppValue(Application::APP_ID, 'client_key', Application::DEFAULT_CLIENT_KEY) ?: Application::DEFAULT_CLIENT_KEY;
+		return $this->config->getUserValue($userId, Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
+	}
+
+	/**
+	 * @param string $userId
+	 * @return string
+	 */
+	public function getBaseUrl(string $userId): string {
+		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
+		return $this->config->getUserValue($userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
+	}
+
+	public function getBoards(string $userId): array {
+		return $this->request($userId, 'list', [], 'POST');
+	}
+
+	/**
+	 * @param string $userId
 	 * @param string $endPoint
 	 * @param array $params
 	 * @param string $method
 	 * @return array
 	 */
-	public function request(string $url, string $accessToken, string $endPoint, array $params = [],
+	public function request(string $userId, string $endPoint, array $params = [],
 							string $method = 'GET'): array {
 		try {
-			$url = $url . '/api/v4/' . $endPoint;
+			$baseUrl = $this->getBaseUrl($userId);
+			$clientKey = $this->getClientKey($userId);
+			$apiKey = $this->config->getUserValue($userId, Application::APP_ID, 'api_key');
+			$url = $baseUrl . '/api/v1/' . $endPoint;
 			$options = [
 				'headers' => [
-					'Authorization'  => 'Bearer ' . $accessToken,
-					'User-Agent' => 'Nextcloud Nuiteq integration'
+					'User-Agent' => 'Nextcloud Nuiteq integration',
+					'Content-Type' => 'application/json',
+				],
+				'json' => [
+					'clientKey' => $clientKey,
+					'apiKey' => $apiKey,
 				],
 			];
 
@@ -91,7 +119,7 @@ class NuiteqAPIService {
 
 					$url .= '?' . $paramsContent;
 				} else {
-					$options['body'] = $params;
+					$options['json'] = array_merge($options['json'], $params);
 				}
 			}
 
@@ -112,24 +140,45 @@ class NuiteqAPIService {
 			if ($respCode >= 400) {
 				return ['error' => $this->l10n->t('Bad credentials')];
 			} else {
-				return json_decode($body, true);
+				try {
+					error_log($body.'!!!');
+					return json_decode($body, true);
+				} catch (Exception | Throwable $e) {
+					$this->logger->warning('NUITEQ invalid request response : '.$e->getMessage(), ['app' => $this->appName]);
+					return ['error' => $this->l10n->t('Invalid response')];
+				}
 			}
-		} catch (Exception $e) {
+		} catch (ClientException | ServerException $e) {
+			$response = $e->getResponse();
+			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
+				$body = $response->getBody();
+				try {
+					return json_decode($body, true);
+				} catch (Exception | Throwable $e2) {
+				}
+			}
+			return ['error' => $e->getMessage()];
+		} catch (Exception | Throwable $e) {
 			$this->logger->warning('Nuiteq API error : '.$e->getMessage(), array('app' => $this->appName));
 			return ['error' => $e->getMessage()];
 		}
 	}
 
-	public function login(string $baseUrl, string $login, string $password): array {
+	/**
+	 * @param string $userId
+	 * @param string $login
+	 * @param string $password
+	 * @return array
+	 */
+	public function login(string $userId, string $login, string $password): array {
 		try {
+			$baseUrl = $this->getBaseUrl($userId);
+			$clientKey = $this->getClientKey($userId);
 			$url = $baseUrl . '/api/v1/login';
-			$defaultClientKey = 'EJZBdijln5TcgjAbzxDwm8Ms0AQa99RsBPiWVEhoMMg0dnsLYZiCS0R4C6pmspt';
-			$adminClientKey = $this->config->getAppValue(Application::APP_ID, 'client_id', $defaultClientKey) ?: $defaultClientKey;
-			$clientKey = $this->config->getAppValue(Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
+
 			$options = [
 				'headers' => [
 					'User-Agent'  => 'Nextcloud NUITEQ integration',
-//					'Content-Type' => 'application/x-www-form-urlencoded',
 					'Content-Type' => 'application/json',
 				],
 				'json' => [
@@ -162,7 +211,7 @@ class NuiteqAPIService {
 				}
 			}
 			return ['error' => $e->getMessage()];
-		} catch (Exception $e) {
+		} catch (Exception | Throwable $e) {
 			$this->logger->warning('NUITEQ login error : '.$e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}

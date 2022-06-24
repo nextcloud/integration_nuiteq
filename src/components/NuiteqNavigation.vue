@@ -5,8 +5,8 @@
 				:text="t('integration_nuiteq', 'Create a board')"
 				button-class="icon-add"
 				@click="onCreateBoardClick" />
-			<BoardNavigationItem v-for="(board, id) in boards"
-				:key="id"
+			<BoardNavigationItem v-for="board in boards"
+				:key="board.id"
 				class="boardItem"
 				:board="board"
 				:selected="board.id === selectedBoardId"
@@ -34,11 +34,11 @@ export default {
 
 	props: {
 		boards: {
-			type: Object,
+			type: Array,
 			required: true,
 		},
 		selectedBoardId: {
-			type: Number,
+			type: String,
 			required: true,
 		},
 		isConfigured: {

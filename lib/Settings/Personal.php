@@ -32,7 +32,7 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url');
+		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', 'https://nuiteqstage.se') ?: 'https://nuiteqstage.se';
 		$baseUrl = $this->config->getUserValue($this->userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');

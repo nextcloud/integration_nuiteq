@@ -24,7 +24,7 @@
 					{{ t('integration_nuiteq', 'Default NUITEQ Stage client ID for users') }}
 				</label>
 				<input id="base-url"
-					v-model="state.client_id"
+					v-model="state.client_key"
 					type="text"
 					:placeholder="t('integration_nuiteq', 'client ID')"
 					@input="onInput">
@@ -84,7 +84,7 @@ export default {
 			const req = {
 				values: {
 					base_url: this.state.base_url,
-					client_id: this.state.client_id,
+					client_key: this.state.client_key,
 				},
 			}
 			const url = generateUrl('/apps/integration_nuiteq/admin-config')

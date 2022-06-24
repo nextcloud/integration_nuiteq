@@ -1,9 +1,9 @@
 <template>
 	<Content app-name="integration_nuiteq">
 		<NuiteqNavigation
-			:boards="boards"
+			:boards="activeBoards"
 			:selected-board-id="selectedBoardId"
-			:is-configured="state.is_configured"
+			:is-configured="isConfigured"
 			@create-board-clicked="onCreateBoardClick"
 			@board-clicked="onBoardClicked"
 			@delete-board="onBoardDeleted"
@@ -17,14 +17,14 @@
 			<!--template slot="list">
 			</template-->
 			<BoardDetails v-if="selectedBoard"
-				:board="selectedBoard" />
-			<EmptyContent v-else-if="!state.is_configured">
+				:board="selectedBoard"
+				:nuiteq-url="nuiteqUrl" />
+			<EmptyContent v-else-if="!isConfigured">
 				<template #icon>
 					<CogIcon />
 				</template>
 				{{ t('integration_nuiteq', 'Application is not configured') }}
-				<a v-if="currentUser.isAdmin"
-					:href="configureUrl">
+				<a :href="configureUrl">
 					<Button
 						class="configureButton">
 						<template #icon>
@@ -33,11 +33,8 @@
 						{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
 					</Button>
 				</a>
-				<p v-else>
-					{{ t('integration_nuiteq', 'Ask your administrator to configure this integration') }}
-				</p>
 			</EmptyContent>
-			<EmptyContent v-else-if="boardCount === 0">
+			<EmptyContent v-else-if="activeBoardCount === 0">
 				<template #icon>
 					<NuiteqIcon />
 				</template>
@@ -83,7 +80,6 @@ import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
-import { getCurrentUser } from '@nextcloud/auth'
 
 import NuiteqNavigation from './components/NuiteqNavigation'
 import CreationForm from './components/CreationForm'
@@ -113,24 +109,50 @@ export default {
 	data() {
 		return {
 			creationModalOpen: false,
-			boards: {},
-			selectedBoardId: 0,
+			boardList: [],
+			selectedBoardId: '',
 			state: loadState('integration_nuiteq', 'page-state'),
-			currentUser: getCurrentUser(),
-			configureUrl: generateUrl('/settings/admin/connected-accounts'),
+			isConfigured: false,
+			nuiteqUrl: '',
+			configureUrl: generateUrl('/settings/user/connected-accounts'),
 		}
 	},
 
 	computed: {
-		selectedBoard() {
-			return this.boards[this.selectedBoardId]
+		activeBoards() {
+			return this.boardList.filter((b) => !b.trash)
 		},
-		boardCount() {
-			return Object.keys(this.boards).length
+		activeBoardsById() {
+			return this.activeBoards.reduce((object, item) => {
+				object[item.id] = item
+				return object
+			}, {})
+		},
+		activeBoardCount() {
+			return this.activeBoards.length
+		},
+		selectedBoard() {
+			return this.selectedBoardId
+				? this.activeBoardsById[this.selectedBoardId]
+				: null
 		},
 	},
 
 	watch: {
+	},
+
+	beforeMount() {
+		const state = loadState('integration_nuiteq', 'page-state')
+		this.isConfigured = state.is_configured
+		if (state.base_url) {
+			this.nuiteqUrl = state.base_url
+		}
+		if (state.boards) {
+			this.boardList = [...state.boards]
+		}
+		console.debug('state.boards', state.boards)
+		console.debug('this.boardList', this.boardList)
+		console.debug('this.activeBoardsById', this.activeBoardsById)
 	},
 
 	mounted() {
@@ -146,10 +168,11 @@ export default {
 		onCreationValidate(board) {
 			console.debug('CREATE', board)
 			this.creationModalOpen = false
-			const nbBoards = Object.values(this.boards).length
-			board.id = nbBoards + 1
-			this.$set(this.boards, board.id, board)
-			console.debug(this.boards)
+			// TODO network
+			board.id = 'new'
+			board.trash = false
+			this.boardList.push(board)
+			console.debug(this.boardList)
 			this.selectedBoardId = board.id
 		},
 		onBoardClicked(boardId) {
@@ -162,7 +185,7 @@ export default {
 		},
 		onDeletingBoard(boardId) {
 			if (boardId === this.selectedBoardId) {
-				this.selectedBoardId = 0
+				this.selectedBoardId = ''
 			}
 		},
 	},

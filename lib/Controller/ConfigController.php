@@ -66,7 +66,7 @@ class ConfigController extends Controller {
 	 */
 	public function setConfig(array $values): DataResponse {
 		if (isset($values['base_url'], $values['login'], $values['password'])) {
-			return $this->loginWithCredentials($values['base_url'], $values['login'], $values['password']);
+			return $this->loginWithCredentials($values['login'], $values['password']);
 		}
 
 		foreach ($values as $key => $value) {
@@ -88,8 +88,8 @@ class ConfigController extends Controller {
 		return new DataResponse('');
 	}
 
-	private function loginWithCredentials(string $url, string $login, string $password): DataResponse {
-		$result = $this->nuiteqAPIService->login($url, $login, $password);
+	private function loginWithCredentials(string $login, string $password): DataResponse {
+		$result = $this->nuiteqAPIService->login($this->userId, $login, $password);
 		if (isset($result['apiKey'])) {
 			$this->config->setUserValue($this->userId, Application::APP_ID, 'api_key', $result['apiKey']);
 			$this->config->setUserValue($this->userId, Application::APP_ID, 'user_name', $login);
