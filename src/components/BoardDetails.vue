@@ -14,11 +14,11 @@
 					<a :href="publicLink" @click.prevent.stop="copyLink(false)">
 						<Button v-tooltip.bottom="{ content: t('integration_nuiteq', 'Copy to clipboard') }">
 							<template #icon>
-								<ClipboardCheckOutlineIcon v-if="publicLinkCopied"
+								<CheckIcon v-if="publicLinkCopied"
 									class="copiedIcon"
-									:size="20" />
-								<ClipboardArrowLeftOutlineIcon v-else
-									:size="20" />
+									:size="16" />
+								<ClippyIcon v-else
+									:size="16" />
 							</template>
 						</Button>
 					</a>
@@ -128,14 +128,14 @@ import { fields, Timer } from '../utils'
 import moment from '@nextcloud/moment'
 import ShieldLinkVariantIcon from 'vue-material-design-icons/ShieldLinkVariant'
 import LinkVariantIcon from 'vue-material-design-icons/LinkVariant'
-import ClipboardArrowLeftOutlineIcon from 'vue-material-design-icons/ClipboardArrowLeftOutline'
-import ClipboardCheckOutlineIcon from 'vue-material-design-icons/ClipboardCheckOutline'
 import ToggleSwitchIcon from 'vue-material-design-icons/ToggleSwitch'
 import ToggleSwitchOffOutlineIcon from 'vue-material-design-icons/ToggleSwitchOffOutline'
 import CheckboxMarkedIcon from 'vue-material-design-icons/CheckboxMarked'
 import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline'
+import CheckIcon from 'vue-material-design-icons/Check'
 
 import TalkIcon from './talk/TalkIcon'
+import ClippyIcon from './ClippyIcon'
 
 import Button from '@nextcloud/vue/dist/Components/Button'
 import { showSuccess, showError } from '@nextcloud/dialogs'
@@ -145,16 +145,16 @@ export default {
 	name: 'BoardDetails',
 
 	components: {
+		ClippyIcon,
 		SendModal,
 		TalkIcon,
 		LinkVariantIcon,
 		ShieldLinkVariantIcon,
-		ClipboardArrowLeftOutlineIcon,
-		ClipboardCheckOutlineIcon,
 		ToggleSwitchIcon,
 		ToggleSwitchOffOutlineIcon,
 		CheckboxBlankOutlineIcon,
 		CheckboxMarkedIcon,
+		CheckIcon,
 		Button,
 	},
 
