@@ -66,6 +66,7 @@ class ConfigController extends Controller {
 	 */
 	public function setConfig(array $values): DataResponse {
 		if (isset($values['base_url'], $values['login'], $values['password'])) {
+			$this->config->setUserValue($this->userId, Application::APP_ID, 'base_url', $values['base_url']);
 			return $this->loginWithCredentials($values['login'], $values['password']);
 		}
 

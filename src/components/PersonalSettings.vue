@@ -1,6 +1,6 @@
 <template>
 	<div id="nuiteq_prefs" class="section">
-		<h2>
+		<h2 v-if="showTitle">
 			<NuiteqIcon />
 			<label>
 				{{ t('integration_nuiteq', 'Nuiteq integration') }}
@@ -104,11 +104,16 @@ export default {
 		CloseIcon,
 	},
 
-	props: [],
+	props: {
+		showTitle: {
+			type: Boolean,
+			default: true,
+		},
+	},
 
 	data() {
 		return {
-			state: loadState('integration_nuiteq', 'user-config'),
+			state: loadState('integration_nuiteq', 'nuiteq-state'),
 			login: '',
 			password: '',
 			loading: false,
@@ -145,6 +150,7 @@ export default {
 				if (response.data.user_name) {
 					showSuccess(t('integration_mattermost', 'Successfully connected to NUITEQ!'))
 					this.state.user_name = response.data.user_name
+					this.$emit('connected')
 				} else {
 					showSuccess(t('integration_nuiteq', 'Nuiteq options saved'))
 				}

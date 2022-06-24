@@ -42,7 +42,7 @@ class Personal implements ISettings {
 			'base_url' => $baseUrl,
 			'user_name' => $apiKey ? $userName : '',
 		];
-		$this->initialStateService->provideInitialState('user-config', $userConfig);
+		$this->initialStateService->provideInitialState('nuiteq-state', $userConfig);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');
 	}
 

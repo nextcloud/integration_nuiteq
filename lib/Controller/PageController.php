@@ -63,18 +63,20 @@ class PageController extends Controller {
 	public function index(): TemplateResponse {
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
 		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
-		$isConfigured = ($apiKey && $baseUrl);
-		$pageInitialState = [
-			'is_configured' => $isConfigured,
-		];
+		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
 		$talkEnabled = $this->appManager->isEnabledForUser('spreed', $this->userId);
-		$pageInitialState['talk_enabled'] = $talkEnabled;
-		if ($isConfigured) {
-			$pageInitialState['base_url'] = $baseUrl;
+		$pageInitialState = [
+			'api_key' => $apiKey !== '',
+			'base_url' => $baseUrl,
+			'user_name' => $apiKey ? $userName : '',
+			'talk_enabled' => $talkEnabled,
+			'board_list' => [],
+		];
+		if ($baseUrl !== '' && $apiKey !== '') {
 			$boards = $this->nuiteqAPIService->getBoards($this->userId);
-			$pageInitialState['boards'] = $boards;
+			$pageInitialState['board_list'] = $boards;
 		}
-		$this->initialStateService->provideInitialState('page-state', $pageInitialState);
+		$this->initialStateService->provideInitialState('nuiteq-state', $pageInitialState);
 		return new TemplateResponse(Application::APP_ID, 'main', []);
 	}
 }

@@ -3,7 +3,7 @@
 		<NuiteqNavigation
 			:boards="activeBoards"
 			:selected-board-id="selectedBoardId"
-			:is-configured="isConfigured"
+			:is-configured="connected"
 			@create-board-clicked="onCreateBoardClick"
 			@board-clicked="onBoardClicked"
 			@delete-board="onBoardDeleted"
@@ -18,14 +18,14 @@
 			</template-->
 			<BoardDetails v-if="selectedBoard"
 				:board="selectedBoard"
-				:nuiteq-url="nuiteqUrl"
-				:talk-enabled="talkEnabled" />
-			<EmptyContent v-else-if="!isConfigured">
+				:nuiteq-url="state.base_url"
+				:talk-enabled="state.talk_enabled" />
+			<EmptyContent v-else-if="!connected">
 				<template #icon>
 					<CogIcon />
 				</template>
 				{{ t('integration_nuiteq', 'Application is not configured') }}
-				<a :href="configureUrl">
+				<!--a :href="configureUrl">
 					<Button
 						class="configureButton">
 						<template #icon>
@@ -33,8 +33,12 @@
 						</template>
 						{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
 					</Button>
-				</a>
+				</a-->
 			</EmptyContent>
+			<PersonalSettings v-if="!connected"
+				class="settings"
+				:show-title="false"
+				@connected="onConnected" />
 			<EmptyContent v-else-if="activeBoardCount === 0">
 				<template #icon>
 					<NuiteqIcon />
@@ -89,11 +93,13 @@ import NuiteqNavigation from './components/NuiteqNavigation'
 import CreationForm from './components/CreationForm'
 import BoardDetails from './components/BoardDetails'
 import NuiteqIcon from './components/NuiteqIcon'
+import PersonalSettings from './components/PersonalSettings'
 
 export default {
 	name: 'App',
 
 	components: {
+		PersonalSettings,
 		NuiteqIcon,
 		CreationForm,
 		BoardDetails,
@@ -113,20 +119,19 @@ export default {
 	data() {
 		return {
 			creationModalOpen: false,
-			boardList: [],
 			selectedBoardId: '',
-			state: loadState('integration_nuiteq', 'page-state'),
-			isConfigured: false,
-			nuiteqUrl: '',
+			state: loadState('integration_nuiteq', 'nuiteq-state'),
 			configureUrl: generateUrl('/settings/user/connected-accounts'),
 			creating: false,
-			talkEnabled: false,
 		}
 	},
 
 	computed: {
+		connected() {
+			return this.state.base_url && this.state.user_name && this.state.api_key
+		},
 		activeBoards() {
-			return this.boardList.filter((b) => !b.trash)
+			return this.state.board_list.filter((b) => !b.trash)
 		},
 		activeBoardsById() {
 			return this.activeBoards.reduce((object, item) => {
@@ -148,22 +153,16 @@ export default {
 	},
 
 	beforeMount() {
-		const state = loadState('integration_nuiteq', 'page-state')
-		console.debug('state', state)
-		this.isConfigured = state.is_configured
-		this.talkEnabled = state.talk_enabled
-		if (state.base_url) {
-			this.nuiteqUrl = state.base_url
-		}
-		if (state.boards) {
-			this.boardList = [...state.boards]
-		}
+		console.debug('state', this.state)
 	},
 
 	mounted() {
 	},
 
 	methods: {
+		onConnected() {
+			window.location.reload()
+		},
 		onCreateBoardClick() {
 			this.creationModalOpen = true
 		},
@@ -181,7 +180,7 @@ export default {
 			axios.post(url, req).then((response) => {
 				showSuccess(t('integration_nuiteq', 'New board was created in NUITEQ stage'))
 				board.id = response.data?.id
-				this.boardList.push(board)
+				this.state.board_list.push(board)
 				this.selectedBoardId = board.id
 				this.creationModalOpen = false
 			}).catch((error) => {
@@ -200,7 +199,7 @@ export default {
 		},
 		onBoardDeleted(boardId) {
 			console.debug('DELETE board', boardId)
-			this.$delete(this.boards, boardId)
+			// this.$delete(this.boards, boardId)
 		},
 		onDeletingBoard(boardId) {
 			if (boardId === this.selectedBoardId) {
@@ -219,6 +218,12 @@ export default {
 body {
 	min-height: 100%;
 	height: auto;
+}
+
+.settings {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .emptyContentWrapper {
