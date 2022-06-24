@@ -20,25 +20,27 @@
 				:board="selectedBoard"
 				:nuiteq-url="state.base_url"
 				:talk-enabled="state.talk_enabled" />
-			<EmptyContent v-else-if="!connected">
-				<template #icon>
-					<CogIcon />
-				</template>
-				{{ t('integration_nuiteq', 'Application is not configured') }}
-				<!--a :href="configureUrl">
-					<Button
-						class="configureButton">
-						<template #icon>
-							<CogIcon />
-						</template>
-						{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
-					</Button>
-				</a-->
-			</EmptyContent>
-			<PersonalSettings v-if="!connected"
-				class="settings"
-				:show-title="false"
-				@connected="onConnected" />
+			<div v-else-if="!connected">
+				<EmptyContent>
+					<template #icon>
+						<CogIcon />
+					</template>
+					{{ t('integration_nuiteq', 'Application is not configured') }}
+					<!--a :href="configureUrl">
+						<Button
+							class="configureButton">
+							<template #icon>
+								<CogIcon />
+							</template>
+							{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
+						</Button>
+					</a-->
+				</EmptyContent>
+				<PersonalSettings
+					class="settings"
+					:show-title="false"
+					@connected="onConnected" />
+			</div>
 			<EmptyContent v-else-if="activeBoardCount === 0">
 				<template #icon>
 					<NuiteqIcon />
