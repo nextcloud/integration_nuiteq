@@ -18,7 +18,8 @@
 			</template-->
 			<BoardDetails v-if="selectedBoard"
 				:board="selectedBoard"
-				:nuiteq-url="nuiteqUrl" />
+				:nuiteq-url="nuiteqUrl"
+				:talk-enabled="talkEnabled" />
 			<EmptyContent v-else-if="!isConfigured">
 				<template #icon>
 					<CogIcon />
@@ -119,6 +120,7 @@ export default {
 			nuiteqUrl: '',
 			configureUrl: generateUrl('/settings/user/connected-accounts'),
 			creating: false,
+			talkEnabled: false,
 		}
 	},
 
@@ -147,16 +149,15 @@ export default {
 
 	beforeMount() {
 		const state = loadState('integration_nuiteq', 'page-state')
+		console.debug('state', state)
 		this.isConfigured = state.is_configured
+		this.talkEnabled = state.talk_enabled
 		if (state.base_url) {
 			this.nuiteqUrl = state.base_url
 		}
 		if (state.boards) {
 			this.boardList = [...state.boards]
 		}
-		console.debug('state.boards', state.boards)
-		console.debug('this.boardList', this.boardList)
-		console.debug('this.activeBoardsById', this.activeBoardsById)
 	},
 
 	mounted() {

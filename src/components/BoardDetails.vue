@@ -23,6 +23,17 @@
 						</Button>
 					</a>
 				</div>
+				<Button v-if="talkEnabled"
+					@click="showTalkModal = true">
+					<template #icon>
+						<TalkIcon :size="20" />
+					</template>
+					{{ t('integration_nuiteq', 'Share to a Talk conversation') }}
+				</Button>
+				<SendModal v-if="showTalkModal"
+					:board="board"
+					:nuiteq-url="nuiteqUrl"
+					@close="showTalkModal = false" />
 			</div>
 		</div>
 		<div class="fields">
@@ -124,13 +135,18 @@ import ToggleSwitchOffOutlineIcon from 'vue-material-design-icons/ToggleSwitchOf
 import CheckboxMarkedIcon from 'vue-material-design-icons/CheckboxMarked'
 import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline'
 
+import TalkIcon from './talk/TalkIcon'
+
 import Button from '@nextcloud/vue/dist/Components/Button'
 import { showSuccess, showError } from '@nextcloud/dialogs'
+import SendModal from './talk/SendModal'
 
 export default {
 	name: 'BoardDetails',
 
 	components: {
+		SendModal,
+		TalkIcon,
 		LinkVariantIcon,
 		ShieldLinkVariantIcon,
 		ClipboardArrowLeftOutlineIcon,
@@ -151,6 +167,10 @@ export default {
 			type: String,
 			required: true,
 		},
+		talkEnabled: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
@@ -158,6 +178,7 @@ export default {
 			fields,
 			adminLinkCopied: false,
 			publicLinkCopied: false,
+			showTalkModal: false,
 		}
 	},
 
