@@ -126,6 +126,8 @@ import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOut
 
 import Button from '@nextcloud/vue/dist/Components/Button'
 import { showSuccess, showError } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
 
 export default {
 	name: 'BoardDetails',
@@ -180,6 +182,18 @@ export default {
 				await this.$copyText(link)
 				this.publicLinkCopied = true
 				showSuccess(t('integration_nuiteq', 'Public link copied!'))
+				// ///////////
+				const url = generateOcsUrl('/apps/spreed/api/v1/chat/{token}', { token: 'mr3qxhsp' }, {})
+				const req = {
+					message: 'plop',
+				}
+
+				axios.post(url, req, { headers: { 'OCS-APIRequest': true } }).then((response) => {
+					console.debug('TALK response', response)
+				}).catch((error) => {
+					console.debug(error)
+				})
+				// ///////////
 				// eslint-disable-next-line
 				new Timer(() => {
 					this.publicLinkCopied = false

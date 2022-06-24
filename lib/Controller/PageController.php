@@ -12,6 +12,7 @@
 namespace OCA\Nuiteq\Controller;
 
 use OCA\Nuiteq\Service\NuiteqAPIService;
+use OCP\App\IAppManager;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
@@ -34,20 +35,23 @@ class PageController extends Controller {
 	private IConfig $config;
 	private IInitialState $initialStateService;
 	private NuiteqAPIService $nuiteqAPIService;
+	private IAppManager $appManager;
 
-	public function __construct(string            $appName,
-								IRequest          $request,
-								IConfig           $config,
-								IInitialState     $initialStateService,
-								LoggerInterface   $logger,
-								NuiteqAPIService  $nuiteqAPIService,
-								?string           $userId) {
+	public function __construct(string $appName,
+								IRequest $request,
+								IConfig $config,
+								IAppManager $appManager,
+								IInitialState $initialStateService,
+								LoggerInterface $logger,
+								NuiteqAPIService $nuiteqAPIService,
+								?string $userId) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->logger = $logger;
 		$this->config = $config;
 		$this->initialStateService = $initialStateService;
 		$this->nuiteqAPIService = $nuiteqAPIService;
+		$this->appManager = $appManager;
 	}
 
 	/**
@@ -63,6 +67,8 @@ class PageController extends Controller {
 		$pageInitialState = [
 			'is_configured' => $isConfigured,
 		];
+		$talkEnabled = $this->appManager->isEnabledForUser('spreed', $this->userId);
+		$pageInitialState['talk_enabled'] = $talkEnabled;
 		if ($isConfigured) {
 			$pageInitialState['base_url'] = $baseUrl;
 			$boards = $this->nuiteqAPIService->getBoards($this->userId);
