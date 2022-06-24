@@ -11,9 +11,9 @@
 				:user-select="false"
 				label="displayName"
 				track-by="token"
-				:loading="loadingOpenRooms"
+				:loading="loadingOpenRooms || loadingUsers"
 				:internal-search="true"
-				@search-change="findOpenRooms">
+				@search-change="searchQueryChanged">
 				<template #option="{option}">
 					<Avatar v-if="option.type === 1"
 						:size="34"
@@ -55,7 +55,7 @@
 					:disabled="selectedRoom === null"
 					@click="onSendLinkClick">
 					<template #icon>
-						<SendIcon :class="{ 'icon-loading': loading }" />
+						<SendIcon :class="{ 'icon-loading': sending }" />
 					</template>
 					{{ t('integration_nuiteq', 'Send') }}
 				</Button>
@@ -106,9 +106,11 @@ export default {
 			opened: false,
 			myRooms: [],
 			openRooms: [],
+			users: [],
 			loadingOpenRooms: false,
+			loadingUsers: false,
 			selectedRoom: null,
-			loading: false,
+			sending: false,
 			query: '',
 		}
 	},
@@ -121,6 +123,10 @@ export default {
 			return [
 				...this.myRooms,
 				...this.openRooms,
+				...this.users.filter((u) => {
+					// avoid users for which we already have a 1-1 conversation
+					return !this.myRooms.find((r) => r.type === 1 && u.id === r.name)
+				}),
 			]
 		},
 	},
@@ -142,9 +148,44 @@ export default {
 				console.debug(error)
 			})
 		},
+		searchQueryChanged(query) {
+			this.query = query
+			this.findOpenRooms(query)
+			this.findUsers(query)
+		},
+		findUsers(query) {
+			this.users = []
+			if (query === '') {
+				return
+			}
+			this.loadingUsers = true
+			const url = generateOcsUrl('core/autocomplete/get', 2).replace(/\/$/, '')
+			axios.get(url, {
+				params: {
+					format: 'json',
+					search: query,
+					itemType: ' ',
+					itemId: ' ',
+					shareTypes: [0],
+				},
+			}).then((response) => {
+				this.users = response.data.ocs.data.map((u) => {
+					return {
+						id: u.id,
+						name: u.id,
+						displayName: u.label,
+						type: 1,
+						isUser: true,
+					}
+				})
+			}).catch((error) => {
+				console.error(error)
+			}).then(() => {
+				this.loadingUsers = false
+			})
+		},
 		findOpenRooms(query) {
 			this.openRooms = []
-			this.query = query
 			if (query === '') {
 				return
 			}
@@ -164,12 +205,37 @@ export default {
 		onSendLinkClick() {
 			if (this.selectedRoom.isOpenRoom) {
 				this.joinOpenRoom()
+			} else if (this.selectedRoom.isUser) {
+				this.createOneToOneRoom()
 			} else {
 				this.sendLink()
 			}
 		},
+		createOneToOneRoom() {
+			this.sending = true
+			const userId = this.selectedRoom.id
+			const url = generateOcsUrl('/apps/spreed/api/v4/room')
+			const req = {
+				roomType: 1,
+				invite: userId,
+			}
+
+			axios.post(url, req).then((response) => {
+				console.debug('TALK create room response', response.data.ocs.data)
+				showSuccess(t('integration_nuiteq', 'You invite {name} in a 1-1 conversation', { name: this.selectedRoom.displayName }))
+				this.selectedRoom.token = response.data.ocs.data.token
+				this.sendLink()
+			}).catch((error) => {
+				showError(
+					t('integration_nuiteq', 'Failed to join')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+				)
+				console.debug(error)
+				this.sending = false
+			})
+		},
 		joinOpenRoom() {
-			this.loading = true
+			this.sending = true
 			const token = this.selectedRoom.token
 			const url = generateOcsUrl('/apps/spreed/api/v4/room/{token}/participants/active', { token })
 			const req = {
@@ -186,7 +252,7 @@ export default {
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
 				)
 				console.debug(error)
-				this.loading = false
+				this.sending = false
 			})
 		},
 		sendLink() {
@@ -210,7 +276,7 @@ export default {
 				)
 				console.debug(error)
 			}).then(() => {
-				this.loading = false
+				this.sending = false
 			})
 		},
 	},
