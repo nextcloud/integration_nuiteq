@@ -158,7 +158,7 @@
 			<div class="spacer" />
 			<Button type="primary" @click="onOkClick">
 				<template #icon>
-					<CheckIcon />
+					<CheckIcon :class="{ 'icon-loading': loading }" />
 				</template>
 				{{ t('integration_nuiteq', 'Create') }}
 			</Button>
@@ -198,11 +198,14 @@ export default {
 	},
 
 	props: {
+		loading: {
+			type: Boolean,
+			default: false,
+		},
 	},
 
 	data() {
 		return {
-			// newBoard: { style: fields.style.default, permissions: fields.permissions.default },
 			newBoard: {},
 			fields,
 			query: '',
@@ -235,7 +238,7 @@ export default {
 				const field = this.fields[fieldId]
 				const fieldValue = this.newBoard[fieldId]
 				// a field with false as value is accepted
-				if (!fieldValue && fieldValue !== false) {
+				if (field.mandatory && !fieldValue && fieldValue !== false) {
 					showError(t('integration_nuiteq', 'Field "{name}" is missing', { name: field.label }))
 					isFormValid = false
 				}

@@ -51,6 +51,7 @@ export const fields = {
 		type: 'text',
 		placeholder: t('integration_nuiteq', 'board name'),
 		default: 'Unnamed',
+		mandatory: true,
 	},
 	password: {
 		icon: LockIcon,

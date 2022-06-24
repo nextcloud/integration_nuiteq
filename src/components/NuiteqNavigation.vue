@@ -4,7 +4,11 @@
 			<AppNavigationNew v-if="isConfigured"
 				:text="t('integration_nuiteq', 'Create a board')"
 				button-class="icon-add"
-				@click="onCreateBoardClick" />
+				@click="onCreateBoardClick">
+				<!--template #icon>
+					<PlusIcon />
+				</template-->
+			</AppNavigationNew>
 			<BoardNavigationItem v-for="board in boards"
 				:key="board.id"
 				class="boardItem"
@@ -19,6 +23,7 @@
 </template>
 
 <script>
+// import PlusIcon from 'vue-material-design-icons/Plus'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import BoardNavigationItem from './BoardNavigationItem'
@@ -30,6 +35,7 @@ export default {
 		BoardNavigationItem,
 		AppNavigationNew,
 		AppNavigation,
+		// PlusIcon,
 	},
 
 	props: {

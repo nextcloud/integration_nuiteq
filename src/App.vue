@@ -63,6 +63,7 @@
 			size="normal"
 			@close="closeCreationModal">
 			<CreationForm
+				:loading="creating"
 				@ok-clicked="onCreationValidate"
 				@cancel-clicked="closeCreationModal" />
 		</Modal>
@@ -80,6 +81,8 @@ import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
+import axios from '@nextcloud/axios'
+import { showSuccess, showError } from '@nextcloud/dialogs'
 
 import NuiteqNavigation from './components/NuiteqNavigation'
 import CreationForm from './components/CreationForm'
@@ -115,6 +118,7 @@ export default {
 			isConfigured: false,
 			nuiteqUrl: '',
 			configureUrl: generateUrl('/settings/user/connected-accounts'),
+			creating: false,
 		}
 	},
 
@@ -166,14 +170,28 @@ export default {
 			this.creationModalOpen = false
 		},
 		onCreationValidate(board) {
-			console.debug('CREATE', board)
-			this.creationModalOpen = false
-			// TODO network
-			board.id = 'new'
+			this.creating = true
 			board.trash = false
-			this.boardList.push(board)
-			console.debug(this.boardList)
-			this.selectedBoardId = board.id
+			const req = {
+				name: board.name,
+				password: board.password,
+			}
+			const url = generateUrl('/apps/integration_nuiteq/new')
+			axios.post(url, req).then((response) => {
+				showSuccess(t('integration_nuiteq', 'New board was created in NUITEQ stage'))
+				board.id = response.data?.id
+				this.boardList.push(board)
+				this.selectedBoardId = board.id
+				this.creationModalOpen = false
+			}).catch((error) => {
+				showError(
+					t('integration_nuiteq', 'Failed create new board')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+				)
+				console.debug(error)
+			}).then(() => {
+				this.creating = false
+			})
 		},
 		onBoardClicked(boardId) {
 			console.debug('select board', boardId)

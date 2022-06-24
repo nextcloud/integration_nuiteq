@@ -74,8 +74,36 @@ class NuiteqAPIService {
 		return $this->config->getUserValue($userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 	}
 
+	/**
+	 * @param string $userId
+	 * @return array
+	 */
 	public function getBoards(string $userId): array {
 		return $this->request($userId, 'list', [], 'POST');
+	}
+
+	/**
+	 * @param string $userId
+	 * @param string $name
+	 * @param string $password
+	 * @return array
+	 */
+	public function newBoard(string $userId, string $name, string $password): array {
+		$params = [
+			'name' => $name,
+			'password' => $password,
+		];
+		$result = $this->request($userId, 'new', $params, 'POST');
+		if (isset($result['boardId'])) {
+			$parts = explode('/', $result['boardId']);
+			if (count($parts) > 0) {
+				$result['id'] = array_pop($parts);
+				unset($result['boardId']);
+				return $result;
+			}
+			return ['error' => 'malformed NUITEQ response'];
+		}
+		return $result;
 	}
 
 	/**

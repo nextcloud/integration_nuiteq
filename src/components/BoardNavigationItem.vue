@@ -2,7 +2,7 @@
 	<AppNavigationItem v-show="!deleting"
 		:title="board.name"
 		:class="{ selectedBoard: selected }"
-		:force-menu="false"
+		:force-menu="true"
 		@click="onBoardClick">
 		<template #icon>
 			<ForumIcon v-if="selected"
@@ -11,14 +11,6 @@
 				:size="20" />
 		</template>
 		<template #actions>
-			<ActionButton
-				:close-after-click="true"
-				@click="onFavoriteClick">
-				<template #icon>
-					<StarIcon :size="20" />
-				</template>
-				{{ t('integration_nuiteq', 'Add to favorites') }}
-			</ActionButton>
 			<ActionButton
 				:close-after-click="true"
 				@click="onDeleteClick">
@@ -32,7 +24,6 @@
 </template>
 
 <script>
-import StarIcon from 'vue-material-design-icons/Star'
 import DeleteIcon from 'vue-material-design-icons/Delete'
 import ForumIcon from 'vue-material-design-icons/Forum'
 import ForumOutlineIcon from 'vue-material-design-icons/ForumOutline'
@@ -52,7 +43,6 @@ export default {
 		ForumIcon,
 		ForumOutlineIcon,
 		DeleteIcon,
-		StarIcon,
 	},
 	directives: {
 		ClickOutside,
@@ -93,9 +83,6 @@ export default {
 			this.deleting = false
 			this.deletionTimer.pause()
 			delete this.deletionTimer
-		},
-		onFavoriteClick() {
-			console.debug('on fav click')
 		},
 	},
 }
