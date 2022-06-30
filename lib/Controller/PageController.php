@@ -75,8 +75,7 @@ class PageController extends Controller {
 			'board_list' => [],
 		];
 		if ($baseUrl !== '' && $apiKey !== '') {
-			$boards = $this->nuiteqAPIService->getBoards($this->userId);
-			$pageInitialState['board_list'] = $boards;
+			$pageInitialState['board_list'] = $this->nuiteqAPIService->getBoards($this->userId);
 		}
 		$this->initialStateService->provideInitialState('nuiteq-state', $pageInitialState);
 		return new TemplateResponse(Application::APP_ID, 'main', []);

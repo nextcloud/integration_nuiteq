@@ -170,7 +170,7 @@ export default {
 				if (response.data.user_name) {
 					showSuccess(t('integration_mattermost', 'Successfully connected to NUITEQ!'))
 					this.state.user_name = response.data.user_name
-					this.$emit('connected')
+					this.$emit('connected', this.state.user_name, this.state.base_url)
 				} else {
 					showSuccess(t('integration_nuiteq', 'Nuiteq options saved'))
 				}

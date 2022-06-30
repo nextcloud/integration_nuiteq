@@ -162,8 +162,25 @@ export default {
 	},
 
 	methods: {
-		onConnected() {
-			window.location.reload()
+		onConnected(userName, baseUrl) {
+			this.state.base_url = baseUrl
+			this.state.user_name = userName
+			this.state.api_key = true
+			// window.location.reload()
+			this.getBoards()
+		},
+		getBoards() {
+			const url = generateUrl('/apps/integration_nuiteq/list')
+			axios.get(url).then((response) => {
+				this.state.board_list.push(...response.data)
+			}).catch((error) => {
+				showError(
+					t('integration_nuiteq', 'Failed to get boards')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+				)
+				console.debug(error)
+			}).then(() => {
+			})
 		},
 		onCreateBoardClick() {
 			this.creationModalOpen = true

@@ -14,6 +14,7 @@ return [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 
 		['name' => 'nuiteqAPI#newBoard', 'url' => '/new', 'verb' => 'POST'],
+		['name' => 'nuiteqAPI#getBoards', 'url' => '/list', 'verb' => 'GET'],
 
 		['name' => 'config#setAdminConfig', 'url' => '/admin-config', 'verb' => 'PUT'],
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],

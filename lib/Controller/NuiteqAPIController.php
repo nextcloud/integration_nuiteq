@@ -62,4 +62,17 @@ class NuiteqAPIController extends Controller {
 		}
 		return new DataResponse($result);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return DataResponse
+	 */
+	public function getBoards(): DataResponse {
+		$result = $this->nuiteqAPIService->getBoards($this->userId);
+		if (isset($result['error'])) {
+			return new DataResponse($result, Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse($result);
+	}
 }
