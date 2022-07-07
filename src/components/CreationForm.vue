@@ -149,13 +149,10 @@
 			</div>
 		</div>
 		<div class="nuiteq-footer">
+			<div class="spacer" />
 			<Button @click="$emit('cancel-clicked')">
-				<template #icon>
-					<UndoIcon />
-				</template>
 				{{ t('integration_nuiteq', 'Cancel') }}
 			</Button>
-			<div class="spacer" />
 			<Button type="primary" @click="onOkClick">
 				<template #icon>
 					<CheckIcon :class="{ 'icon-loading': loading }" />
@@ -169,7 +166,6 @@
 <script>
 import PaletteIcon from 'vue-material-design-icons/Palette'
 import CheckIcon from 'vue-material-design-icons/Check'
-import UndoIcon from 'vue-material-design-icons/Undo'
 import Button from '@nextcloud/vue/dist/Components/Button'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
@@ -187,7 +183,6 @@ export default {
 	components: {
 		RadioElementSet,
 		CheckIcon,
-		UndoIcon,
 		PaletteIcon,
 		Button,
 		Multiselect,
@@ -334,16 +329,17 @@ export default {
 		}
 	}
 
+	.spacer {
+		flex-grow: 1;
+	}
+
 	.nuiteq-footer {
 		width: 100%;
 		display: flex;
 		align-items: center;
 		margin-top: 12px;
 		> * {
-			margin: 0 10px 0 10px;
-		}
-		.spacer {
-			flex-grow: 1;
+			margin-left: 8px;
 		}
 	}
 }

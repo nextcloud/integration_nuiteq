@@ -19,6 +19,12 @@
 					:disabled="connected === true"
 					@input="onInput">
 			</div>
+			<p v-show="!connected" class="settings-hint">
+				<InformationOutlineIcon :size="20" />
+				<span>
+					{{ t('integration_nuiteq', 'Leave the client key empty to use the default one.') }}
+				</span>
+			</p>
 			<div v-show="!connected" class="field">
 				<KeyIcon :size="20" />
 				<label for="base-url">
@@ -29,10 +35,6 @@
 					type="text"
 					:placeholder="t('integration_nuiteq', 'client key')"
 					@input="onInput">
-				<p class="settings-hint">
-					<InformationOutlineIcon :size="20" />
-					{{ t('integration_nuiteq', 'Leave this empty to use the default client key.') }}
-				</p>
 			</div>
 			<div v-show="!connected" class="field">
 				<AccountIcon :size="20" />
@@ -61,9 +63,9 @@
 					@keyup.enter="onConnectClick">
 			</div>
 		</div>
-		<Button v-if="!connected && login && password"
+		<Button v-if="!connected"
 			id="nuiteq-connect"
-			:disabled="loading === true"
+			:disabled="loading || !login || !password"
 			:class="{ loading }"
 			@click="onConnectClick">
 			<template #icon>
@@ -141,7 +143,7 @@ export default {
 
 	computed: {
 		connected() {
-			return this.state.user_name && this.state.user_name !== ''
+			return !!this.state.user_name
 		},
 	},
 
@@ -254,7 +256,9 @@ export default {
 
 	.settings-hint {
 		display: flex;
+		align-items: center;
 		opacity: 0.7;
+		margin-top: 8px;
 		> * {
 			margin: 0 4px;
 		}

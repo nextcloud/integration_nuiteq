@@ -6,7 +6,7 @@
 			<Multiselect
 				v-model="selectedRoom"
 				class="multi-select"
-				:placeholder="t('integration_nuiteq', 'Search rooms')"
+				:placeholder="t('integration_nuiteq', 'Search for users, groups or rooms')"
 				:options="rooms"
 				:user-select="false"
 				label="displayName"
@@ -44,13 +44,10 @@
 			</Multiselect>
 			<div class="spacer" />
 			<div class="modal-footer">
+				<div class="spacer" />
 				<Button @click="$emit('close')">
-					<template #icon>
-						<UndoIcon />
-					</template>
 					{{ t('integration_nuiteq', 'Cancel') }}
 				</Button>
-				<div class="spacer" />
 				<Button type="primary"
 					:disabled="selectedRoom === null"
 					@click="onSendLinkClick">
@@ -67,7 +64,6 @@
 <script>
 
 import SendIcon from 'vue-material-design-icons/Send'
-import UndoIcon from 'vue-material-design-icons/Undo'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Button from '@nextcloud/vue/dist/Components/Button'
@@ -87,7 +83,6 @@ export default {
 		Multiselect,
 		Highlight,
 		SendIcon,
-		UndoIcon,
 	},
 
 	props: {
@@ -308,11 +303,7 @@ export default {
 		margin-top: 12px;
 
 		> * {
-			margin: 0 10px 0 10px;
-		}
-
-		.spacer {
-			flex-grow: 1;
+			margin-left: 8px;
 		}
 	}
 }

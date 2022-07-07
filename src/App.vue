@@ -67,7 +67,7 @@
 			</EmptyContent>
 		</AppContent>
 		<Modal v-if="creationModalOpen"
-			size="normal"
+			size="small"
 			@close="closeCreationModal">
 			<CreationForm
 				:loading="creating"
