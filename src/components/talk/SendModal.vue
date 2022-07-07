@@ -3,6 +3,9 @@
 		size="normal"
 		@close="$emit('close')">
 		<div class="modal-content">
+			<h2>
+				{{ t('integration_nuiteq', 'Send link to a Talk room') }}
+			</h2>
 			<Multiselect
 				v-model="selectedRoom"
 				class="multi-select"
@@ -284,6 +287,10 @@ export default {
 	min-height: 300px;
 	display: flex;
 	flex-direction: column;
+
+	h2 {
+		text-align: center;
+	}
 
 	.spacer {
 		flex-grow: 1;

@@ -1,123 +1,127 @@
 <template>
-	<div class="boardDetails">
-		<h2>
-			{{ board.name }}
-		</h2>
-		<div class="links">
-			<div class="link">
-				<LinkVariantIcon :size="20" />
-				<label>
-					{{ t('integration_nuiteq', 'Public board link') }}
-				</label>
-				<div class="linkInputWrapper">
-					<input type="text" :readonly="true" :value="publicLink">
-					<a :href="publicLink" @click.prevent.stop="copyLink(false)">
-						<Button v-tooltip.bottom="{ content: t('integration_nuiteq', 'Copy to clipboard') }">
-							<template #icon>
-								<CheckIcon v-if="publicLinkCopied"
-									class="copiedIcon"
-									:size="16" />
-								<ClippyIcon v-else
-									:size="16" />
-							</template>
-						</Button>
-					</a>
-				</div>
-				<Button v-if="talkEnabled"
-					@click="showTalkModal = true">
-					<template #icon>
-						<TalkIcon :size="20" />
-					</template>
-					{{ t('integration_nuiteq', 'Share to a Talk conversation') }}
-				</Button>
-				<SendModal v-if="showTalkModal"
-					:board="board"
-					:nuiteq-url="nuiteqUrl"
-					@close="showTalkModal = false" />
-			</div>
-		</div>
-		<div class="fields">
-			<div v-for="(field, fieldId) in fields"
-				:key="fieldId"
-				class="field">
-				<component :is="field.icon"
-					v-if="field.icon"
-					:size="20" />
-				<span v-else class="emptyIcon" />
-				<label class="fieldLabel">
-					{{ field.label }}
-				</label>
-				<label v-if="['ncCheckbox'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue multiple">
-					<component :is="field.enabledIcon"
-						v-if="board[fieldId] && field.enabledIcon"
-						:size="20" />
-					<component :is="field.disabledIcon"
-						v-else-if="!board[fieldId] && field.disabledIcon"
-						:size="20" />
-					<CheckboxMarkedIcon v-else-if="board[fieldId]" :size="20" />
-					<CheckboxBlankOutlineIcon v-else-if="!board[fieldId]" :size="20" />
-					{{ board[fieldId] ? t('integration_nuiteq', 'Enabled') : t('integration_nuiteq', 'Disabled') }}
-				</label>
-				<label v-if="['ncSwitch'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue multiple">
-					<component :is="field.enabledIcon"
-						v-if="board[fieldId] && field.enabledIcon"
-						:size="20" />
-					<component :is="field.disabledIcon"
-						v-else-if="!board[fieldId] && field.disabledIcon"
-						:size="20" />
-					<ToggleSwitchIcon v-else-if="board[fieldId]" :size="20" />
-					<ToggleSwitchOffOutlineIcon v-else-if="!board[fieldId]" :size="20" />
-					{{ board[fieldId] ? t('integration_nuiteq', 'Enabled') : t('integration_nuiteq', 'Disabled') }}
-				</label>
-				<label v-if="['text'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue">
-					{{ board[fieldId] }}
-				</label>
-				<label v-else-if="['ncDate'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue">
-					{{ getFormattedDate(board[fieldId]) }}
-				</label>
-				<label v-else-if="['ncDatetime'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue">
-					{{ getFormattedDatetime(board[fieldId]) }}
-				</label>
-				<label v-else-if="['ncColor'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue">
-					<div class="colorDot" :style="{ 'background-color': board[fieldId] }" />
-				</label>
-				<textarea v-if="['textarea'].includes(field.type)"
-					:id="'board-' + fieldId + '-value'"
-					class="fieldValue"
-					:value="board[fieldId]"
-					:readonly="true" />
-				<label v-else-if="['select', 'customRadioSet', 'ncRadioSet'].includes(field.type)"
-					:for="'board-' + fieldId + '-value'"
-					class="fieldValue multiple">
-					<component :is="field.options[board[fieldId]].icon"
-						v-if="field.options[board[fieldId]].icon"
-						:size="20" />
-					{{ field.options[board[fieldId]].label }}
-				</label>
-				<label v-else-if="['ncCheckboxSet'].includes(field.type)"
-					:for="'board-' + fieldId + '-value'"
-					class="fieldValue multipleVertical">
-					<div v-for="optionId in board[fieldId]"
-						:key="optionId"
-						class="oneValue">
-						<component :is="field.options[optionId].icon"
-							v-if="field.options[optionId].icon"
-							:size="20" />
-						{{ field.options[optionId].label }}
+	<div class="details-wrapper">
+		<div class="boardDetails">
+			<h2>
+				{{ board.name }}
+			</h2>
+			<div class="links">
+				<div class="link">
+					<LinkVariantIcon :size="20" />
+					<label>
+						{{ t('integration_nuiteq', 'Public board link') }}
+					</label>
+					<div class="linkInputWrapper">
+						<input type="text" :readonly="true" :value="publicLink">
+						<a :href="publicLink" @click.prevent.stop="copyLink(false)">
+							<Button v-tooltip.bottom="{ content: t('integration_nuiteq', 'Copy to clipboard') }">
+								<template #icon>
+									<CheckIcon v-if="publicLinkCopied"
+										class="copiedIcon"
+										:size="16" />
+									<ClippyIcon v-else
+										:size="16" />
+								</template>
+							</Button>
+						</a>
 					</div>
-				</label>
+				</div>
+				<div v-if="talkEnabled"
+					class="talk-button-wrapper">
+					<Button @click="showTalkModal = true">
+						<template #icon>
+							<TalkIcon :size="20" />
+						</template>
+						{{ t('integration_nuiteq', 'Share link to a Talk conversation') }}
+					</Button>
+					<SendModal v-if="showTalkModal"
+						:board="board"
+						:nuiteq-url="nuiteqUrl"
+						@close="showTalkModal = false" />
+				</div>
+			</div>
+			<div class="fields">
+				<div v-for="(field, fieldId) in fields"
+					:key="fieldId"
+					class="field">
+					<component :is="field.icon"
+						v-if="field.icon"
+						:size="20" />
+					<span v-else class="emptyIcon" />
+					<label class="fieldLabel">
+						{{ field.label }}
+					</label>
+					<label v-if="['ncCheckbox'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue multiple">
+						<component :is="field.enabledIcon"
+							v-if="board[fieldId] && field.enabledIcon"
+							:size="20" />
+						<component :is="field.disabledIcon"
+							v-else-if="!board[fieldId] && field.disabledIcon"
+							:size="20" />
+						<CheckboxMarkedIcon v-else-if="board[fieldId]" :size="20" />
+						<CheckboxBlankOutlineIcon v-else-if="!board[fieldId]" :size="20" />
+						{{ board[fieldId] ? t('integration_nuiteq', 'Enabled') : t('integration_nuiteq', 'Disabled') }}
+					</label>
+					<label v-if="['ncSwitch'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue multiple">
+						<component :is="field.enabledIcon"
+							v-if="board[fieldId] && field.enabledIcon"
+							:size="20" />
+						<component :is="field.disabledIcon"
+							v-else-if="!board[fieldId] && field.disabledIcon"
+							:size="20" />
+						<ToggleSwitchIcon v-else-if="board[fieldId]" :size="20" />
+						<ToggleSwitchOffOutlineIcon v-else-if="!board[fieldId]" :size="20" />
+						{{ board[fieldId] ? t('integration_nuiteq', 'Enabled') : t('integration_nuiteq', 'Disabled') }}
+					</label>
+					<label v-if="['text'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue">
+						{{ board[fieldId] }}
+					</label>
+					<label v-else-if="['ncDate'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue">
+						{{ getFormattedDate(board[fieldId]) }}
+					</label>
+					<label v-else-if="['ncDatetime'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue">
+						{{ getFormattedDatetime(board[fieldId]) }}
+					</label>
+					<label v-else-if="['ncColor'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue">
+						<div class="colorDot" :style="{ 'background-color': board[fieldId] }" />
+					</label>
+					<textarea v-if="['textarea'].includes(field.type)"
+						:id="'board-' + fieldId + '-value'"
+						class="fieldValue"
+						:value="board[fieldId]"
+						:readonly="true" />
+					<label v-else-if="['select', 'customRadioSet', 'ncRadioSet'].includes(field.type)"
+						:for="'board-' + fieldId + '-value'"
+						class="fieldValue multiple">
+						<component :is="field.options[board[fieldId]].icon"
+							v-if="field.options[board[fieldId]].icon"
+							:size="20" />
+						{{ field.options[board[fieldId]].label }}
+					</label>
+					<label v-else-if="['ncCheckboxSet'].includes(field.type)"
+						:for="'board-' + fieldId + '-value'"
+						class="fieldValue multipleVertical">
+						<div v-for="optionId in board[fieldId]"
+							:key="optionId"
+							class="oneValue">
+							<component :is="field.options[optionId].icon"
+								v-if="field.options[optionId].icon"
+								:size="20" />
+							{{ field.options[optionId].label }}
+						</div>
+					</label>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -221,11 +225,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.details-wrapper {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .boardDetails {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	// background-color: var(--color-primary-element-lighter);
+	background-color: var(--color-primary-light);
+	border-radius: var(--border-radius-large);
 	h2 {
 		margin: 12px 0 32px 0;
 	}
@@ -307,6 +321,10 @@ export default {
 			.copiedIcon {
 				color: var(--color-success);
 			}
+		}
+		.talk-button-wrapper {
+			display: flex;
+			justify-content: center;
 		}
 	}
 }
