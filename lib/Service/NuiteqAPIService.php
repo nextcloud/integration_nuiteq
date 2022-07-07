@@ -169,7 +169,6 @@ class NuiteqAPIService {
 				return ['error' => $this->l10n->t('Bad credentials')];
 			} else {
 				try {
-					error_log($body.'!!!');
 					return json_decode($body, true);
 				} catch (Exception | Throwable $e) {
 					$this->logger->warning('NUITEQ invalid request response : '.$e->getMessage(), ['app' => $this->appName]);

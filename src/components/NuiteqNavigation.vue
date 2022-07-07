@@ -2,7 +2,7 @@
 	<AppNavigation>
 		<template #list>
 			<AppNavigationNew v-if="isConfigured"
-				:text="t('integration_nuiteq', 'Create a board')"
+				:text="t('integration_nuiteq', 'Create a board') + isConfigured"
 				button-class="icon-add"
 				@click="onCreateBoardClick">
 				<!--template #icon>

@@ -25,7 +25,7 @@
 					<template #icon>
 						<CogIcon />
 					</template>
-					{{ t('integration_nuiteq', 'Application is not configured') }}
+					{{ t('integration_nuiteq', 'You are not connected to NUITEQ Stage') }}
 					<!--a :href="configureUrl">
 						<Button
 							class="configureButton">
@@ -130,7 +130,7 @@ export default {
 
 	computed: {
 		connected() {
-			return this.state.base_url && this.state.user_name && this.state.api_key
+			return !!this.state.base_url && !!this.state.user_name && !!this.state.api_key
 		},
 		activeBoards() {
 			return this.state.board_list.filter((b) => !b.trash)
