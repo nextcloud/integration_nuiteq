@@ -1,50 +1,86 @@
 <template>
 	<Modal
-		size="normal"
+		size="small"
 		@close="$emit('close')">
 		<div class="modal-content">
 			<h2>
 				{{ t('integration_nuiteq', 'Send link to a Talk room') }}
 			</h2>
-			<Multiselect
-				v-model="selectedRoom"
-				class="multi-select"
-				:placeholder="t('integration_nuiteq', 'Search for users, groups or rooms')"
-				:options="rooms"
-				:user-select="false"
-				label="displayName"
-				track-by="token"
-				:loading="loadingOpenRooms || loadingUsers"
-				:internal-search="true"
-				@search-change="searchQueryChanged">
-				<template #option="{option}">
-					<Avatar v-if="option.type === 1"
-						:size="34"
-						:user="option.name" />
-					<Avatar v-else
-						:size="34"
-						icon-class="icon-group" />
-					<Highlight
-						class="option-label"
-						:text="option.displayName"
-						:search="query" />
-				</template>
-				<template #singleLabel="{option}">
-					<Avatar v-if="option.type === 1"
-						:size="34"
-						:user="option.name" />
-					<Avatar v-else
-						:size="34"
-						icon-class="icon-group" />
-					<label
-						class="option-label">
-						{{ option.displayName }}
-					</label>
-				</template>
-				<template #noOptions>
-					{{ t('integration_nuiteq', 'Start typing to search') }}
-				</template>
-			</Multiselect>
+			<div class="input-wrapper">
+				<input ref="query"
+					v-model="query"
+					type="text"
+					:placeholder="t('integration_nuiteq', 'Search for users, groups or conversations')"
+					@input="searchQueryChanged">
+				<CloseIcon @click="resetQuery" />
+			</div>
+			<div class="results">
+				<div v-show="conversationsToShow.length > 0" id="conversations">
+					<h3>
+						{{ t('integration_nuiteq', 'Conversations') }}
+					</h3>
+					<ul>
+						<ListItem v-for="c in conversationsToShow"
+							:key="'conv-' + c.id"
+							:title="c.displayName"
+							:active="selectedRoom && selectedRoom.id === c.id"
+							:bold="selectedRoom && selectedRoom.id === c.id"
+							@click="selectedRoom = c">
+							<template #subtitle>
+								{{ c.description }}
+							</template>
+							<template #icon>
+								<Avatar v-if="c.type === CONVERSATION_TYPE.ONE_TO_ONE"
+									:size="34"
+									:user="c.name"
+									:disable-menu="true" />
+								<Avatar v-else
+									:size="34"
+									icon-class="icon-group" />
+							</template>
+						</ListItem>
+					</ul>
+				</div>
+				<div v-show="usersToShow.length > 0" id="users">
+					<h3>
+						{{ t('integration_nuiteq', 'Users') }}
+					</h3>
+					<ul>
+						<ListItem v-for="c in usersToShow"
+							:key="'user-' + c.id"
+							:title="c.displayName"
+							:active="selectedRoom && selectedRoom.id === c.id"
+							:bold="selectedRoom && selectedRoom.id === c.id"
+							@click="selectedRoom = c">
+							<template #icon>
+								<Avatar
+									:size="34"
+									:user="c.name"
+									:disable-menu="true" />
+							</template>
+						</ListItem>
+					</ul>
+				</div>
+				<div v-show="groupsToShow.length > 0" id="groups">
+					<h3>
+						{{ t('integration_nuiteq', 'Groups') }}
+					</h3>
+					<ul>
+						<ListItem v-for="c in groupsToShow"
+							:key="'group-' + c.id"
+							:title="c.displayName"
+							:active="selectedRoom && selectedRoom.id === c.id"
+							:bold="selectedRoom && selectedRoom.id === c.id"
+							@click="selectedRoom = c">
+							<template #icon>
+								<Avatar
+									:size="34"
+									icon-class="icon-group" />
+							</template>
+						</ListItem>
+					</ul>
+				</div>
+			</div>
 			<div class="spacer" />
 			<div class="modal-footer">
 				<div class="spacer" />
@@ -66,15 +102,23 @@
 
 <script>
 
+import CloseIcon from 'vue-material-design-icons/Close'
 import SendIcon from 'vue-material-design-icons/Send'
 import Modal from '@nextcloud/vue/dist/Components/Modal'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import Button from '@nextcloud/vue/dist/Components/Button'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
-import Highlight from '@nextcloud/vue/dist/Components/Highlight'
+import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
+import { delay } from '../../utils'
+
+const CONVERSATION_TYPE = {
+	ONE_TO_ONE: 1,
+	GROUP: 2,
+	PUBLIC: 3,
+	CHANGELOG: 4,
+}
 
 export default {
 	name: 'SendModal',
@@ -83,9 +127,9 @@ export default {
 		Button,
 		Avatar,
 		Modal,
-		Multiselect,
-		Highlight,
 		SendIcon,
+		CloseIcon,
+		ListItem,
 	},
 
 	props: {
@@ -101,12 +145,13 @@ export default {
 
 	data() {
 		return {
+			CONVERSATION_TYPE,
 			opened: false,
 			myRooms: [],
 			openRooms: [],
-			users: [],
+			usersAndGroups: [],
 			loadingOpenRooms: false,
-			loadingUsers: false,
+			loadingUsersAndGroups: false,
 			selectedRoom: null,
 			sending: false,
 			query: '',
@@ -117,13 +162,25 @@ export default {
 		publicLink() {
 			return this.nuiteqUrl + '/board/' + this.board.id
 		},
-		rooms() {
+		conversationsToShow() {
 			return [
-				...this.myRooms,
+				...this.myRooms.filter((r) => r.name.includes(this.query) || r.displayName.includes(this.query)),
 				...this.openRooms,
-				...this.users.filter((u) => {
+			]
+		},
+		usersToShow() {
+			return [
+				...this.usersAndGroups.filter((item) => {
 					// avoid users for which we already have a 1-1 conversation
-					return !this.myRooms.find((r) => r.type === 1 && u.id === r.name)
+					return item.type === CONVERSATION_TYPE.ONE_TO_ONE
+						&& !this.myRooms.find((r) => r.type === CONVERSATION_TYPE.ONE_TO_ONE && item.id === r.name)
+				}),
+			]
+		},
+		groupsToShow() {
+			return [
+				...this.usersAndGroups.filter((item) => {
+					return item.type === CONVERSATION_TYPE.GROUP
 				}),
 			]
 		},
@@ -146,17 +203,33 @@ export default {
 				console.debug(error)
 			})
 		},
-		searchQueryChanged(query) {
-			this.query = query
-			this.findOpenRooms(query)
-			this.findUsers(query)
+		searchQueryChanged(event) {
+			this.query = event.target.value
+			this.selectedRoom = null
+			if (this.query === '') {
+				this.usersAndGroups = []
+				this.openRooms = []
+			} else {
+				delay(() => {
+					this.findOpenRooms(this.query)
+					this.findUsersAndGroups(this.query)
+				}, 400)()
+			}
 		},
-		findUsers(query) {
-			this.users = []
+		resetQuery() {
+			this.query = ''
+			this.selectedRoom = null
+			this.usersAndGroups = []
+			this.openRooms = []
+			this.$refs.query.focus()
+		},
+		findUsersAndGroups(query) {
 			if (query === '') {
+				this.usersAndGroups = []
+				this.selectedRoom = null
 				return
 			}
-			this.loadingUsers = true
+			this.loadingUsersAndGroups = true
 			const url = generateOcsUrl('core/autocomplete/get', 2).replace(/\/$/, '')
 			axios.get(url, {
 				params: {
@@ -164,32 +237,38 @@ export default {
 					search: query,
 					itemType: ' ',
 					itemId: ' ',
-					shareTypes: [0],
+					shareTypes: [0, 1],
 				},
 			}).then((response) => {
-				this.users = response.data.ocs.data.map((u) => {
+				this.usersAndGroups = response.data.ocs.data.map((u) => {
 					return {
 						id: u.id,
 						name: u.id,
 						displayName: u.label,
-						type: 1,
-						isUser: true,
+						type: u.source === 'users' ? CONVERSATION_TYPE.ONE_TO_ONE : CONVERSATION_TYPE.GROUP,
+						exists: false,
 					}
 				})
 			}).catch((error) => {
 				console.error(error)
 			}).then(() => {
-				this.loadingUsers = false
+				this.loadingUsersAndGroups = false
 			})
 		},
 		findOpenRooms(query) {
-			this.openRooms = []
 			if (query === '') {
+				this.openRooms = []
+				this.selectedRoom = null
 				return
 			}
 			this.loadingOpenRooms = true
 			const url = generateOcsUrl('/apps/spreed/api/v4/listed-room')
-			axios.get(url, { headers: { searchTerm: query } }).then((response) => {
+			const req = {
+				params: {
+					searchTerm: query,
+				},
+			}
+			axios.get(url, req).then((response) => {
 				this.openRooms = response.data.ocs.data
 					.filter((r) => r.readOnly === 0)
 					.map((r) => { return { ...r, isOpenRoom: true } })
@@ -203,24 +282,23 @@ export default {
 		onSendLinkClick() {
 			if (this.selectedRoom.isOpenRoom) {
 				this.joinOpenRoom()
-			} else if (this.selectedRoom.isUser) {
-				this.createOneToOneRoom()
+			} else if (this.selectedRoom.exists === false) {
+				this.createRoom()
 			} else {
 				this.sendLink()
 			}
 		},
-		createOneToOneRoom() {
+		createRoom() {
 			this.sending = true
-			const userId = this.selectedRoom.id
 			const url = generateOcsUrl('/apps/spreed/api/v4/room')
 			const req = {
-				roomType: 1,
-				invite: userId,
+				roomType: this.selectedRoom.type,
+				invite: this.selectedRoom.id,
 			}
 
 			axios.post(url, req).then((response) => {
 				console.debug('TALK create room response', response.data.ocs.data)
-				showSuccess(t('integration_nuiteq', 'You invite {name} in a 1-1 conversation', { name: this.selectedRoom.displayName }))
+				showSuccess(t('integration_nuiteq', 'You created a conversation with {name}', { name: this.selectedRoom.displayName }))
 				this.selectedRoom.token = response.data.ocs.data.token
 				this.sendLink()
 			}).catch((error) => {
@@ -290,6 +368,19 @@ export default {
 
 	h2 {
 		text-align: center;
+	}
+
+	h3 {
+		font-weight: bold;
+		color: var(--color-primary-element);
+	}
+
+	.input-wrapper {
+		display: flex;
+		align-items: center;
+		input {
+			flex-grow: 1;
+		}
 	}
 
 	.spacer {
