@@ -12,7 +12,12 @@
 					<component :is="field.icon"
 						v-if="field.icon"
 						:size="20" />
-					<label
+					<CheckboxRadioSwitch v-if="field.togglable"
+						:checked.sync="field.enabled"
+						@update:checked="newBoard[fieldId] = ''">
+						{{ field.label }}
+					</CheckboxRadioSwitch>
+					<label v-else
 						:for="'board-' + fieldId">
 						{{ field.label }}
 					</label>
@@ -23,6 +28,16 @@
 					v-model="newBoard[fieldId]"
 					type="text"
 					:placeholder="field.placeholder">
+				<div v-else-if="field.type === 'password' && (!field.togglable || field.enabled)"
+					class="password-input-wrapper">
+					<input
+						:id="'board-' + fieldId"
+						v-model="newBoard[fieldId]"
+						:type="field.view ? 'text' : 'password'"
+						:placeholder="field.placeholder">
+					<EyeOutlineIcon v-if="field.view" @click="field.view = false" />
+					<EyeOffOutlineIcon v-else @click="field.view = true" />
+				</div>
 				<span v-else-if="field.type === 'textarea'"
 					class="textarea-wrapper">
 					<textarea
@@ -164,6 +179,8 @@
 </template>
 
 <script>
+import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline'
+import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline'
 import PaletteIcon from 'vue-material-design-icons/Palette'
 import CheckIcon from 'vue-material-design-icons/Check'
 import Button from '@nextcloud/vue/dist/Components/Button'
@@ -184,6 +201,8 @@ export default {
 		RadioElementSet,
 		CheckIcon,
 		PaletteIcon,
+		EyeOutlineIcon,
+		EyeOffOutlineIcon,
 		Button,
 		Multiselect,
 		DatetimePicker,
@@ -287,12 +306,20 @@ export default {
 			}
 			.fieldLabelWithIcon {
 				display: flex;
+				align-items: center;
 				width: 250px;
 				label {
 					width: 150px;
 				}
 				> * {
 					margin: 0 8px 0 8px;
+				}
+			}
+			.password-input-wrapper {
+				display: flex;
+				align-items: center;
+				input {
+					flex-grow: 1;
 				}
 			}
 			.option-icon {

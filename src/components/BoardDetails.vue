@@ -81,6 +81,15 @@
 						class="fieldValue">
 						{{ board[fieldId] }}
 					</label>
+					<div v-if="['password'].includes(field.type)" class="password-input-wrapper">
+						<label
+							:id="'board-' + fieldId + '-value'"
+							class="fieldValue">
+							{{ field.view ? board[fieldId] : discify(board[fieldId]) }}
+						</label>
+						<EyeOutlineIcon v-if="field.view" @click="field.view = false" />
+						<EyeOffOutlineIcon v-else @click="field.view = true" />
+					</div>
 					<label v-else-if="['ncDate'].includes(field.type)"
 						:id="'board-' + fieldId + '-value'"
 						class="fieldValue">
@@ -137,6 +146,8 @@ import ToggleSwitchOffOutlineIcon from 'vue-material-design-icons/ToggleSwitchOf
 import CheckboxMarkedIcon from 'vue-material-design-icons/CheckboxMarked'
 import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline'
 import CheckIcon from 'vue-material-design-icons/Check'
+import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline'
+import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline'
 
 import TalkIcon from './talk/TalkIcon'
 import ClippyIcon from './ClippyIcon'
@@ -159,6 +170,8 @@ export default {
 		CheckboxBlankOutlineIcon,
 		CheckboxMarkedIcon,
 		CheckIcon,
+		EyeOutlineIcon,
+		EyeOffOutlineIcon,
 		Button,
 	},
 
@@ -220,6 +233,9 @@ export default {
 		getFormattedDatetime(date) {
 			return moment(date).format('LLL')
 		},
+		discify(string) {
+			return '•'.repeat(string.length)
+		},
 	},
 }
 </script>
@@ -264,7 +280,7 @@ export default {
 			.fieldLabel {
 				width: 250px;
 			}
-			.fieldValue {
+			> .fieldValue {
 				width: 300px;
 				&.multiple {
 					display: flex;
@@ -292,6 +308,14 @@ export default {
 				width: 24px;
 				height: 24px;
 				border-radius: 50%;
+			}
+			.password-input-wrapper {
+				display: flex;
+				align-items: center;
+				width: 300px;
+				label {
+					flex-grow: 1;
+				}
 			}
 		}
 	}

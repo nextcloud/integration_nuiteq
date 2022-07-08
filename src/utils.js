@@ -56,8 +56,11 @@ export const fields = {
 	password: {
 		icon: LockIcon,
 		label: t('integration_nuiteq', 'Password'),
-		type: 'text',
+		type: 'password',
 		placeholder: t('integration_nuiteq', 'Password'),
+		togglable: true,
+		enabled: false,
+		view: false,
 		default: '',
 	},
 	/*
