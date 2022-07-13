@@ -212,10 +212,52 @@ export default {
 				this.openRooms = []
 			} else {
 				delay(() => {
-					this.findOpenRooms(this.query)
-					this.findUsersAndGroups(this.query)
+					this.search()
 				}, 400)()
 			}
+		},
+		search() {
+			const allPromises = [
+				this.findOpenRooms(this.query),
+				this.findUsersAndGroups(this.query),
+			]
+			Promise.all(allPromises)
+				.catch(error => {
+					console.error(error)
+					showError(error?.response?.data?.error || error.message)
+				})
+				.then(() => {
+					console.debug('allPromises finished', allPromises)
+					this.loadingUsersAndGroups = false
+					this.loadingOpenRooms = false
+
+					// open rooms
+					allPromises[0].then((response) => {
+						this.openRooms = response.data.ocs.data
+							.filter((r) => r.readOnly === 0)
+							.map((r) => { return { ...r, isOpenRoom: true } })
+						console.debug('TALK OPEN rooms response', response.data.ocs.data)
+						console.debug('findOpenRooms finished')
+					}).catch((error) => {
+						console.error(error)
+					})
+
+					// users and groups
+					allPromises[1].then((response) => {
+						this.usersAndGroups = response.data.ocs.data.map((u) => {
+							return {
+								id: u.id,
+								name: u.id,
+								displayName: u.label,
+								type: u.source === 'users' ? CONVERSATION_TYPE.ONE_TO_ONE : CONVERSATION_TYPE.GROUP,
+								exists: false,
+							}
+						})
+						console.debug('findUsersAndGroups finished')
+					}).catch((error) => {
+						console.error(error)
+					})
+				})
 		},
 		resetQuery() {
 			this.query = ''
@@ -232,7 +274,7 @@ export default {
 			}
 			this.loadingUsersAndGroups = true
 			const url = generateOcsUrl('core/autocomplete/get', 2).replace(/\/$/, '')
-			axios.get(url, {
+			return axios.get(url, {
 				params: {
 					format: 'json',
 					search: query,
@@ -240,20 +282,6 @@ export default {
 					itemId: ' ',
 					shareTypes: [0, 1],
 				},
-			}).then((response) => {
-				this.usersAndGroups = response.data.ocs.data.map((u) => {
-					return {
-						id: u.id,
-						name: u.id,
-						displayName: u.label,
-						type: u.source === 'users' ? CONVERSATION_TYPE.ONE_TO_ONE : CONVERSATION_TYPE.GROUP,
-						exists: false,
-					}
-				})
-			}).catch((error) => {
-				console.error(error)
-			}).then(() => {
-				this.loadingUsersAndGroups = false
 			})
 		},
 		findOpenRooms(query) {
@@ -269,16 +297,7 @@ export default {
 					searchTerm: query,
 				},
 			}
-			axios.get(url, req).then((response) => {
-				this.openRooms = response.data.ocs.data
-					.filter((r) => r.readOnly === 0)
-					.map((r) => { return { ...r, isOpenRoom: true } })
-				console.debug('TALK OPEN rooms response', response.data.ocs.data)
-			}).catch((error) => {
-				console.debug(error)
-			}).then(() => {
-				this.loadingOpenRooms = false
-			})
+			return axios.get(url, req)
 		},
 		onSendLinkClick() {
 			if (this.selectedRoom.isOpenRoom) {
