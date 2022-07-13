@@ -242,7 +242,6 @@ export default {
 			const board = this.state.board_list[boardIndex]
 			if (boardIndex !== -1) {
 				board.trash = true
-				console.debug('set board ' + boardIndex + ' => trash to TRUE', this.state.board_list)
 			}
 
 			// cancel or delete

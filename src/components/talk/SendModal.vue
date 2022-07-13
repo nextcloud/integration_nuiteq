@@ -1,5 +1,6 @@
 <template>
 	<Modal
+		class="send-modal"
 		size="small"
 		@close="$emit('close')">
 		<div class="modal-content">
@@ -12,7 +13,7 @@
 					type="text"
 					:placeholder="t('integration_nuiteq', 'Search for users, groups or conversations')"
 					@input="searchQueryChanged">
-				<CloseIcon @click="resetQuery" />
+				<CloseIcon v-show="query" @click="resetQuery" />
 			</div>
 			<div class="results">
 				<div v-show="conversationsToShow.length > 0" id="conversations">
