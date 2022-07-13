@@ -361,9 +361,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
+::v-deep .modal-container {
+	min-height: 90%;
+	display: flex !important;
+	flex-direction: column;
+}
+
 .modal-content {
+	flex-grow: 1;
 	padding: 12px;
 	min-height: 300px;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 
