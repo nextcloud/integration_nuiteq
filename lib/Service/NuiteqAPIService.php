@@ -84,6 +84,15 @@ class NuiteqAPIService {
 
 	/**
 	 * @param string $userId
+	 * @param string $boardId
+	 * @return array
+	 */
+	public function deleteBoard(string $userId, string $boardId): array {
+		return $this->request($userId, 'delete', ['boardId' => $boardId], 'POST');
+	}
+
+	/**
+	 * @param string $userId
 	 * @param string $name
 	 * @param string $password
 	 * @return array

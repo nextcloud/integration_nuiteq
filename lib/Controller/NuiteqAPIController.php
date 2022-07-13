@@ -75,4 +75,17 @@ class NuiteqAPIController extends Controller {
 		}
 		return new DataResponse($result);
 	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return DataResponse
+	 */
+	public function deleteBoard(string $boardId): DataResponse {
+		$result = $this->nuiteqAPIService->deleteBoard($this->userId, $boardId);
+		if (isset($result['error'])) {
+			return new DataResponse($result, Http::STATUS_BAD_REQUEST);
+		}
+		return new DataResponse($result);
+	}
 }

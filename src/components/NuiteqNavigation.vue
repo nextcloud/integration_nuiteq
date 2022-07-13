@@ -5,6 +5,7 @@
 				:text="t('integration_nuiteq', 'Create a board') + isConfigured"
 				button-class="icon-add"
 				@click="onCreateBoardClick">
+				<!-- will be possible with @nc/vue v5.3.2 -->
 				<!--template #icon>
 					<PlusIcon />
 				</template-->
@@ -15,8 +16,7 @@
 				:board="board"
 				:selected="board.id === selectedBoardId"
 				@board-clicked="onBoardClicked"
-				@delete-board="onBoardDeleted"
-				@deleting-board="onDeletingBoard" />
+				@delete-board="onBoardDeleted" />
 		</template>
 		<!--template #footer></template-->
 	</AppNavigation>
@@ -76,9 +76,6 @@ export default {
 		},
 		onBoardDeleted(boardId) {
 			this.$emit('delete-board', boardId)
-		},
-		onDeletingBoard(boardId) {
-			this.$emit('deleting-board', boardId)
 		},
 	},
 }

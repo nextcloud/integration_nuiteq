@@ -6,8 +6,7 @@
 			:is-configured="connected"
 			@create-board-clicked="onCreateBoardClick"
 			@board-clicked="onBoardClicked"
-			@delete-board="onBoardDeleted"
-			@deleting-board="onDeletingBoard" />
+			@delete-board="onBoardDeleted" />
 		<AppContent
 			:list-max-width="50"
 			:list-min-width="20"
@@ -89,13 +88,14 @@ import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import axios from '@nextcloud/axios'
-import { showSuccess, showError } from '@nextcloud/dialogs'
+import { showSuccess, showError, showUndo } from '@nextcloud/dialogs'
 
 import NuiteqNavigation from './components/NuiteqNavigation'
 import CreationForm from './components/CreationForm'
 import BoardDetails from './components/BoardDetails'
 import NuiteqIcon from './components/NuiteqIcon'
 import PersonalSettings from './components/PersonalSettings'
+import { Timer } from './utils'
 
 export default {
 	name: 'App',
@@ -204,7 +204,7 @@ export default {
 				this.creationModalOpen = false
 			}).catch((error) => {
 				showError(
-					t('integration_nuiteq', 'Failed create new board')
+					t('integration_nuiteq', 'Failed to create new board')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
 				)
 				console.debug(error)
@@ -216,14 +216,47 @@ export default {
 			console.debug('select board', boardId)
 			this.selectedBoardId = boardId
 		},
-		onBoardDeleted(boardId) {
+		deleteBoard(boardId) {
 			console.debug('DELETE board', boardId)
-			// this.$delete(this.boards, boardId)
+			const req = {
+				boardId,
+			}
+			const url = generateUrl('/apps/integration_nuiteq/delete')
+			axios.post(url, req).then((response) => {
+			}).catch((error) => {
+				showError(
+					t('integration_nuiteq', 'Failed to delete the board')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+				)
+				console.debug(error)
+			})
 		},
-		onDeletingBoard(boardId) {
+		onBoardDeleted(boardId) {
+			// deselect the board
 			if (boardId === this.selectedBoardId) {
 				this.selectedBoardId = ''
 			}
+
+			// hide the board nav item
+			const boardIndex = this.state.board_list.findIndex((b) => b.id === boardId)
+			const board = this.state.board_list[boardIndex]
+			if (boardIndex !== -1) {
+				board.trash = true
+				console.debug('set board ' + boardIndex + ' => trash to TRUE', this.state.board_list)
+			}
+
+			// cancel or delete
+			const deletionTimer = new Timer(() => {
+				this.deleteBoard(boardId)
+			}, 10000)
+			showUndo(
+				t('integration_nuiteq', '{name} deleted', { name: board.name }),
+				() => {
+					deletionTimer.pause()
+					board.trash = false
+				},
+				{ timeout: 10000 }
+			)
 		},
 	},
 }

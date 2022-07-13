@@ -1,5 +1,5 @@
 <template>
-	<AppNavigationItem v-show="!deleting"
+	<AppNavigationItem
 		:title="board.name"
 		:class="{ selectedBoard: selected }"
 		:force-menu="true"
@@ -31,9 +31,6 @@ import ClickOutside from 'vue-click-outside'
 
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import { showUndo } from '@nextcloud/dialogs'
-
-import { Timer } from '../utils'
 
 export default {
 	name: 'BoardNavigationItem',
@@ -59,8 +56,6 @@ export default {
 	},
 	data() {
 		return {
-			deleting: false,
-			deletionTimer: null,
 		}
 	},
 	computed: {
@@ -72,17 +67,7 @@ export default {
 			this.$emit('board-clicked', this.board.id)
 		},
 		onDeleteClick() {
-			this.deleting = true
-			this.deletionTimer = new Timer(() => {
-				this.$emit('delete-board', this.board.id)
-			}, 10000)
-			showUndo(t('integration_nuiteq', 'Board deleted'), this.cancelDeletion, { timeout: 10000 })
-			this.$emit('deleting-board', this.board.id)
-		},
-		cancelDeletion() {
-			this.deleting = false
-			this.deletionTimer.pause()
-			delete this.deletionTimer
+			this.$emit('delete-board', this.board.id)
 		},
 	},
 }
