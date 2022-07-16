@@ -254,7 +254,8 @@ export default {
 	align-items: center;
 	justify-content: center;
 	// background-color: var(--color-primary-element-lighter);
-	background-color: var(--color-primary-light);
+	// background-color: var(--color-primary-light);
+	box-shadow: 0 0 10px var(--color-box-shadow);
 	border-radius: var(--border-radius-large);
 	h2 {
 		margin: 12px 0 32px 0;
