@@ -380,7 +380,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-::v-deep .modal-container {
+:deep(.modal-container) {
 	min-height: 90%;
 	display: flex !important;
 	flex-direction: column;

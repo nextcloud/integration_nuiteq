@@ -345,7 +345,7 @@ export default {
 				}
 			}
 			// this fixes the multiline radio label
-			::v-deep .ncradio > label {
+			:deep(.ncradio > label) {
 				height: unset !important;
 				min-height: 44px;
 				> * {

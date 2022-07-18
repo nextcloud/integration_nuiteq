@@ -262,9 +262,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-::v-deep #content-vue {
-	padding-top: 0 !important;
-}
 // TODO in global css loaded by main
 body {
 	min-height: 100%;

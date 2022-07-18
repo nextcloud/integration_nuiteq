@@ -86,17 +86,16 @@ export default {
 	border-bottom: 1px solid var(--color-border);
 }
 
-::v-deep .boardItem {
+:deep(.boardItem) {
 	padding-right: 0 !important;
 	&.selectedBoard {
 		> a,
 		> div {
-			background: var(--color-background-dark, lightgrey);
+			background: var(--color-primary-light, lightgrey);
 		}
 
 		> a {
 			font-weight: bold;
-			color: var(--color-primary);
 		}
 	}
 }
