@@ -1,6 +1,6 @@
 # Nuiteq Stage integration
 
-[![NUITEQ logo](https://github.com/eneiluj/integration_nuiteq/raw/master/img/nuiteq.stage.logo.svg)](https://nuiteqstage.se/en)
+[<img src="https://github.com/eneiluj/integration_nuiteq/raw/master/img/nuiteq.stage.logo.svg" width="150" />](https://nuiteqstage.se/en)
 
 [NUITEQ Stage](https://nuiteqstage.se/en) is a modern and beautiful collaborative whiteboard service.
 
