@@ -40,7 +40,7 @@
 				</div>
 			</div>
 			<div class="fields">
-				<div v-for="(field, fieldId) in fields"
+				<div v-for="(field, fieldId) in fieldsToDisplay"
 					:key="fieldId"
 					class="field">
 					<component :is="field.icon"
@@ -202,6 +202,17 @@ export default {
 	computed: {
 		publicLink() {
 			return this.nuiteqUrl + '/board/' + this.board.id
+		},
+		fieldsToDisplay() {
+			const result = {}
+			Object.keys(this.fields).forEach((fieldId) => {
+				const field = this.fields[fieldId]
+				// do not display password if not set
+				if (!['password'].includes(field.type) || this.board[fieldId]) {
+					result[fieldId] = field
+				}
+			})
+			return result
 		},
 	},
 

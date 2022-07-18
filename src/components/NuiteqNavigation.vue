@@ -2,7 +2,7 @@
 	<AppNavigation>
 		<template #list>
 			<AppNavigationNew v-if="isConfigured"
-				:text="t('integration_nuiteq', 'Create a board') + isConfigured"
+				:text="t('integration_nuiteq', 'Create a board')"
 				button-class="icon-add"
 				@click="onCreateBoardClick">
 				<!-- will be possible with @nc/vue v5.3.2 -->
