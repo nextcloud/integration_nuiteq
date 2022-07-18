@@ -1,31 +1,32 @@
 <?xml version="1.0"?>
 <info>
-    <id>integration_nuiteq</id>
-    <name>Nuiteq Stage integration</name>
-    <summary>Quickly create Nuiteq Stage boards in Nextcloud</summary>
-    <description><![CDATA[This app provides a simple interface to list and create Nuiteq Stage boards.]]></description>
-    <version>1.0.0</version>
-    <licence>agpl</licence>
-    <author>Julien Veyssier</author>
-    <namespace>Nuiteq</namespace>
-    <documentation>
-        <developer>https://github.com/eneiluj/integration_nuiteq</developer>
-    </documentation>
-    <category>integration</category>
-    <website>https://github.com/eneiluj/integration_nuiteq</website>
-    <bugs>https://github.com/eneiluj/integration_nuiteq/issues</bugs>
-    <screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot1.jpg</screenshot>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot2.jpg</screenshot>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot3.jpg</screenshot>
+	<id>integration_nuiteq</id>
+	<name>Nuiteq Stage integration</name>
+	<summary>Quickly create Nuiteq Stage boards in Nextcloud</summary>
+	<description><![CDATA[This app provides a simple interface to list and create Nuiteq Stage boards.]]></description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author>Julien Veyssier</author>
+	<namespace>Nuiteq</namespace>
+	<documentation>
+		<developer>https://github.com/eneiluj/integration_nuiteq</developer>
+	</documentation>
+	<category>integration</category>
+	<website>https://github.com/eneiluj/integration_nuiteq</website>
+	<bugs>https://github.com/eneiluj/integration_nuiteq/issues</bugs>
+	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot1.png</screenshot>
+	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot2.png</screenshot>
+	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot3.png</screenshot>
+	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot4.png</screenshot>
 	<dependencies>
-        <nextcloud min-version="22" max-version="25"/>
-    </dependencies>
+		<nextcloud min-version="22" max-version="25"/>
+	</dependencies>
 	<settings>
-        <admin>OCA\Nuiteq\Settings\Admin</admin>
-        <admin-section>OCA\Nuiteq\Settings\AdminSection</admin-section>
+		<admin>OCA\Nuiteq\Settings\Admin</admin>
+		<admin-section>OCA\Nuiteq\Settings\AdminSection</admin-section>
 		<personal>OCA\Nuiteq\Settings\Personal</personal>
-        <personal-section>OCA\Nuiteq\Settings\PersonalSection</personal-section>
-    </settings>
+		<personal-section>OCA\Nuiteq\Settings\PersonalSection</personal-section>
+	</settings>
 	<navigations>
 		<navigation>
 			<id>integration_nuiteq</id>
