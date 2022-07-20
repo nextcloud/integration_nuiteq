@@ -93,7 +93,7 @@ import { showSuccess, showError, showUndo } from '@nextcloud/dialogs'
 import NuiteqNavigation from './components/NuiteqNavigation'
 import CreationForm from './components/CreationForm'
 import BoardDetails from './components/BoardDetails'
-import NuiteqIcon from './components/NuiteqIcon'
+import NuiteqIcon from './components/icons/NuiteqIcon'
 import PersonalSettings from './components/PersonalSettings'
 import { Timer } from './utils'
 

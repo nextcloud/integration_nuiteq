@@ -150,7 +150,7 @@ import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline'
 import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline'
 
 import TalkIcon from './talk/TalkIcon'
-import ClippyIcon from './ClippyIcon'
+import ClippyIcon from './icons/ClippyIcon'
 
 import Button from '@nextcloud/vue/dist/Components/Button'
 import { showSuccess, showError } from '@nextcloud/dialogs'

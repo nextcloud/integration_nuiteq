@@ -47,7 +47,7 @@ import { showSuccess, showError } from '@nextcloud/dialogs'
 import ServerIcon from 'vue-material-design-icons/Server'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline'
 import KeyIcon from 'vue-material-design-icons/Key'
-import NuiteqIcon from './NuiteqIcon'
+import NuiteqIcon from './icons/NuiteqIcon'
 
 export default {
 	name: 'AdminSettings',

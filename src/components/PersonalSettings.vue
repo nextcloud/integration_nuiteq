@@ -99,7 +99,7 @@ import { delay } from '../utils'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
 import Button from '@nextcloud/vue/dist/Components/Button'
-import NuiteqIcon from './NuiteqIcon'
+import NuiteqIcon from './icons/NuiteqIcon'
 import ServerIcon from 'vue-material-design-icons/Server'
 import CheckIcon from 'vue-material-design-icons/Check'
 import CloseIcon from 'vue-material-design-icons/Close'
