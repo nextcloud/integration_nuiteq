@@ -32,10 +32,22 @@ class PageController extends Controller {
 	 * @var LoggerInterface
 	 */
 	private $logger;
-	private IConfig $config;
-	private IInitialState $initialStateService;
-	private NuiteqAPIService $nuiteqAPIService;
-	private IAppManager $appManager;
+	/**
+	 * @var IConfig
+	 */
+	private $config;
+	/**
+	 * @var IAppManager
+	 */
+	private $appManager;
+	/**
+	 * @var IInitialState
+	 */
+	private $initialStateService;
+	/**
+	 * @var NuiteqAPIService
+	 */
+	private $nuiteqAPIService;
 
 	public function __construct(string $appName,
 								IRequest $request,
@@ -49,9 +61,9 @@ class PageController extends Controller {
 		$this->userId = $userId;
 		$this->logger = $logger;
 		$this->config = $config;
+		$this->appManager = $appManager;
 		$this->initialStateService = $initialStateService;
 		$this->nuiteqAPIService = $nuiteqAPIService;
-		$this->appManager = $appManager;
 	}
 
 	/**
