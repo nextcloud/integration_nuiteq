@@ -17,10 +17,8 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 
-use OCA\Nuiteq\AppInfo\Application;
 
 class NuiteqAPIController extends Controller {
 
@@ -32,8 +30,14 @@ class NuiteqAPIController extends Controller {
 	 * @var LoggerInterface
 	 */
 	private $logger;
-	private IConfig $config;
-	private NuiteqAPIService $nuiteqAPIService;
+	/**
+	 * @var IConfig
+	 */
+	private $config;
+	/**
+	 * @var NuiteqAPIService
+	 */
+	private $nuiteqAPIService;
 
 	public function __construct(string            $appName,
 								IRequest          $request,

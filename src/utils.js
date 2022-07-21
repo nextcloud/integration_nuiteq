@@ -50,7 +50,7 @@ export const fields = {
 		label: t('integration_nuiteq', 'Board name'),
 		type: 'text',
 		placeholder: t('integration_nuiteq', 'board name'),
-		default: 'Unnamed',
+		default: t('integration_nuiteq', 'New board'),
 		mandatory: true,
 	},
 	password: {
