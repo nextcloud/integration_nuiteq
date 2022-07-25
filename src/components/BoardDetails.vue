@@ -193,7 +193,6 @@ export default {
 	data() {
 		return {
 			fields,
-			adminLinkCopied: false,
 			publicLinkCopied: false,
 			showTalkModal: false,
 		}
