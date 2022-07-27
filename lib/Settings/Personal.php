@@ -18,7 +18,10 @@ class Personal implements ISettings {
 	 * @var IInitialState
 	 */
 	private $initialStateService;
-	private ?string $userId;
+	/**
+	 * @var string|null
+	 */
+	private $userId;
 
 	public function __construct(IConfig $config,
 								IInitialState $initialStateService,

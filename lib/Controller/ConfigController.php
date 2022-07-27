@@ -40,7 +40,10 @@ class ConfigController extends Controller {
 	 * @var string|null
 	 */
 	private $userId;
-	private NuiteqAPIService $nuiteqAPIService;
+	/**
+	 * @var NuiteqAPIService
+	 */
+	private $nuiteqAPIService;
 
 	public function __construct(string $appName,
 								IRequest $request,

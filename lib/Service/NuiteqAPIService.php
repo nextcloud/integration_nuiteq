@@ -39,7 +39,10 @@ class NuiteqAPIService {
 	 * @var \OCP\Http\Client\IClient
 	 */
 	private $client;
-	private IConfig $config;
+	/**
+	 * @var IConfig
+	 */
+	private $config;
 
 	/**
 	 * Service to make requests to Nuiteq Stage API
