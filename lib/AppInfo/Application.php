@@ -53,14 +53,11 @@ class Application extends App implements IBootstrap {
 			} else {
 				$baseUrl = $config->getUserValue($userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 			}
+			$overrideClick = $config->getAppValue(Application::APP_ID, 'override_link_click', '0') === '1';
 
-			$initialState->provideLazyInitialState('base_url', function () use ($config) {
-				return $config->getAppValue(self::APP_ID, 'base_url', self::DEFAULT_BASE_URL) ?: self::DEFAULT_BASE_URL;
-			});
-			$initialState->provideLazyInitialState('override_link_click', function () use ($config) {
-				// TODO add setting to set this value
-				return $config->getAppValue(self::APP_ID, 'override_link_click', '0') === '1';
-			});
+			$initialState->provideInitialState('base_url', $baseUrl);
+			// TODO add setting to set this value
+			$initialState->provideInitialState('override_link_click', $overrideClick);
 			Util::addScript(self::APP_ID, self::APP_ID . '-standalone');
 		});
 	}

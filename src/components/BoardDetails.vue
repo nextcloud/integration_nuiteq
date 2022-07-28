@@ -6,7 +6,7 @@
 			</h2>
 			<div class="links">
 				<div class="buttons">
-					<div class="modal-button-wrapper">
+					<!--div class="modal-button-wrapper">
 						<Button @click="showNuiteqModal = true">
 							<template #icon>
 								<DockWindowIcon :size="20" />
@@ -16,7 +16,7 @@
 						<NuiteqModal v-if="showNuiteqModal"
 							:board-url="publicLink"
 							@close="showNuiteqModal = false" />
-					</div>
+					</div-->
 					<a :href="publicLink" target="_blank">
 						<Button>
 							<template #icon>
@@ -184,13 +184,13 @@ import ClippyIcon from './icons/ClippyIcon'
 import Button from '@nextcloud/vue/dist/Components/Button'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import SendModal from './talk/SendModal'
-import NuiteqModal from './NuiteqModal'
+// import NuiteqModal from './NuiteqModal'
 
 export default {
 	name: 'BoardDetails',
 
 	components: {
-		NuiteqModal,
+		// NuiteqModal,
 		Button,
 		SendModal,
 		ClippyIcon,
