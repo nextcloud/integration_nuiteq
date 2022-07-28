@@ -97,6 +97,8 @@ appstore: clean
 	--exclude=l10n/[a-z][a-z]_[A-Z][A-Z] \
 	--exclude=l10n/no-php \
 	--exclude=makefile \
+	--exclude=/.idea \
+	--exclude=/release.sh \
 	--exclude=screenshots \
 	--exclude=phpunit*xml \
 	--exclude=tests \
