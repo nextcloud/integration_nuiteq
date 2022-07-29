@@ -27,10 +27,10 @@
 			</p>
 			<div v-show="!connected" class="field">
 				<KeyIcon :size="20" />
-				<label for="base-url">
+				<label for="client-key">
 					{{ t('integration_nuiteq', 'Client key') }}
 				</label>
-				<input id="base-url"
+				<input id="client-key"
 					v-model="state.client_key"
 					type="text"
 					:placeholder="t('integration_nuiteq', 'client key')"
@@ -155,9 +155,8 @@ export default {
 
 	methods: {
 		onInput() {
-			const that = this
 			delay(() => {
-				that.saveOptions({
+				this.saveOptions({
 					base_url: this.state.base_url,
 					client_key: this.state.client_key,
 				})
