@@ -221,6 +221,7 @@ export default {
 	.fields {
 		display: flex;
 		flex-direction: column;
+		margin-left: 30px;
 
 		.field {
 			display: flex;
@@ -241,9 +242,14 @@ export default {
 		}
 	}
 
+	#nuiteq-connect {
+		margin-left: 30px;
+	}
+
 	.nuiteq-connected-wrapper {
 		display: flex;
 		align-items: center;
+		margin-left: 30px;
 		> label {
 			display: flex;
 			align-items: center;
