@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import NuiteqModal from './NuiteqModal'
+import NuiteqModal from './NuiteqModal.vue'
 
 export default {
 	name: 'NuiteqModalWrapper',

@@ -41,13 +41,13 @@
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { delay } from '../utils'
+import { delay } from '../utils.js'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
-import ServerIcon from 'vue-material-design-icons/Server'
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline'
-import KeyIcon from 'vue-material-design-icons/Key'
-import NuiteqIcon from './icons/NuiteqIcon'
+import ServerIcon from 'vue-material-design-icons/Server.vue'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
+import KeyIcon from 'vue-material-design-icons/Key.vue'
+import NuiteqIcon from './icons/NuiteqIcon.vue'
 
 export default {
 	name: 'AdminSettings',

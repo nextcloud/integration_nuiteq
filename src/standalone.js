@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import './bootstrap'
+import './bootstrap.js'
 import { loadState } from '@nextcloud/initial-state'
-import NuiteqModalWrapper from './components/NuiteqModalWrapper'
+import NuiteqModalWrapper from './components/NuiteqModalWrapper.vue'
 
 function init() {
 	if (!OCA.Nuiteq) {

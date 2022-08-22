@@ -63,7 +63,7 @@
 					@keyup.enter="onConnectClick">
 			</div>
 		</div>
-		<Button v-if="!connected"
+		<NcButton v-if="!connected"
 			id="nuiteq-connect"
 			:disabled="loading || !login || !password"
 			:class="{ loading }"
@@ -72,7 +72,7 @@
 				<OpenInNewIcon />
 			</template>
 			{{ t('integration_nuiteq', 'Connect to NUITEQ Stage') }}
-		</Button>
+		</NcButton>
 		<div v-if="connected" class="nuiteq-connected-wrapper">
 			<label class="nuiteq-connected">
 				<CheckIcon />
@@ -80,12 +80,12 @@
 					{{ t('integration_nuiteq', 'Connected as {user}', { user: state.user_name }) }}
 				</label>
 			</label>
-			<Button id="nuiteq-rm-cred" @click="onLogoutClick">
+			<NcButton id="nuiteq-rm-cred" @click="onLogoutClick">
 				<template #icon>
 					<CloseIcon />
 				</template>
 				{{ t('integration_nuiteq', 'Disconnect from NUITEQ') }}
-			</Button>
+			</NcButton>
 			<span />
 		</div>
 	</div>
@@ -95,25 +95,26 @@
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
-import { delay } from '../utils'
+import { delay } from '../utils.js'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
-import Button from '@nextcloud/vue/dist/Components/Button'
-import NuiteqIcon from './icons/NuiteqIcon'
-import ServerIcon from 'vue-material-design-icons/Server'
-import CheckIcon from 'vue-material-design-icons/Check'
-import CloseIcon from 'vue-material-design-icons/Close'
-import AccountIcon from 'vue-material-design-icons/Account'
-import LockIcon from 'vue-material-design-icons/Lock'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew'
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline'
-import KeyIcon from 'vue-material-design-icons/Key'
+import NcButton from '@nextcloud/vue/dist/Components/Button.js'
+
+import NuiteqIcon from './icons/NuiteqIcon.vue'
+import ServerIcon from 'vue-material-design-icons/Server.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import AccountIcon from 'vue-material-design-icons/Account.vue'
+import LockIcon from 'vue-material-design-icons/Lock.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
+import KeyIcon from 'vue-material-design-icons/Key.vue'
 
 export default {
 	name: 'PersonalSettings',
 
 	components: {
-		Button,
+		NcButton,
 		NuiteqIcon,
 		ServerIcon,
 		CheckIcon,

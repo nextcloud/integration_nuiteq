@@ -1,5 +1,5 @@
 <template>
-	<Content app-name="integration_nuiteq">
+	<NcContent app-name="integration_nuiteq">
 		<NuiteqNavigation
 			:boards="activeBoards"
 			:selected-board-id="selectedBoardId"
@@ -26,13 +26,13 @@
 					</template>
 					{{ t('integration_nuiteq', 'You are not connected to NUITEQ Stage') }}
 					<!--a :href="configureUrl">
-						<Button
+						<NcButton
 							class="configureButton">
 							<template #icon>
 								<CogIcon />
 							</template>
 							{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
-						</Button>
+						</NcButton>
 					</a-->
 				</EmptyContent>
 				<PersonalSettings
@@ -48,14 +48,14 @@
 					<span>
 						{{ t('integration_nuiteq', 'You haven\'t created any boards yet') }}
 					</span>
-					<Button
+					<NcButton
 						class="createButton"
 						@click="onCreateBoardClick">
 						<template #icon>
 							<PlusIcon />
 						</template>
 						{{ t('integration_nuiteq', 'Create a board') }}
-					</Button>
+					</NcButton>
 				</span>
 			</EmptyContent>
 			<EmptyContent v-else>
@@ -74,29 +74,30 @@
 				@ok-clicked="onCreationValidate"
 				@cancel-clicked="closeCreationModal" />
 		</Modal>
-	</Content>
+	</NcContent>
 </template>
 
 <script>
-import CogIcon from 'vue-material-design-icons/Cog'
-import PlusIcon from 'vue-material-design-icons/Plus'
-import Button from '@nextcloud/vue/dist/Components/Button'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import Content from '@nextcloud/vue/dist/Components/Content'
-import Modal from '@nextcloud/vue/dist/Components/Modal'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import CogIcon from 'vue-material-design-icons/Cog.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+
+import NcButton from '@nextcloud/vue/dist/Components/Button.js'
+import AppContent from '@nextcloud/vue/dist/Components/AppContent.js'
+import NcContent from '@nextcloud/vue/dist/Components/Content.js'
+import Modal from '@nextcloud/vue/dist/Components/Modal.js'
+import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent.js'
 
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import axios from '@nextcloud/axios'
 import { showSuccess, showError, showUndo } from '@nextcloud/dialogs'
 
-import NuiteqNavigation from './components/NuiteqNavigation'
-import CreationForm from './components/CreationForm'
-import BoardDetails from './components/BoardDetails'
-import NuiteqIcon from './components/icons/NuiteqIcon'
-import PersonalSettings from './components/PersonalSettings'
-import { Timer } from './utils'
+import NuiteqNavigation from './components/NuiteqNavigation.vue'
+import CreationForm from './components/CreationForm.vue'
+import BoardDetails from './components/BoardDetails.vue'
+import NuiteqIcon from './components/icons/NuiteqIcon.vue'
+import PersonalSettings from './components/PersonalSettings.vue'
+import { Timer } from './utils.js'
 
 export default {
 	name: 'App',
@@ -110,10 +111,10 @@ export default {
 		CogIcon,
 		PlusIcon,
 		AppContent,
-		Content,
+		NcContent,
 		Modal,
 		EmptyContent,
-		Button,
+		NcButton,
 	},
 
 	props: {
