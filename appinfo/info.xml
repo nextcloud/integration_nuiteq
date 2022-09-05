@@ -3,7 +3,7 @@
 	<id>integration_nuiteq</id>
 	<name>Nuiteq Stage integration</name>
 	<summary>Quickly create Nuiteq Stage boards in Nextcloud</summary>
-	<description><![CDATA[This app provides a simple interface to list and create Nuiteq Stage boards.]]></description>
+	<description><![CDATA[This app provides a simple interface to list, create and share Nuiteq Stage boards.]]></description>
 	<version>1.0.0</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
