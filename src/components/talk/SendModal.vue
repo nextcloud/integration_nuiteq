@@ -4,16 +4,19 @@
 		size="small"
 		@close="$emit('close')">
 		<div class="modal-content">
-			<h2>
-				{{ t('integration_nuiteq', 'Send link to a Talk room') }}
-			</h2>
-			<div class="input-wrapper">
-				<input ref="query"
-					v-model="query"
-					type="text"
-					:placeholder="t('integration_nuiteq', 'Search for users, groups or conversations')"
-					@input="searchQueryChanged">
-				<CloseIcon v-show="query" @click="resetQuery" />
+			<div class="modal-header">
+				<h2>
+					<TalkIcon class="icon" />
+					{{ t('integration_nuiteq', 'Send link to a Talk room') }}
+				</h2>
+				<div class="input-wrapper">
+					<input ref="query"
+						v-model="query"
+						type="text"
+						:placeholder="t('integration_nuiteq', 'Search for users, groups or conversations')"
+						@input="searchQueryChanged">
+					<CloseIcon v-show="query" @click="resetQuery" />
+				</div>
 			</div>
 			<div class="results">
 				<div v-show="conversationsToShow.length > 0" id="conversations">
@@ -82,7 +85,6 @@
 					</ul>
 				</div>
 			</div>
-			<div class="spacer" />
 			<div class="modal-footer">
 				<div class="spacer" />
 				<NcButton @click="$emit('close')">
@@ -105,10 +107,14 @@
 
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import SendIcon from 'vue-material-design-icons/Send.vue'
+
+import TalkIcon from './TalkIcon.vue'
+
 import Modal from '@nextcloud/vue/dist/Components/Modal.js'
 import Avatar from '@nextcloud/vue/dist/Components/Avatar.js'
 import NcButton from '@nextcloud/vue/dist/Components/Button.js'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem.js'
+
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
@@ -125,6 +131,7 @@ export default {
 	name: 'SendModal',
 
 	components: {
+		TalkIcon,
 		NcButton,
 		Avatar,
 		Modal,
@@ -388,14 +395,18 @@ export default {
 
 .modal-content {
 	flex-grow: 1;
-	padding: 12px;
 	min-height: 300px;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 
 	h2 {
-		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.icon {
+			margin-right: 8px;
+		}
 	}
 
 	h3 {
@@ -422,14 +433,32 @@ export default {
 		}
 	}
 
+	.results {
+		flex-grow: 1;
+		padding: 0 12px;
+	}
+
+	.modal-header,
 	.modal-footer {
+		position: sticky;
+		z-index: 1000;
+		background-color: var(--color-main-background);
+	}
+
+	.modal-header {
+		top: 0;
+		padding: 12px;
+	}
+
+	.modal-footer {
+		bottom: 0;
 		width: 100%;
 		display: flex;
 		align-items: center;
-		margin-top: 12px;
+		padding: 12px 0;
 
 		> * {
-			margin-left: 8px;
+			margin-right: 12px;
 		}
 	}
 
