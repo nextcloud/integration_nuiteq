@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.3 – 2022-09-07
+### Fixed
+- style of talk modal: paddings/margins, always show header/footer
+
 ## 1.0.1 – 2022-09-06
 ### Changed
 - App description
