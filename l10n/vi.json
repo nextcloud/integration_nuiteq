@@ -1,0 +1,12 @@
+{ "translations": {
+    "Enabled" : "Đá kích hoạt",
+    "Disabled" : "Đã vô hiệu",
+    "Delete" : "Xóa",
+    "Cancel" : "Hủy",
+    "Login" : "Đăng nhập",
+    "Password" : "Mật khẩu",
+    "Conversations" : "Đàm thoại",
+    "Users" : "Người dùng",
+    "Send" : "Gửi"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

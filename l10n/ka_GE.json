@@ -1,0 +1,10 @@
+{ "translations": {
+    "Enabled" : "მოქმედია",
+    "Disabled" : "არაა მოქმედი",
+    "Delete" : "წაშლა",
+    "Cancel" : "უარყოფა",
+    "Login" : "ავტორიზაცია",
+    "Password" : "პაროლი",
+    "Send" : "გაგზავნა"
+},"pluralForm" :"nplurals=2; plural=(n!=1);"
+}

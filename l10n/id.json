@@ -1,0 +1,8 @@
+{ "translations": {
+    "Disabled" : "Dinonaktifkan",
+    "Delete" : "Hapus",
+    "Login" : "Masuk",
+    "Password" : "Kata sandi",
+    "Send" : "Kirim"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

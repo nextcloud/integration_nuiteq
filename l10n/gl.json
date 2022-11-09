@@ -1,0 +1,9 @@
+{ "translations": {
+    "Disabled" : "Desactivado",
+    "Delete" : "Eliminar",
+    "Login" : "Acceder",
+    "Password" : "Contrasinal",
+    "Conversations" : "Conversas",
+    "Board name" : "Nome do taboleiro"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

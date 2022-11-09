@@ -1,0 +1,11 @@
+{ "translations": {
+    "Enabled" : "Идэвхижүүлэх",
+    "Disabled" : "идэвхигүй",
+    "Delete" : "Устгах",
+    "Cancel" : "болиулах",
+    "Login" : "Нэвтрэх",
+    "Password" : "Нууц үг",
+    "Users" : "хэрэглэгч",
+    "Send" : "илгээх"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

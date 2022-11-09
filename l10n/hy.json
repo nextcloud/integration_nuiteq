@@ -1,0 +1,7 @@
+{ "translations": {
+    "Delete" : "հեռացնել",
+    "Login" : "Login",
+    "Password" : "Գաղտնաբառ",
+    "Send" : "Ուղարկել"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

@@ -1,0 +1,7 @@
+{ "translations": {
+    "Disabled" : "Keelatud",
+    "Delete" : "Kustuta",
+    "Login" : "Logi sisse",
+    "Password" : "Parool"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

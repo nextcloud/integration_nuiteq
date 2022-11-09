@@ -1,0 +1,7 @@
+{ "translations": {
+    "Disabled" : "Deaktiviert",
+    "Public link copied!" : "Öffentlicher Link kopiert!",
+    "Delete" : "Löschen",
+    "Login" : "Anmelden"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

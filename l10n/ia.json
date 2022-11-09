@@ -1,0 +1,7 @@
+{ "translations": {
+    "Delete" : "Deler",
+    "Login" : "Login",
+    "Password" : "Contrasigno",
+    "Send" : "Inviar"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

@@ -1,0 +1,9 @@
+{ "translations": {
+    "Delete" : "Delete",
+    "Cancel" : "Cancel",
+    "Login" : "Login",
+    "Password" : "Password",
+    "Users" : "Users",
+    "Send" : "Send"
+},"pluralForm" :"nplurals=1; plural=0;"
+}

@@ -1,0 +1,9 @@
+{ "translations": {
+    "Delete" : "ئۆچۈر",
+    "Cancel" : "ۋاز كەچ",
+    "Login" : "Login",
+    "Password" : "ئىم",
+    "Users" : "ئىشلەتكۈچىلەر",
+    "Send" : "يوللا"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

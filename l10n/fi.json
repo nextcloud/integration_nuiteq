@@ -1,0 +1,10 @@
+{ "translations": {
+    "Disabled" : "Pois käytöstä",
+    "Public link copied!" : "Julkinen linkki kopioitu!",
+    "Delete" : "Poista",
+    "Login" : "Kirjaudu sisään",
+    "Password" : "Salasana",
+    "Conversations" : "Keskustelut",
+    "Board name" : "Taulun nimi"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

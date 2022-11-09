@@ -1,0 +1,12 @@
+{ "translations": {
+    "Connected accounts" : "Tilkopla kontoar",
+    "Enabled" : "Aktivert",
+    "Disabled" : "Deaktivert",
+    "Delete" : "Slett",
+    "Cancel" : "Avbryt",
+    "Login" : "Login",
+    "Password" : "Passord",
+    "Users" : "Brukarare",
+    "Send" : "Send"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}

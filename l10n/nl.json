@@ -1,0 +1,14 @@
+{ "translations": {
+    "Connected accounts" : "Verbonden accounts",
+    "Enabled" : "Ingeschakeld",
+    "Disabled" : "Uitgeschakeld",
+    "Delete" : "Verwijder",
+    "Cancel" : "Annuleren",
+    "Login" : "Inloggen",
+    "Password" : "Wachtwoord",
+    "Conversations" : "Gesprekken",
+    "Users" : "Gebruikers",
+    "Send" : "Verzenden",
+    "Board name" : "Bordnaam"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
