@@ -1,6 +1,22 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
-    "Disabled" : "Απενεργοποιημένο"
+    "Bad HTTP method" : "Κακή μέθοδος HTTP",
+    "Bad credentials" : "Εσφαλμένα διαπιστευτήρια",
+    "Connected accounts" : "Συνδεδεμένοι λογαριασμοί",
+    "Copy to clipboard" : "Αντιγραφή στο πρόχειρο",
+    "Enabled" : "Ενεργοποιημένο",
+    "Disabled" : "Απενεργοποιημένο",
+    "Delete" : "Διαγραφή",
+    "Cancel" : "Ακύρωση",
+    "Create" : "Δημιουργία",
+    "Login" : "Σύνδεση",
+    "Password" : "Συνθηματικό",
+    "Connected as {user}" : "Συνδεδεμένος ως {user}",
+    "Conversations" : "Συνομιλίες",
+    "Users" : "Χρήστες",
+    "Groups" : "Ομάδες",
+    "Send" : "Αποστολή",
+    "Board name" : "Όνομα πίνακα"
 },
 "nplurals=2; plural=(n != 1);");

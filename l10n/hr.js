@@ -1,11 +1,21 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Pogrešna metoda HTTP-a",
+    "Bad credentials" : "Pogrešne vjerodajnice",
+    "Connected accounts" : "Povezani računi",
+    "Copy to clipboard" : "Kopiraj u međuspremnik",
+    "Enabled" : "Omogućeno",
     "Disabled" : "Onemogućeno",
     "Delete" : "Izbriši",
+    "Cancel" : "Odustani",
+    "Create" : "Stvori",
     "Login" : "Prijava",
     "Password" : "Zaporka",
+    "Connected as {user}" : "Povezan kao {user}",
     "Conversations" : "Razgovori",
+    "Users" : "Korisnici",
+    "Groups" : "Grupe",
     "Send" : "Pošalji",
     "Board name" : "Naziv ploče"
 },

@@ -1,9 +1,25 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Método HTTP erróneo",
+    "Bad credentials" : "Credenciales erróneas",
+    "Invalid response" : "Respuesta inválida",
+    "Invalid credentials" : "Credenciales inválidas",
+    "Connected accounts" : "Cuentas conectadas",
+    "Copy to clipboard" : "Copiar al portapapeles",
+    "Enabled" : "Activado",
     "Disabled" : "Desactivado",
     "Public link copied!" : "¡Se copió el enlace público!",
     "Delete" : "Eliminar",
-    "Login" : "Iniciar sesión"
+    "Cancel" : "Cancelar",
+    "Create" : "Crear",
+    "Login" : "Iniciar sesión",
+    "Password" : "Contraseña",
+    "Connected as {user}" : "Conectado como {user}",
+    "Conversations" : "Conversaciones",
+    "Users" : "Usuarios",
+    "Groups" : "Grupos",
+    "Send" : "Enviar",
+    "Board name" : "Nombre del tablero"
 },
 "nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");

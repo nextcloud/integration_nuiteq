@@ -1,16 +1,21 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Неверный метод HTTP",
     "Bad credentials" : "Неверные учетные данные",
     "Connected accounts" : "Подключённые учётные записи",
+    "Copy to clipboard" : "Копировать в буфер",
     "Enabled" : "Включено",
     "Disabled" : "Отключено",
     "Delete" : "Удалить",
     "Cancel" : "Отменить",
+    "Create" : "Создать",
     "Login" : "Войти",
     "Password" : "Пароль",
+    "Connected as {user}" : "Подключено под именем {user}",
     "Conversations" : "Разговоры",
     "Users" : "Пользователи",
+    "Groups" : "Группы",
     "Send" : "Отправить",
     "Board name" : "Название доски"
 },

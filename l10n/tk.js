@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Delete" : "Pozmak",
     "Cancel" : "ýatyrmak",
+    "Create" : "Dörediň",
     "Password" : "Açarsöz",
     "Send" : "Iber"
 },

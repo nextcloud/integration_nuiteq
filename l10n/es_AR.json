@@ -1,6 +1,14 @@
 { "translations": {
+    "Copy to clipboard" : "Copiar al portapapeles",
+    "Enabled" : "Habilitado",
     "Disabled" : "Deshabilitado",
     "Delete" : "Eliminar",
-    "Login" : "Inicio de sesión"
+    "Cancel" : "Cancelar",
+    "Create" : "Crear",
+    "Login" : "Inicio de sesión",
+    "Password" : "Contraseña",
+    "Users" : "Ususarios",
+    "Groups" : "Grupos",
+    "Send" : "Enviar"
 },"pluralForm" :"nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
 }

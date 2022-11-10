@@ -1,11 +1,19 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad credentials" : "פרטי גישה שגויים",
+    "Connected accounts" : "חשבונות מקושרים",
+    "Copy to clipboard" : "העתקה ללוח הגזירים",
+    "Enabled" : "מופעל",
     "Disabled" : "מושבת",
     "Delete" : "מחיקה",
+    "Cancel" : "ביטול",
+    "Create" : "יצירה",
     "Login" : "כניסה",
     "Password" : "ססמה",
     "Conversations" : "דיונים",
+    "Users" : "משתמשים",
+    "Groups" : "קבוצות",
     "Send" : "שליחה",
     "Board name" : "שם הלוח"
 },

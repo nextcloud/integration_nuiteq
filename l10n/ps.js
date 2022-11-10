@@ -5,6 +5,7 @@ OC.L10N.register(
     "Cancel" : "پرېښول",
     "Password" : "پاسورډ",
     "Users" : "کارنان",
+    "Groups" : "ګروپونه",
     "Send" : "لېږل"
 },
 "nplurals=2; plural=(n != 1);");

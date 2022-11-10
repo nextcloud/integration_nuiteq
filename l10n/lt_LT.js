@@ -1,15 +1,22 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Blogas HTTP metodas",
+    "Bad credentials" : "Blogi prisijungimo duomenys",
     "Connected accounts" : "Prijungtos paskyros",
+    "Copy to clipboard" : "Kopijuoti į iškarpinę",
     "Enabled" : "Įjungta",
     "Disabled" : "Išjungta",
     "Public link copied!" : "Viešoji nuoroda nukopijuota!",
     "Delete" : "Ištrinti",
     "Cancel" : "Atsisakyti",
+    "Create" : "Sukurti",
     "Login" : "Prisijungti",
     "Password" : "Slaptažodis",
+    "Connected as {user}" : "Prisijungta kaip {user}",
     "Conversations" : "Pokalbiai",
+    "Users" : "Naudotojai",
+    "Groups" : "Grupės",
     "Send" : "Siųsti",
     "Board name" : "Lentos pavadinimas"
 },

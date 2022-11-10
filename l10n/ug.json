@@ -1,9 +1,11 @@
 { "translations": {
     "Delete" : "ئۆچۈر",
     "Cancel" : "ۋاز كەچ",
+    "Create" : "قۇر",
     "Login" : "Login",
     "Password" : "ئىم",
     "Users" : "ئىشلەتكۈچىلەر",
+    "Groups" : "گۇرۇپپا",
     "Send" : "يوللا"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

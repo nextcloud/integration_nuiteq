@@ -1,6 +1,8 @@
 { "translations": {
     "Delete" : "Strika",
+    "Cancel" : "strika",
     "Login" : "Innrita",
-    "Password" : "Loyniorð"
+    "Password" : "Loyniorð",
+    "Groups" : "Bólkar"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

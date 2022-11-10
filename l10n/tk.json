@@ -1,6 +1,7 @@
 { "translations": {
     "Delete" : "Pozmak",
     "Cancel" : "ýatyrmak",
+    "Create" : "Dörediň",
     "Password" : "Açarsöz",
     "Send" : "Iber"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"

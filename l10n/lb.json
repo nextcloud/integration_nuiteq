@@ -3,8 +3,11 @@
     "Disabled" : "Deaktivéiert",
     "Delete" : "Läschen",
     "Cancel" : "Ofbriechen",
+    "Create" : "Erstellen",
     "Login" : "Login",
     "Password" : "Passwuert",
+    "Users" : "Benotzer",
+    "Groups" : "Gruppen",
     "Send" : "Schécken"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -1,9 +1,11 @@
 { "translations": {
     "Delete" : "Padam",
     "Cancel" : "Batal",
+    "Create" : "Buat",
     "Login" : "Login",
     "Password" : "Kata laluan",
     "Users" : "Pengguna",
+    "Groups" : "Kumpulan",
     "Send" : "Hantar"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

@@ -1,7 +1,10 @@
 { "translations": {
     "Delete" : "հեռացնել",
+    "Cancel" : "ընդհատել",
+    "Create" : "Ստեղծել",
     "Login" : "Login",
     "Password" : "Գաղտնաբառ",
+    "Groups" : "Խմբեր",
     "Send" : "Ուղարկել"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
