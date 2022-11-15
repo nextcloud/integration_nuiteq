@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "HTTP yöntemi hatalı",
     "Bad credentials" : "Kimlik doğrulama bilgileri hatalı",
+    "Invalid response" : "Yanıt geçersiz",
+    "Invalid credentials" : "Kimlik doğrulama bilgileri geçersiz",
     "Connected accounts" : "Bağlı hesaplar",
     "Copy to clipboard" : "Panoya kopyala",
     "Enabled" : "Etkin",
