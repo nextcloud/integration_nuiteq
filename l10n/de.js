@@ -11,6 +11,8 @@ OC.L10N.register(
     "Delete" : "Löschen",
     "Cancel" : "Abbrechen",
     "Connected as {user}" : "Verbunden als {user}",
+    "You created a conversation with {name}" : "Du hast eine Unterhaltung mit {name} erstellt.",
+    "You joined {name}" : "Du bist {name} beigetreten.",
     "Board name" : "Boardname"
 },
 "nplurals=2; plural=(n != 1);");
