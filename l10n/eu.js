@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "HTTP metodo okerra",
     "Bad credentials" : "Kredentzial okerrak",
+    "Invalid response" : "Erantzun baliogabea",
+    "Invalid credentials" : "Kredentzial baliogabeak",
     "Connected accounts" : "Konektatutako kontuak",
     "{name} deleted" : "{name} ezabatuta",
     "Open here" : "Ireki hemen",
