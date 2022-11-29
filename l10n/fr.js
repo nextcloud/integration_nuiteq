@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Mauvaise méthode HTTP",
     "Bad credentials" : "Identifiants incorrects",
+    "Invalid response" : "Réponse non valide",
+    "Invalid credentials" : "Identifiants invalides",
     "Connected accounts" : "Comptes connectés",
     "{name} deleted" : "{name} supprimé",
     "Open here" : "Ouvrir dans cet onglet",
