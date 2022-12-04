@@ -17,6 +17,7 @@ OC.L10N.register(
     "Choose color" : "Sélectionnez une couleur",
     "Cancel" : "Annuler",
     "Create" : "Créer",
+    "Field \"{name}\" is missing" : "Le fichier \"{name}\" est manquant",
     "Login" : "S'identifier",
     "Password" : "Mot de passe",
     "Connected as {user}" : "Connecté en tant que {user}",
@@ -24,6 +25,7 @@ OC.L10N.register(
     "Users" : "Utilisateurs",
     "Groups" : "Groupes",
     "Send" : "Envoyer",
+    "Link sent to {name}" : "Lien envoyé à {name}",
     "Board name" : "Nom du tableau"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
