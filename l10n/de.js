@@ -4,6 +4,8 @@ OC.L10N.register(
     "Bad HTTP method" : "Ungültige HTTP-Methode",
     "Bad credentials" : "Falsche Anmeldeinformationen",
     "Connected accounts" : "Verbundene Konten",
+    "You are not connected to NUITEQ Stage" : "Du bist nicht mit NUITEQ-Stage verbunden.",
+    "You haven't created any boards yet" : "Du hast bislang kein Board erstellt.",
     "Copy to clipboard" : "In die Zwischenablage kopieren",
     "Enabled" : "Aktiviert",
     "Disabled" : "Deaktiviert",
