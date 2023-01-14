@@ -6,6 +6,7 @@ OC.L10N.register(
     "Invalid response" : "Erantzun baliogabea",
     "Invalid credentials" : "Kredentzial baliogabeak",
     "Connected accounts" : "Konektatutako kontuak",
+    "Create a board" : "Sortu taula bat",
     "{name} deleted" : "{name} ezabatuta",
     "Open here" : "Ireki hemen",
     "Open in a new tab" : "Ireki erlaitz berri batean",
