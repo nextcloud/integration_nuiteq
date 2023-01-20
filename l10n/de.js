@@ -19,6 +19,7 @@ OC.L10N.register(
     "Connected as {user}" : "Verbunden als {user}",
     "You created a conversation with {name}" : "Du hast eine Unterhaltung mit {name} erstellt.",
     "You joined {name}" : "Du bist {name} beigetreten.",
+    "Link sent to {name}" : "Link an {name} versandt",
     "Board name" : "Boardname"
 },
 "nplurals=2; plural=(n != 1);");
