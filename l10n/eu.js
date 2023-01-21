@@ -29,6 +29,7 @@ OC.L10N.register(
     "Password" : "Pasahitza",
     "NUITEQ password" : "NUITEQ pasahitza",
     "Connected as {user}" : "{user} gisa konektatuta",
+    "Disconnect from NUITEQ" : "Deskonektatu NUITEQ-etik",
     "Send link to a Talk room" : "Bidali esteka Talk gela batera",
     "Search for users, groups or conversations" : "Bilatu erabiltzaileak, taldeak edo elkarrizketak",
     "Conversations" : "Elkarrizketak",
