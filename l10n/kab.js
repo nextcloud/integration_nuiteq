@@ -7,6 +7,7 @@ OC.L10N.register(
     "Login" : "Aseqdac",
     "Password" : "Awal uffir",
     "Users" : "Iseqdacen",
+    "Groups" : "Igrawen",
     "Send" : "Tuzna"
 },
 "nplurals=2; plural=(n != 1);");
