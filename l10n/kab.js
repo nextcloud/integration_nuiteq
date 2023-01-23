@@ -1,6 +1,8 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Enabled" : "Yermed",
+    "Disabled" : "Ittwarermed",
     "Delete" : "Kkes",
     "Cancel" : "Sefsex",
     "Create" : "Snulfu-d",
