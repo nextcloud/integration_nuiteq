@@ -6,8 +6,14 @@ OC.L10N.register(
     "Invalid response" : "Erantzun baliogabea",
     "Invalid credentials" : "Kredentzial baliogabeak",
     "Connected accounts" : "Konektatutako kontuak",
+    "Nuiteq" : "Nuiteq",
     "Create a board" : "Sortu taula bat",
+    "No selected board" : "Ez dago hautatutako taularik",
+    "Failed to get boards" : "Taulak eskuratzeak huts egin du",
+    "Failed to create new board" : "Taula berria sortzeak huts egin du",
+    "Failed to delete the board" : "Taula ezabatzeak huts egin du",
     "{name} deleted" : "{name} ezabatuta",
+    "Nuiteq integration" : "Nuiteq integrazioa",
     "Client key" : "Bezeroaren gakoa",
     "Open here" : "Ireki hemen",
     "Open in a new tab" : "Ireki erlaitz berri batean",
@@ -41,6 +47,8 @@ OC.L10N.register(
     "You joined {name}" : "{name}-n sartu zara",
     "Link sent to {name}" : "{name}-ra bidali da esteka",
     "Failed to send link" : "Ezin izan da esteka bidali",
-    "Board name" : "Taularen izena"
+    "Board name" : "Taularen izena",
+    "board name" : "taularen izena",
+    "New board" : "Taula berria"
 },
 "nplurals=2; plural=(n != 1);");
