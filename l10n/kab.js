@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Copy to clipboard" : "Copier dans le presse-papiers",
     "Enabled" : "Yermed",
     "Disabled" : "Ittwarermed",
     "Delete" : "Kkes",
