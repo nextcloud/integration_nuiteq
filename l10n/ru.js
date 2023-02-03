@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Неверный метод HTTP",
     "Bad credentials" : "Неверные учетные данные",
+    "Invalid response" : "Недопустимый ответ",
+    "Invalid credentials" : "Недопустимые учетные данные",
     "Connected accounts" : "Подключённые учётные записи",
     "Copy to clipboard" : "Копировать в буфер",
     "Enabled" : "Включено",
