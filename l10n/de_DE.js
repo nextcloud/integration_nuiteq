@@ -17,7 +17,7 @@ OC.L10N.register(
     "No selected board" : "Kein Board ausgewählt",
     "Failed to get boards" : "Fehler beim Laden der Boards",
     "New board was created in NUITEQ stage" : "In NUITEQ-Stage wurde ein neues Board erstellt",
-    "Failed to create new board" : "Fehler beim Erstellen eines neuen Bpards",
+    "Failed to create new board" : "Fehler beim Erstellen eines neuen Boards",
     "Failed to delete the board" : "Fehler beim Löschen des Boards",
     "{name} deleted" : "{name} gelöscht",
     "Nuiteq integration" : "Nuiteq-Einbindung",
