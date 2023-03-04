@@ -1,6 +1,8 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Лоша HTTP метода",
+    "Bad credentials" : "Лоши креденцијали",
     "Copy to clipboard" : "Копирај у оставу",
     "Enabled" : "укључено",
     "Disabled" : "Искључено",
