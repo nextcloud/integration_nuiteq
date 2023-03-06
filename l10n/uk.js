@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Поганий метод HTTP",
     "Bad credentials" : "Погані облікові дані",
-    "Copy to clipboard" : "Скопіювати до буферу обміну ",
+    "Copy to clipboard" : "Копіювати до буферу обміну",
     "Enabled" : "Увімкнено",
     "Disabled" : "Вимкнено",
     "Public link copied!" : "Публічне посилання скопійовано!",
