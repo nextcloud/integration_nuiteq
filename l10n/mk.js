@@ -6,6 +6,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Копирај во клипборд",
     "Enabled" : "Овозможено",
     "Disabled" : "Оневозможено",
+    "Public link copied!" : "Јавниот линк е копиран!",
     "Delete" : "Избриши",
     "Cancel" : "Откажи",
     "Create" : "Креирај",
