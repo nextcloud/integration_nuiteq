@@ -14,6 +14,7 @@ OC.L10N.register(
     "Login" : "Logga in",
     "Password" : "Lösenord",
     "Connected as {user}" : "Ansluten som {user}",
+    "Search for users, groups or conversations" : "Sök efter användare, grupper eller konversationer",
     "Conversations" : "Konversationer",
     "Users" : "Användare",
     "Groups" : "Grupper",
