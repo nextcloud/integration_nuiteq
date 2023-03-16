@@ -9,6 +9,7 @@ OC.L10N.register(
     "Create" : "‎Tạo‎",
     "Login" : "Đăng nhập",
     "Password" : "Mật khẩu",
+    "Connected as {user}" : "Kết nối bởi {user}",
     "Conversations" : "Đàm thoại",
     "Users" : "Người dùng",
     "Groups" : "Nhóm",
