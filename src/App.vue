@@ -7,7 +7,7 @@
 			@create-board-clicked="onCreateBoardClick"
 			@board-clicked="onBoardClicked"
 			@delete-board="onBoardDeleted" />
-		<AppContent
+		<NcAppContent
 			:list-max-width="50"
 			:list-min-width="20"
 			:list-size="20"
@@ -20,52 +20,43 @@
 				:nuiteq-url="state.base_url"
 				:talk-enabled="state.talk_enabled" />
 			<div v-else-if="!connected">
-				<EmptyContent>
+				<NcEmptyContent
+					:title="t('integration_nuiteq', 'You are not connected to NUITEQ Stage')">
 					<template #icon>
 						<CogIcon />
 					</template>
-					{{ t('integration_nuiteq', 'You are not connected to NUITEQ Stage') }}
-					<!--a :href="configureUrl">
-						<NcButton
-							class="configureButton">
-							<template #icon>
-								<CogIcon />
-							</template>
-							{{ t('integration_nuiteq', 'Configure Nuiteq integration') }}
-						</NcButton>
-					</a-->
-				</EmptyContent>
+				</NcEmptyContent>
 				<PersonalSettings
 					class="settings"
 					:show-title="false"
 					@connected="onConnected" />
 			</div>
-			<EmptyContent v-else-if="activeBoardCount === 0">
+			<NcEmptyContent v-else-if="activeBoardCount === 0"
+				:title="t('integration_nuiteq', 'You haven\'t created any boards yet')">
 				<template #icon>
 					<NuiteqIcon />
 				</template>
-				<span class="emptyContentWrapper">
-					<span>
-						{{ t('integration_nuiteq', 'You haven\'t created any boards yet') }}
+				<template #action>
+					<span class="emptyContentWrapper">
+						<NcButton
+							class="createButton"
+							@click="onCreateBoardClick">
+							<template #icon>
+								<PlusIcon />
+							</template>
+							{{ t('integration_nuiteq', 'Create a board') }}
+						</NcButton>
 					</span>
-					<NcButton
-						class="createButton"
-						@click="onCreateBoardClick">
-						<template #icon>
-							<PlusIcon />
-						</template>
-						{{ t('integration_nuiteq', 'Create a board') }}
-					</NcButton>
-				</span>
-			</EmptyContent>
-			<EmptyContent v-else>
+				</template>
+			</NcEmptyContent>
+			<NcEmptyContent v-else
+				:title="t('integration_nuiteq', 'No selected board')">
 				<template #icon>
 					<NuiteqIcon />
 				</template>
-				{{ t('integration_nuiteq', 'No selected board') }}
-			</EmptyContent>
-		</AppContent>
-		<Modal v-if="creationModalOpen"
+			</NcEmptyContent>
+		</NcAppContent>
+		<NcModal v-if="creationModalOpen"
 			size="small"
 			@close="closeCreationModal">
 			<CreationForm
@@ -73,7 +64,7 @@
 				focus-on-field="name"
 				@ok-clicked="onCreationValidate"
 				@cancel-clicked="closeCreationModal" />
-		</Modal>
+		</NcModal>
 	</NcContent>
 </template>
 
@@ -81,11 +72,11 @@
 import CogIcon from 'vue-material-design-icons/Cog.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/Button.js'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent.js'
-import NcContent from '@nextcloud/vue/dist/Components/Content.js'
-import Modal from '@nextcloud/vue/dist/Components/Modal.js'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent.js'
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
+import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -110,10 +101,10 @@ export default {
 		NuiteqNavigation,
 		CogIcon,
 		PlusIcon,
-		AppContent,
+		NcAppContent,
 		NcContent,
-		Modal,
-		EmptyContent,
+		NcModal,
+		NcEmptyContent,
 		NcButton,
 	},
 

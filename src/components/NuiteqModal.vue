@@ -1,5 +1,5 @@
 <template>
-	<Modal
+	<NcModal
 		size="full"
 		@close="$emit('close')">
 		<iframe
@@ -7,17 +7,17 @@
 			frameborder="0"
 			:allowFullScreen="true"
 			:src="boardUrl" />
-	</Modal>
+	</NcModal>
 </template>
 
 <script>
-import Modal from '@nextcloud/vue/dist/Components/Modal.js'
+import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
 
 export default {
 	name: 'NuiteqModal',
 
 	components: {
-		Modal,
+		NcModal,
 	},
 
 	props: {

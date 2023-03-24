@@ -92,15 +92,6 @@
 </template>
 
 <script>
-import { loadState } from '@nextcloud/initial-state'
-import { generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
-import { delay } from '../utils.js'
-import { showSuccess, showError } from '@nextcloud/dialogs'
-
-import NcButton from '@nextcloud/vue/dist/Components/Button.js'
-
-import NuiteqIcon from './icons/NuiteqIcon.vue'
 import ServerIcon from 'vue-material-design-icons/Server.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
@@ -109,6 +100,17 @@ import LockIcon from 'vue-material-design-icons/Lock.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 import KeyIcon from 'vue-material-design-icons/Key.vue'
+
+import NuiteqIcon from './icons/NuiteqIcon.vue'
+
+import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
+import { showSuccess, showError } from '@nextcloud/dialogs'
+
+import { delay } from '../utils.js'
 
 export default {
 	name: 'PersonalSettings',
