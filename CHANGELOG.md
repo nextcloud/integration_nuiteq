@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.0.4 – 2023-03-24
+### Changed
+- bump max NC version to 27
+- use latest @nextcloud/vue and make adjustments
+
 ## 1.0.3 – 2022-09-07
 ### Fixed
 - style of talk modal: paddings/margins, always show header/footer
