@@ -11,7 +11,6 @@ OC.L10N.register(
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "NUITEQ Stage panolarının Nextcloud üzerinden eklenip paylaşılmasını sağlar",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage, panoda birlikte çalışma ve görüntülü arama ile sohbette tartışma deneyimini birleştirerek bir modern toplantıdaki katılımcılar arasında doğal bir etkileşim yaratır. Dosya ve sunumlar hazırlayabilir, yükleyebilir ve toplantıda başkalarıyla paylaşabilirsiniz. Ekip üyelerini birleştirmek ve işbirliği sağlamak önceliği ile tasarlanmıştır - NUITEQ Stage kullanımı güvenli, kolay ve verimlidir.\n\nBu uygulama, NUITEQ Stage panolarını listelemek, oluşturmak ve paylaşmak için basit bir arayüz sağlar.",
     "You are not connected to NUITEQ Stage" : "NUITEQ Stage bağlantısı kurulmamış",
-    "Configure Nuiteq integration" : "NUITEQ bütünleştirmesini yapılandırın",
     "You haven't created any boards yet" : "Henüz herhangi bir pano eklememişsiniz",
     "Create a board" : "Pano ekle",
     "No selected board" : "Herhangi bir pano seçilmemiş",

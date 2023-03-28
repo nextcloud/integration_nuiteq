@@ -11,7 +11,6 @@ OC.L10N.register(
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "Бързо създаване и споделяне на NUITEQ табла за прехвърляне /на файлове/ в Nextcloud",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ прехвърляне /на файлове/ създава естествено взаимодействие между участниците в /онлайн/ Модерна среща, като обединява преживяването от съвместното създаване на бяла дъска и обсъждането във видеоразговор и чат. Подготвяйте и качвайте файлове и презентации, споделяйте ги с другите участници в срещата. На първо място, проектиран за сътрудничество и за да ангажира членовете на екипа - NUITEQ прехвърляне е безопасен, лесен и ефективен за използване.\n\nТова приложение NUITEQ прехвърляне, осигурява прост интерфейс за изготвяне на списъци, създаване и споделяне на бели дъски .",
     "You are not connected to NUITEQ Stage" : "Не сте свързани с NUITEQ прехвърляне",
-    "Configure Nuiteq integration" : "Конфигуриране на интеграцията на Nuiteq",
     "You haven't created any boards yet" : "Все още не сте създали табла",
     "Create a board" : "Създаване на табло",
     "No selected board" : "Няма избрано табло",

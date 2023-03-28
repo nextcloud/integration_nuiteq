@@ -11,7 +11,6 @@ OC.L10N.register(
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "Pohotově vytvářejte a sdílejte tabule NUITEQ Stage v Nextlcoud",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage vytváří přirozenou interakci mezi účastníky v moderní schůzce spojením zážitku ze společného tvoření na tabuli s videohovorem a chatem. Připravujte a nahrávejte soubory a prezentace, sdílejte je s ostatními ve schůzce. Navrženo především pro spolupráci vtažením členů kolektivu – NUITEQ Stage je bezpečné, snadno a efektivně použitelné.\n\nTato aplikace poskytuje jednoduché rozhraní pro vypisování seznamů, vytváření a sdílení tabulí NUITEQ Stage.",
     "You are not connected to NUITEQ Stage" : "Nejste připojení k NUITEQ Stage",
-    "Configure Nuiteq integration" : "Nastavit napojení na Nuiteq",
     "You haven't created any boards yet" : "Zatím jste nevytvořili žádné tabule",
     "Create a board" : "Vytvořit tabuli",
     "No selected board" : "Nevybrána tabule",
