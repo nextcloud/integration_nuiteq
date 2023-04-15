@@ -1,6 +1,9 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "دالة HTTP  غير صحيحة",
+    "Bad credentials" : "رموز التعريف غير صحيحة",
+    "Connected accounts" : "حسابات مترابطة",
     "Copy to clipboard" : "نسخ الرابط",
     "Enabled" : "مفعلة",
     "Disabled" : "معطّل",
