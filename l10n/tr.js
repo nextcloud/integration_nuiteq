@@ -54,7 +54,7 @@ OC.L10N.register(
     "Nuiteq options saved" : "NUITEQ ayarları kaydedildi",
     "Failed to save NUITEQ options" : "NUITEQ ayarları kaydedilemedi",
     "Send link to a Talk room" : "Bağlantıyı bir Talk odasına gönder",
-    "Search for users, groups or conversations" : "Kullanıcı, grup ve görüşme arama",
+    "Search for users, groups or conversations" : "Kullanıcı, grup ya da görüşme ara",
     "Conversations" : "Görüşmeler",
     "Users" : "Kullanıcılar",
     "Groups" : "Gruplar",
