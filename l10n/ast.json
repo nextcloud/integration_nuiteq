@@ -1,0 +1,7 @@
+{ "translations": {
+    "Delete" : "Desaniciar",
+    "Password" : "Contraseña",
+    "Conversations" : "Conversaciones",
+    "Groups" : "Grupos"
+},"pluralForm" :"nplurals=2; plural=(n != 1);"
+}
