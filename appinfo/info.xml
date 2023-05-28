@@ -12,15 +12,15 @@ This app provides a simple interface to list, create and share NUITEQ Stage whit
 	<author>Julien Veyssier</author>
 	<namespace>Nuiteq</namespace>
 	<documentation>
-		<developer>https://github.com/eneiluj/integration_nuiteq</developer>
+		<developer>https://github.com/nextcloud/integration_nuiteq</developer>
 	</documentation>
 	<category>integration</category>
-	<website>https://github.com/eneiluj/integration_nuiteq</website>
-	<bugs>https://github.com/eneiluj/integration_nuiteq/issues</bugs>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot1.png</screenshot>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot2.png</screenshot>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot3.png</screenshot>
-	<screenshot>https://github.com/eneiluj/integration_nuiteq/raw/master/img/screenshot4.png</screenshot>
+	<website>https://github.com/nextcloud/integration_nuiteq</website>
+	<bugs>https://github.com/nextcloud/integration_nuiteq/issues</bugs>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot1.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot2.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot3.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot4.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="22" max-version="27"/>
 	</dependencies>
