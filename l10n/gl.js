@@ -18,7 +18,7 @@ OC.L10N.register(
     "Choose color" : "Elixa cor",
     "Cancel" : "Cancelar",
     "Create" : "Crear",
-    "Field \"{name}\" is missing" : "Falta o campo \"{name}\"",
+    "Field \"{name}\" is missing" : "Falta o campo «{name}»",
     "Login" : "Acceder",
     "Password" : "Contrasinal",
     "Connected as {user}" : "Conectado como {user}",
