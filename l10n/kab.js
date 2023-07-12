@@ -9,6 +9,7 @@ OC.L10N.register(
     "Create" : "Snulfu-d",
     "Login" : "Aseqdac",
     "Password" : "Awal uffir",
+    "Conversations" : "Idiwenniyen",
     "Users" : "Iseqdacen",
     "Groups" : "Igrawen",
     "Send" : "Tuzna"
