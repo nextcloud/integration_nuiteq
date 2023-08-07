@@ -12,6 +12,7 @@ OC.L10N.register(
     "Create" : "ساخت",
     "Login" : "ورود",
     "Password" : "کلمه عبور",
+    "Connected as {user}" : "متصل به عنوان {user}",
     "Conversations" : "گفتگو",
     "Users" : "کاربران",
     "Groups" : "گروه ها",
