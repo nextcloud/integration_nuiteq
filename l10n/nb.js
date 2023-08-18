@@ -3,6 +3,9 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "HTTP-metode er feil",
     "Bad credentials" : "Påloggingsdetaljene er feil",
+    "Invalid response" : "Ugyldig svar",
+    "Invalid credentials" : "Ugyldige legitimasjon",
+    "Connected accounts" : "Tilknyttede kontoer",
     "Copy to clipboard" : "Kopiert til utklippstavlen",
     "Enabled" : "Aktivert",
     "Disabled" : "Deaktivert",
@@ -12,6 +15,7 @@ OC.L10N.register(
     "Create" : "Opprett",
     "Login" : "Logg inn",
     "Password" : "Passord",
+    "Connected as {user}" : "Tilkoblet som {user}",
     "Conversations" : "Samtaler",
     "Users" : "Brukere",
     "Groups" : "Grupper",
