@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Public link copied!" : "¡Copióse l'enllaz públicu!",
     "Delete" : "Desaniciar",
     "Password" : "Contraseña",
     "Conversations" : "Conversaciones",
