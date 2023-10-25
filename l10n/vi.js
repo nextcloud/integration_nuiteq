@@ -2,6 +2,7 @@ OC.L10N.register(
     "integration_nuiteq",
     {
     "Bad HTTP method" : "Phương thức HTTP không hợp lệ",
+    "Copy to clipboard" : "Sao chép vào clipboard",
     "Enabled" : "Đá kích hoạt",
     "Disabled" : "Đã vô hiệu",
     "Delete" : "Xóa",
