@@ -12,6 +12,7 @@ OC.L10N.register(
     "Create" : "Crează",
     "Login" : "Autentificare",
     "Password" : "Parolă",
+    "Conversations" : "Conversații",
     "Users" : "Utilizatori",
     "Groups" : "Grupuri",
     "Send" : "Trimite"
