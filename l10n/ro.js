@@ -15,6 +15,7 @@ OC.L10N.register(
     "Conversations" : "Conversații",
     "Users" : "Utilizatori",
     "Groups" : "Grupuri",
-    "Send" : "Trimite"
+    "Send" : "Trimite",
+    "Board name" : "Nume panou"
 },
 "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));");
