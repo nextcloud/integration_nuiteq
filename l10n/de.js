@@ -25,7 +25,7 @@ OC.L10N.register(
     "Client key" : "Client-Schlüssel",
     "Leave this empty to use the default client key." : "Lass dieses Feld leer, um den Standard-Client-Schlüssel zu verwenden.",
     "Nuiteq admin options saved" : "NUITEQ-Administartions-Optionen gespeichert",
-    "Failed to save Nuiteq admin options" : "NUITEQ-Administrations-Optionen konnten nicht gespeichert werden",
+    "Failed to save Nuiteq admin options" : "NUITEQ-Administrationsoptionen konnten nicht gespeichert werden",
     "Open here" : "Hier öffnen",
     "Open in a new tab" : "In einem neuen Tab öffnen",
     "Share link to a Talk conversation" : "Mit einer Talk-Unterhaltung teilen",
