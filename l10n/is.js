@@ -16,6 +16,7 @@ OC.L10N.register(
     "Conversations" : "Samtöl",
     "Users" : "Notendur",
     "Groups" : "Hópar",
-    "Send" : "Senda"
+    "Send" : "Senda",
+    "Board name" : "Heiti borðs"
 },
 "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);");

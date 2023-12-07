@@ -14,6 +14,7 @@
     "Conversations" : "Samtöl",
     "Users" : "Notendur",
     "Groups" : "Hópar",
-    "Send" : "Senda"
+    "Send" : "Senda",
+    "Board name" : "Heiti borðs"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }
