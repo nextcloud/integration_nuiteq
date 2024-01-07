@@ -14,6 +14,7 @@ OC.L10N.register(
     "Conversations" : "Đàm thoại",
     "Users" : "Người dùng",
     "Groups" : "Nhóm",
-    "Send" : "Gửi"
+    "Send" : "Gửi",
+    "Board name" : "Tên bảng"
 },
 "nplurals=1; plural=0;");
