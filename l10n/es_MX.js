@@ -9,6 +9,7 @@ OC.L10N.register(
     "Create" : "Crear",
     "Login" : "Iniciar sesión",
     "Password" : "Contraseña",
+    "Search for users, groups or conversations" : "Buscar usuarios, grupos o conversaciones",
     "Conversations" : "Conversaciones",
     "Users" : " Usuarios",
     "Groups" : "Grupos",
