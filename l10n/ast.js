@@ -8,6 +8,7 @@ OC.L10N.register(
     "Create" : "Crear",
     "Password" : "Contraseña",
     "Conversations" : "Conversaciones",
+    "Users" : "Usuarios",
     "Groups" : "Grupos"
 },
 "nplurals=2; plural=(n != 1);");
