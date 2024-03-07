@@ -9,6 +9,8 @@ OC.L10N.register(
     "Password" : "Contraseña",
     "Conversations" : "Conversaciones",
     "Users" : "Usuarios",
-    "Groups" : "Grupos"
+    "Groups" : "Grupos",
+    "Failed to join" : "Nun se pue xunir",
+    "Failed to send link" : "Nun se pue unviar l'enllaz"
 },
 "nplurals=2; plural=(n != 1);");
