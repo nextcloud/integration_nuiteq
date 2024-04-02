@@ -2,6 +2,8 @@ OC.L10N.register(
     "integration_nuiteq",
     {
     "Copy to clipboard" : "Copiar nel cartafueyu",
+    "Enabled" : "Activóse",
+    "Disabled" : "Desactivóse",
     "Public link copied!" : "¡Copióse l'enllaz públicu!",
     "Delete" : "Desaniciar",
     "Cancel" : "Encaboxar",
