@@ -8,6 +8,7 @@ OC.L10N.register(
     "Delete" : "Desaniciar",
     "Cancel" : "Encaboxar",
     "Create" : "Crear",
+    "Login" : "Aniciar la sesión",
     "Password" : "Contraseña",
     "Conversations" : "Conversaciones",
     "Users" : "Usuarios",
