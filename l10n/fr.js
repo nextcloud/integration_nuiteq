@@ -43,7 +43,7 @@ OC.L10N.register(
     "NUITEQ Stage URL" : "URL NUITEQ Stage",
     "Leave the client key empty to use the default one." : "Laisser la clé client vide pour utiliser celle par défaut.",
     "client key" : "clé client",
-    "Login" : "S'identifier",
+    "Login" : "S’identifier",
     "NUITEQ login" : "Identifiant NUITEQ",
     "Password" : "Mot de passe",
     "NUITEQ password" : "Mot de passe NUITEQ",
