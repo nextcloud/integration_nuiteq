@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Copy to clipboard" : "Cóipeáil chuig an ngearrthaisce",
     "Disabled" : "Faoi mhíchumas",
     "Delete" : "Scrios",
     "Cancel" : "Cealaigh",
