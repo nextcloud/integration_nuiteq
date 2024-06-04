@@ -11,6 +11,7 @@ OC.L10N.register(
     "Password" : "Pasfhocal",
     "Users" : "Úsáideoirí",
     "Groups" : "Grúpaí",
-    "Send" : "Seol"
+    "Send" : "Seol",
+    "Board name" : "Ainm an bhoird"
 },
 "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);");
