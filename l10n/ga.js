@@ -10,6 +10,7 @@ OC.L10N.register(
     "Create" : "Cruthaigh",
     "Login" : "Logáil isteach",
     "Password" : "Pasfhocal",
+    "Conversations" : "Comhráite",
     "Users" : "Úsáideoirí",
     "Groups" : "Grúpaí",
     "Send" : "Seol",
