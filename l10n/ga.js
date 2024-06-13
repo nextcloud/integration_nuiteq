@@ -1,6 +1,8 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Droch-mhodh HTTP",
+    "Bad credentials" : "Dintiúir dona",
     "Copy to clipboard" : "Cóipeáil chuig an ngearrthaisce",
     "Enabled" : "Cumasaithe",
     "Disabled" : "Faoi mhíchumas",
