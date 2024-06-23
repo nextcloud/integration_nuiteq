@@ -17,6 +17,7 @@ OC.L10N.register(
     "Conversations" : "대화",
     "Users" : "사용자",
     "Groups" : "그룹",
-    "Send" : "보내기"
+    "Send" : "보내기",
+    "Board name" : "보드 이름"
 },
 "nplurals=1; plural=0;");
