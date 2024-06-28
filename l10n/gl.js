@@ -53,7 +53,7 @@ OC.L10N.register(
     "Successfully connected to NUITEQ!" : "Conectou satisfactoriamente con NUITEQ!",
     "Nuiteq options saved" : "Gardáronse as opcións de Nuiteq",
     "Failed to save NUITEQ options" : "Produciuse un fallo ao gardar as opcións de NUITEQ.",
-    "Send link to a Talk room" : "Enviar a ligazón a unha sala Talk",
+    "Send link to a Talk room" : "Enviar a ligazón a unha sala de conversa",
     "Search for users, groups or conversations" : "Buscar usuarios, grupos ou conversas",
     "Conversations" : "Conversas",
     "Users" : "Usuarios",
