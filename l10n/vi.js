@@ -2,6 +2,10 @@ OC.L10N.register(
     "integration_nuiteq",
     {
     "Bad HTTP method" : "Phương thức HTTP không hợp lệ",
+    "Bad credentials" : "Thông tin đăng nhập không hợp lệ.",
+    "Invalid response" : "Phản hồi không hợp lệ",
+    "Invalid credentials" : "Thông tin đăng nhập không hợp lệ.",
+    "Connected accounts" : "Đã kết nối tài khoản",
     "Copy to clipboard" : "Sao chép vào clipboard",
     "Enabled" : "Đá kích hoạt",
     "Disabled" : "Đã vô hiệu",
