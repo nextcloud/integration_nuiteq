@@ -77,7 +77,7 @@ class PageController extends Controller {
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
 		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
 		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
-		$talkEnabled = $this->appManager->isEnabledForUser('spreed', $this->userId);
+		$talkEnabled = $this->appManager->isEnabledForUser('spreed');
 		$pageInitialState = [
 			'client_key' => $clientKey,
 			'api_key' => $apiKey !== '',

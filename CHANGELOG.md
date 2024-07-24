@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - added support of NC30, minimum required NC raised from v27 to v28
 - bump js libs
 
+### Fixed
+- Exception when clicking on the integration icon in the Top Menu
+
 ## 1.0.6 - 2024-03-07
 ### Changed
 - added support of NC29, minimum required NC raised from v25 to v27
