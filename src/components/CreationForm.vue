@@ -71,7 +71,7 @@
 							:style="{ backgroundColor: newBoard[fieldId] }" />
 					</NcColorPicker>
 				</div>
-				<NcMultiselect v-else-if="field.type === 'select'"
+				<NcSelect v-else-if="field.type === 'select'"
 					:value="newBoard[fieldId]"
 					:options="Object.values(field.options)"
 					label="label"
@@ -94,7 +94,7 @@
 							{{ option.label }}
 						</span>
 					</template>
-				</NcMultiselect>
+				</NcSelect>
 				<RadioElementSet v-else-if="field.type === 'customRadioSet'"
 					:name="fieldId + '_radio'"
 					:options="field.options"
@@ -187,7 +187,7 @@ import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
 import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
 import NcHighlight from '@nextcloud/vue/dist/Components/NcHighlight.js'
@@ -208,7 +208,7 @@ export default {
 		EyeOutlineIcon,
 		EyeOffOutlineIcon,
 		NcButton,
-		NcMultiselect,
+		NcSelect,
 		NcDatetimePicker,
 		NcColorPicker,
 		NcHighlight,
