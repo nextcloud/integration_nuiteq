@@ -189,7 +189,7 @@ import CheckIcon from 'vue-material-design-icons/Check.vue'
 import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
 import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
-import NcDatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker.js'
+import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
 import NcHighlight from '@nextcloud/vue/dist/Components/NcHighlight.js'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
 
@@ -209,7 +209,7 @@ export default {
 		EyeOffOutlineIcon,
 		NcButton,
 		NcSelect,
-		NcDatetimePicker,
+		NcDateTimePicker,
 		NcColorPicker,
 		NcHighlight,
 		NcCheckboxRadioSwitch,
