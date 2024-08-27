@@ -41,7 +41,7 @@ class AddContentSecurityPolicyListener implements IEventListener {
 	private $userId;
 
 	public function __construct(IConfig $config,
-								?string $userId) {
+		?string $userId) {
 		$this->config = $config;
 		$this->userId = $userId;
 	}

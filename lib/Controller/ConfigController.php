@@ -11,16 +11,16 @@
 
 namespace OCA\Nuiteq\Controller;
 
+use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\IURLGenerator;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IRequest;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\Controller;
 
-use OCA\Nuiteq\AppInfo\Application;
+use OCP\IURLGenerator;
 
 class ConfigController extends Controller {
 
@@ -46,12 +46,12 @@ class ConfigController extends Controller {
 	private $nuiteqAPIService;
 
 	public function __construct(string $appName,
-								IRequest $request,
-								IConfig $config,
-								IURLGenerator $urlGenerator,
-								NuiteqAPIService $nuiteqAPIService,
-								IL10N $l,
-								?string $userId) {
+		IRequest $request,
+		IConfig $config,
+		IURLGenerator $urlGenerator,
+		NuiteqAPIService $nuiteqAPIService,
+		IL10N $l,
+		?string $userId) {
 		parent::__construct($appName, $request);
 		$this->config = $config;
 		$this->urlGenerator = $urlGenerator;

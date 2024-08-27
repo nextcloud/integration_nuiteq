@@ -22,7 +22,7 @@ This app provides a simple interface to list, create and share NUITEQ Stage whit
 	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot3.png</screenshot>
 	<screenshot>https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/screenshots/screenshot4.png</screenshot>
 	<dependencies>
-		<nextcloud min-version="28" max-version="30"/>
+		<nextcloud min-version="28" max-version="31"/>
 	</dependencies>
 	<settings>
 		<admin>OCA\Nuiteq\Settings\Admin</admin>
