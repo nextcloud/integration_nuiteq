@@ -10,9 +10,9 @@ namespace OCA\Nuiteq\AppInfo;
 
 use OCA\Nuiteq\Listener\AddContentSecurityPolicyListener;
 use OCP\AppFramework\App;
-use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
@@ -62,4 +62,3 @@ class Application extends App implements IBootstrap {
 		});
 	}
 }
-

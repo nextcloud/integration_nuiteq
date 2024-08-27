@@ -12,13 +12,12 @@
 namespace OCA\Nuiteq\Controller;
 
 use OCA\Nuiteq\Service\NuiteqAPIService;
+use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
-use Psr\Log\LoggerInterface;
-use OCP\AppFramework\Controller;
 use OCP\IRequest;
-
+use Psr\Log\LoggerInterface;
 
 class NuiteqAPIController extends Controller {
 
@@ -40,11 +39,11 @@ class NuiteqAPIController extends Controller {
 	private $nuiteqAPIService;
 
 	public function __construct(string            $appName,
-								IRequest          $request,
-								IConfig           $config,
-								LoggerInterface   $logger,
-								NuiteqAPIService  $nuiteqAPIService,
-								?string           $userId) {
+		IRequest          $request,
+		IConfig           $config,
+		LoggerInterface   $logger,
+		NuiteqAPIService  $nuiteqAPIService,
+		?string           $userId) {
 		parent::__construct($appName, $request);
 		$this->userId = $userId;
 		$this->logger = $logger;

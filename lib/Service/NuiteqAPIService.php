@@ -16,10 +16,10 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use OCA\Nuiteq\AppInfo\Application;
 use OCP\AppFramework\Http;
+use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
-use OCP\Http\Client\IClientService;
 use Throwable;
 
 class NuiteqAPIService {
@@ -47,11 +47,11 @@ class NuiteqAPIService {
 	/**
 	 * Service to make requests to Nuiteq Stage API
 	 */
-	public function __construct (string $appName,
-								LoggerInterface $logger,
-								IL10N $l10n,
-								IConfig $config,
-								IClientService $clientService) {
+	public function __construct(string $appName,
+		LoggerInterface $logger,
+		IL10N $l10n,
+		IConfig $config,
+		IClientService $clientService) {
 		$this->appName = $appName;
 		$this->logger = $logger;
 		$this->l10n = $l10n;
@@ -126,7 +126,7 @@ class NuiteqAPIService {
 	 * @return array
 	 */
 	public function request(string $userId, string $endPoint, array $params = [],
-							string $method = 'GET'): array {
+		string $method = 'GET'): array {
 		try {
 			$baseUrl = $this->getBaseUrl($userId);
 			$clientKey = $this->getClientKey($userId);
@@ -165,11 +165,11 @@ class NuiteqAPIService {
 
 			if ($method === 'GET') {
 				$response = $this->client->get($url, $options);
-			} else if ($method === 'POST') {
+			} elseif ($method === 'POST') {
 				$response = $this->client->post($url, $options);
-			} else if ($method === 'PUT') {
+			} elseif ($method === 'PUT') {
 				$response = $this->client->put($url, $options);
-			} else if ($method === 'DELETE') {
+			} elseif ($method === 'DELETE') {
 				$response = $this->client->delete($url, $options);
 			} else {
 				return ['error' => $this->l10n->t('Bad HTTP method')];
@@ -182,23 +182,23 @@ class NuiteqAPIService {
 			} else {
 				try {
 					return json_decode($body, true);
-				} catch (Exception | Throwable $e) {
+				} catch (Exception|Throwable $e) {
 					$this->logger->warning('NUITEQ invalid request response : '.$e->getMessage(), ['app' => $this->appName]);
 					return ['error' => $this->l10n->t('Invalid response')];
 				}
 			}
-		} catch (ClientException | ServerException $e) {
+		} catch (ClientException|ServerException $e) {
 			$response = $e->getResponse();
 			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
 				$body = $response->getBody();
 				try {
 					return json_decode($body, true);
-				} catch (Exception | Throwable $e2) {
+				} catch (Exception|Throwable $e2) {
 				}
 			}
 			return ['error' => $e->getMessage()];
-		} catch (Exception | Throwable $e) {
-			$this->logger->warning('Nuiteq API error : '.$e->getMessage(), array('app' => $this->appName));
+		} catch (Exception|Throwable $e) {
+			$this->logger->warning('Nuiteq API error : '.$e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
 	}
@@ -217,7 +217,7 @@ class NuiteqAPIService {
 
 			$options = [
 				'headers' => [
-					'User-Agent'  => 'Nextcloud NUITEQ integration',
+					'User-Agent' => 'Nextcloud NUITEQ integration',
 					'Content-Type' => 'application/json',
 				],
 				'json' => [
@@ -235,22 +235,22 @@ class NuiteqAPIService {
 			} else {
 				try {
 					return json_decode($body, true);
-				} catch (Exception | Throwable $e) {
+				} catch (Exception|Throwable $e) {
 					$this->logger->warning('NUITEQ invalid login response : '.$e->getMessage(), ['app' => $this->appName]);
 					return ['error' => $this->l10n->t('Invalid response')];
 				}
 			}
-		} catch (ClientException | ServerException $e) {
+		} catch (ClientException|ServerException $e) {
 			$response = $e->getResponse();
 			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
 				$body = $response->getBody();
 				try {
 					return json_decode($body, true);
-				} catch (Exception | Throwable $e2) {
+				} catch (Exception|Throwable $e2) {
 				}
 			}
 			return ['error' => $e->getMessage()];
-		} catch (Exception | Throwable $e) {
+		} catch (Exception|Throwable $e) {
 			$this->logger->warning('NUITEQ login error : '.$e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
