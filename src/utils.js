@@ -1,3 +1,8 @@
+/**
+ * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 // import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 // import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 // import HomeGroupIcon from 'vue-material-design-icons/HomeGroup.vue'
