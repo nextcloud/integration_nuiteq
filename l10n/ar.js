@@ -45,7 +45,7 @@ OC.L10N.register(
     "client key" : "مفتاح العميل",
     "Login" : "الدخول",
     "NUITEQ login" : "دخول Nuiteq",
-    "Password" : "كلمة السر",
+    "Password" : "كلمة المرور",
     "NUITEQ password" : "كلمة مرور Nuiteq",
     "Connect to NUITEQ Stage" : "الاتصال مع Nuiteq Satge",
     "Connected as {user}" : "متصل بصفته {user}",
@@ -64,7 +64,7 @@ OC.L10N.register(
     "You joined {name}" : "أنت ضممت {name}",
     "NUITEQ board \"{name}\": {link}" : "لوحة Nuiteq ـ \"{name}\": {link}",
     "Link sent to {name}" : "تمّ إرسال الرابط إلى {name}",
-    "Failed to send link" : "إخفاق في إرسال الرابط ",
+    "Failed to send link" : "فشل في إرسال الرابط ",
     "Board name" : "اسم اللوح",
     "board name" : "اسم اللوحة",
     "New board" : "لوحة جديدة"
