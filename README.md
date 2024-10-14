@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
+  - SPDX-License-Identifier: CC0-1.0
+-->
 # NUITEQ Stage integration
 
 [<img src="https://raw.githubusercontent.com/nextcloud/integration_nuiteq/main/img/nuiteq.stage.logo.svg" width="200" />](https://nuiteqstage.se/en)
