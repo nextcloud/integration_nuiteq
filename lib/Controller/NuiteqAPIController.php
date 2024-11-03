@@ -10,39 +10,19 @@ use OCA\Nuiteq\Service\NuiteqAPIService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IConfig;
 use OCP\IRequest;
-use Psr\Log\LoggerInterface;
 
 class NuiteqAPIController extends Controller {
 
-	/**
-	 * @var string|null
-	 */
-	private $userId;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
-	/**
-	 * @var IConfig
-	 */
-	private $config;
-	/**
-	 * @var NuiteqAPIService
-	 */
-	private $nuiteqAPIService;
+	private NuiteqAPIService $nuiteqAPIService;
 
-	public function __construct(string            $appName,
+	public function __construct(
+		string            $appName,
 		IRequest          $request,
-		IConfig           $config,
-		LoggerInterface   $logger,
 		NuiteqAPIService  $nuiteqAPIService,
-		?string           $userId) {
+		private ?string   $userId,
+	) {
 		parent::__construct($appName, $request);
-		$this->userId = $userId;
-		$this->logger = $logger;
-		$this->config = $config;
 		$this->nuiteqAPIService = $nuiteqAPIService;
 	}
 

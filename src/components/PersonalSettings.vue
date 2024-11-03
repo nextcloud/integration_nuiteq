@@ -37,7 +37,7 @@
 				</label>
 				<input id="client-key"
 					v-model="state.client_key"
-					type="text"
+					type="password"
 					:placeholder="t('integration_nuiteq', 'client key')"
 					@input="onInput">
 			</div>

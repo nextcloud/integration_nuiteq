@@ -30,7 +30,7 @@
 				</label>
 				<input id="base-url"
 					v-model="state.client_key"
-					type="text"
+					type="password"
 					:placeholder="t('integration_nuiteq', 'Client key')"
 					@input="onInput">
 				<p class="settings-hint">

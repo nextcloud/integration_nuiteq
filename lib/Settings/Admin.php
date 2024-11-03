@@ -15,19 +15,10 @@ use OCP\Settings\ISettings;
 
 class Admin implements ISettings {
 
-	/**
-	 * @var IConfig
-	 */
-	private $config;
-	/**
-	 * @var IInitialState
-	 */
-	private $initialStateService;
-
-	public function __construct(IConfig $config,
-		IInitialState $initialStateService) {
-		$this->config = $config;
-		$this->initialStateService = $initialStateService;
+	public function __construct(
+		private IConfig $config,
+		private IInitialState $initialStateService,
+	) {
 	}
 
 	/**
@@ -39,7 +30,7 @@ class Admin implements ISettings {
 
 		$adminConfig = [
 			'base_url' => $baseUrl,
-			'client_key' => $clientKey,
+			'client_key' => $clientKey !== '' ? 'dummySecret' : '',
 		];
 		$this->initialStateService->provideInitialState('admin-config', $adminConfig);
 		return new TemplateResponse(Application::APP_ID, 'adminSettings');

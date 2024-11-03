@@ -11,7 +11,7 @@
 
 This app provides a simple interface to list, create and share NUITEQ Stage whiteboards.
 ]]></description>
-	<version>1.0.7</version>
+	<version>1.0.8</version>
 	<licence>agpl</licence>
 	<author>Julien Veyssier</author>
 	<namespace>Nuiteq</namespace>
