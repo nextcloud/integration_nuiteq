@@ -50,7 +50,7 @@ OC.L10N.register(
     "Connect to NUITEQ Stage" : "Conectar a NUITEQ Stage",
     "Connected as {user}" : "Conectado como {user}",
     "Disconnect from NUITEQ" : "Desconectarse de NUITEQ",
-    "Successfully connected to NUITEQ!" : "¡Conectado exitósamente a NUITEQ!",
+    "Successfully connected to NUITEQ!" : "¡Se ha conectado correctamente a NUITEQ!",
     "Nuiteq options saved" : "Opciones de Nuiteq guardadas",
     "Failed to save NUITEQ options" : "Fallo al guardar opciones NUITEQ",
     "Send link to a Talk room" : "Enviar enlace a sala de Talk",
