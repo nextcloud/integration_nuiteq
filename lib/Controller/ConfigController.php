@@ -10,6 +10,7 @@ use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\PasswordConfirmationRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
 use OCP\IRequest;
@@ -43,6 +44,9 @@ class ConfigController extends Controller {
 
 		foreach ($values as $key => $value) {
 			if (in_array($key, ['client_key']) && $value !== '') {
+				if ($value === 'dummySecret') {
+					continue;
+				}
 				$value = $this->crypto->encrypt($value);
 			}
 			$this->config->setUserValue($this->userId, Application::APP_ID, $key, $value);
@@ -56,6 +60,7 @@ class ConfigController extends Controller {
 	 * @param array $values
 	 * @return DataResponse
 	 */
+	#[PasswordConfirmationRequired]
 	public function setAdminConfig(array $values): DataResponse {
 		foreach ($values as $key => $value) {
 			if (in_array($key, ['client_key']) && $value !== '') {

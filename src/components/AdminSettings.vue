@@ -53,6 +53,7 @@ import ServerIcon from 'vue-material-design-icons/Server.vue'
 import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
 import KeyIcon from 'vue-material-design-icons/Key.vue'
 import NuiteqIcon from './icons/NuiteqIcon.vue'
+import { confirmPassword } from '@nextcloud/password-confirmation'
 
 export default {
 	name: 'AdminSettings',
@@ -82,15 +83,19 @@ export default {
 		onInput() {
 			const that = this
 			delay(() => {
-				that.saveOptions()
+				const values = {
+					base_url: this.state.base_url,
+				}
+				if (this.state.client_key !== 'dummySecret') {
+					values.client_key = this.state.client_key
+				}
+				that.saveOptions(values)
 			}, 2000)()
 		},
-		saveOptions() {
+		async saveOptions(values) {
+			await confirmPassword()
 			const req = {
-				values: {
-					base_url: this.state.base_url,
-					client_key: this.state.client_key,
-				},
+				values,
 			}
 			const url = generateUrl('/apps/integration_nuiteq/admin-config')
 			axios.put(url, req).then((response) => {
