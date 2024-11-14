@@ -15,25 +15,11 @@ use OCP\Settings\ISettings;
 
 class Personal implements ISettings {
 
-	/**
-	 * @var IConfig
-	 */
-	private $config;
-	/**
-	 * @var IInitialState
-	 */
-	private $initialStateService;
-	/**
-	 * @var string|null
-	 */
-	private $userId;
-
-	public function __construct(IConfig $config,
-		IInitialState $initialStateService,
-		?string $userId) {
-		$this->config = $config;
-		$this->initialStateService = $initialStateService;
-		$this->userId = $userId;
+	public function __construct(
+		private IConfig $config,
+		private IInitialState $initialStateService,
+		private ?string $userId,
+	) {
 	}
 
 	/**
@@ -50,7 +36,7 @@ class Personal implements ISettings {
 		$userConfig = [
 			'base_url' => $baseUrl,
 			'user_name' => $apiKey ? $userName : '',
-			'client_key' => $clientKey,
+			'client_key' => $clientKey !== '' ? 'dummySecret' : '',
 		];
 		$this->initialStateService->provideInitialState('nuiteq-state', $userConfig);
 		return new TemplateResponse(Application::APP_ID, 'personalSettings');

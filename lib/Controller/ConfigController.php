@@ -10,49 +10,23 @@ use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute\PasswordConfirmationRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
-use OCP\IL10N;
 use OCP\IRequest;
-
-use OCP\IURLGenerator;
+use OCP\Security\ICrypto;
 
 class ConfigController extends Controller {
 
-	/**
-	 * @var IConfig
-	 */
-	private $config;
-	/**
-	 * @var IURLGenerator
-	 */
-	private $urlGenerator;
-	/**
-	 * @var IL10N
-	 */
-	private $l;
-	/**
-	 * @var string|null
-	 */
-	private $userId;
-	/**
-	 * @var NuiteqAPIService
-	 */
-	private $nuiteqAPIService;
-
-	public function __construct(string $appName,
+	public function __construct(
+		string $appName,
 		IRequest $request,
-		IConfig $config,
-		IURLGenerator $urlGenerator,
-		NuiteqAPIService $nuiteqAPIService,
-		IL10N $l,
-		?string $userId) {
+		private IConfig $config,
+		private NuiteqAPIService $nuiteqAPIService,
+		private ICrypto $crypto,
+		private ?string $userId,
+	) {
 		parent::__construct($appName, $request);
-		$this->config = $config;
-		$this->urlGenerator = $urlGenerator;
-		$this->l = $l;
-		$this->userId = $userId;
-		$this->nuiteqAPIService = $nuiteqAPIService;
 	}
 
 	/**
@@ -69,6 +43,12 @@ class ConfigController extends Controller {
 		}
 
 		foreach ($values as $key => $value) {
+			if (in_array($key, ['client_key']) && $value !== '') {
+				if ($value === 'dummySecret') {
+					continue;
+				}
+				$value = $this->crypto->encrypt($value);
+			}
 			$this->config->setUserValue($this->userId, Application::APP_ID, $key, $value);
 		}
 		return new DataResponse('');
@@ -80,8 +60,12 @@ class ConfigController extends Controller {
 	 * @param array $values
 	 * @return DataResponse
 	 */
+	#[PasswordConfirmationRequired]
 	public function setAdminConfig(array $values): DataResponse {
 		foreach ($values as $key => $value) {
+			if (in_array($key, ['client_key']) && $value !== '') {
+				$value = $this->crypto->encrypt($value);
+			}
 			$this->config->setAppValue(Application::APP_ID, $key, $value);
 		}
 		return new DataResponse('');

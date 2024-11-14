@@ -14,44 +14,26 @@ use OCP\AppFramework\Http;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
 class NuiteqAPIService {
-	/**
-	 * @var string
-	 */
-	private $appName;
-	/**
-	 * @var LoggerInterface
-	 */
-	private $logger;
-	/**
-	 * @var IL10N
-	 */
-	private $l10n;
-	/**
-	 * @var \OCP\Http\Client\IClient
-	 */
-	private $client;
-	/**
-	 * @var IConfig
-	 */
-	private $config;
+
+	private \OCP\Http\Client\IClient $client;
 
 	/**
 	 * Service to make requests to Nuiteq Stage API
 	 */
-	public function __construct(string $appName,
-		LoggerInterface $logger,
-		IL10N $l10n,
-		IConfig $config,
-		IClientService $clientService) {
-		$this->appName = $appName;
-		$this->logger = $logger;
-		$this->l10n = $l10n;
+	public function __construct(
+		private string $appName,
+		private LoggerInterface $logger,
+		private IL10N $l10n,
+		private IConfig $config,
+		private ICrypto $crypto,
+		IClientService $clientService,
+	) {
 		$this->client = $clientService->newClient();
-		$this->config = $config;
 	}
 
 	/**
@@ -60,7 +42,13 @@ class NuiteqAPIService {
 	 */
 	private function getClientKey(string $userId): string {
 		$adminClientKey = $this->config->getAppValue(Application::APP_ID, 'client_key', Application::DEFAULT_CLIENT_KEY) ?: Application::DEFAULT_CLIENT_KEY;
-		return $this->config->getUserValue($userId, Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
+		$clientKey = $this->config->getUserValue($userId, Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
+
+		// Decrypt the clientKey if it's encrypted
+		if ($clientKey !== Application::DEFAULT_CLIENT_KEY) {
+			$clientKey = $this->crypto->decrypt($clientKey);
+		}
+		return $clientKey;
 	}
 
 	/**
