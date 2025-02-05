@@ -10,6 +10,7 @@
     "Password" : "Parool",
     "Users" : "Kasutajad",
     "Groups" : "Grupid",
-    "Send" : "Saada"
+    "Send" : "Saada",
+    "You joined {name}" : "Liitusid {name}-ga"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
