@@ -1,8 +1,10 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad credentials" : "Forkerte legitimationsoplysninger",
+    "Invalid credentials" : "Ugyldige legitimationsoplysninger",
     "Connected accounts" : "Forbundne konti",
-    "Client key" : "Klient nøgle",
+    "Client key" : "Klientnøgle",
     "Open here" : "Åbn her",
     "Open in a new tab" : "Åbn i en ny fane",
     "Copy to clipboard" : "Kopier til udklipsholder",
@@ -13,8 +15,8 @@ OC.L10N.register(
     "Choose color" : "Vælg farve",
     "Cancel" : "Annuller",
     "Create" : "Opret",
-    "client key" : "klient nøgle",
-    "Login" : "Login",
+    "client key" : "klientnøgle",
+    "Login" : "Log på",
     "Password" : "Adgangskode",
     "Connected as {user}" : "Forbundet som {user}",
     "Conversations" : "Samtaler",
@@ -22,6 +24,6 @@ OC.L10N.register(
     "Groups" : "Grupper",
     "Send" : "Send",
     "Link sent to {name}" : "Link sendt til {name}",
-    "Board name" : "Tavle navn"
+    "Board name" : "Tavlenavn"
 },
 "nplurals=2; plural=(n != 1);");

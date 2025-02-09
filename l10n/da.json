@@ -1,6 +1,8 @@
 { "translations": {
+    "Bad credentials" : "Forkerte legitimationsoplysninger",
+    "Invalid credentials" : "Ugyldige legitimationsoplysninger",
     "Connected accounts" : "Forbundne konti",
-    "Client key" : "Klient nøgle",
+    "Client key" : "Klientnøgle",
     "Open here" : "Åbn her",
     "Open in a new tab" : "Åbn i en ny fane",
     "Copy to clipboard" : "Kopier til udklipsholder",
@@ -11,8 +13,8 @@
     "Choose color" : "Vælg farve",
     "Cancel" : "Annuller",
     "Create" : "Opret",
-    "client key" : "klient nøgle",
-    "Login" : "Login",
+    "client key" : "klientnøgle",
+    "Login" : "Log på",
     "Password" : "Adgangskode",
     "Connected as {user}" : "Forbundet som {user}",
     "Conversations" : "Samtaler",
@@ -20,6 +22,6 @@
     "Groups" : "Grupper",
     "Send" : "Send",
     "Link sent to {name}" : "Link sendt til {name}",
-    "Board name" : "Tavle navn"
+    "Board name" : "Tavlenavn"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
