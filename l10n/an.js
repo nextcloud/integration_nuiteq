@@ -4,9 +4,9 @@ OC.L10N.register(
     "Enabled" : "Activau",
     "Disabled" : "Desactivau",
     "Delete" : "Borrar",
-    "Cancel" : "Canzelar",
+    "Cancel" : "Cancelar",
     "Create" : "Crear",
-    "Login" : "Inizio de sesión",
+    "Login" : "Inicio de sesión",
     "Password" : "Clau",
     "Users" : "Usuarios",
     "Groups" : "Grupos"
