@@ -5,6 +5,8 @@ OC.L10N.register(
     "Bad credentials" : "Forkerte legitimationsoplysninger",
     "Invalid credentials" : "Ugyldige legitimationsoplysninger",
     "Connected accounts" : "Forbundne konti",
+    "NUITEQ Stage whiteboard integration" : "NUITEQ Stage whiteboard integration",
+    "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage oprette en naturlig interaktion mellem deltagere i et moderne møde ved at sammensmelte oplevelsen af at være kreative sammen på et whiteboard og diskutere i et video opkald og chat. Forbered og upload filer og præsentationer, del dem med andre i mødet. Designet til førstehånds samarbejde for at engagere teammedlemmer - NUITEQ Stage er sikker, nemt og effektivt at anvende.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards.",
     "Client key" : "Klientnøgle",
     "Open here" : "Åbn her",
     "Open in a new tab" : "Åbn i en ny fane",
