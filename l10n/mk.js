@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "Bad credentials" : "Неточни акредитиви",
     "Connected accounts" : "Поврзани сметки",
+    "Public link copied!" : "Јавниот линк е копиран!",
     "Copy to clipboard" : "Копирај во клипборд",
     "Enabled" : "Овозможено",
     "Disabled" : "Оневозможено",
-    "Public link copied!" : "Јавниот линк е копиран!",
     "Delete" : "Избриши",
     "Cancel" : "Откажи",
     "Create" : "Креирај",

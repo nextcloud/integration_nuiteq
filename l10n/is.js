@@ -3,10 +3,10 @@ OC.L10N.register(
     {
     "Bad credentials" : "Gölluð auðkenni",
     "Connected accounts" : "Tengdir aðgangar",
+    "Public link copied!" : "Opinber tengill afritaður!",
     "Copy to clipboard" : "Afrita á klippispjald",
     "Enabled" : "Virkt",
     "Disabled" : "Óvirkt",
-    "Public link copied!" : "Opinber tengill afritaður!",
     "Delete" : "Eyða",
     "Cancel" : "Hætta við",
     "Create" : "Búa til",
