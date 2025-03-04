@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Κακή μέθοδος HTTP",
     "Bad credentials" : "Εσφαλμένα διαπιστευτήρια",
+    "Invalid response" : "Μη έγκυρη απάντηση",
+    "Invalid credentials" : "Μη έγκυρα διαπιστευτήρια",
     "Connected accounts" : "Συνδεδεμένοι λογαριασμοί",
     "Link could not be copied to clipboard" : "Ο σύνδεσμος δεν μπόρεσε να αντιγραφεί στο πρόχειρο",
     "Copy to clipboard" : "Αντιγραφή στο πρόχειρο",
