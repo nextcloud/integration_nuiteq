@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Nederīgs HTTP pieprasījuma veids",
     "Bad credentials" : "Nederīgi pieteikšanās dati",
-    "Connected accounts" : "Savienotie konti",
+    "Connected accounts" : "Sasaistītie konti",
     "Public link copied!" : "Publiskā saite nokopēta!",
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Enabled" : "Iespējots",
