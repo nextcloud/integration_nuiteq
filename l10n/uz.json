@@ -1,6 +1,7 @@
 { "translations": {
     "Delete" : "Delete",
     "Cancel" : "Cancel",
+    "Create" : "Yaratish",
     "Login" : "Login",
     "Password" : "Password",
     "Users" : "Users",
