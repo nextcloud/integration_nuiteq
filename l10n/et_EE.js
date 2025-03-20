@@ -11,6 +11,7 @@ OC.L10N.register(
     "Login" : "Logi sisse",
     "Password" : "Parool",
     "You joined {name}" : "Liitusid {name}-ga",
+    "Conversations" : "Vestlused",
     "Users" : "Kasutajad",
     "Groups" : "Grupid",
     "Send" : "Saada"
