@@ -1,6 +1,11 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Vigane HTTP-meetod",
+    "Bad credentials" : "Vale kasutajanimi, salasõna või tunnusluba",
+    "Invalid response" : "Vigane vastus",
+    "Invalid credentials" : "Vigane kasutajanimi, salasõna või tunnusluba",
+    "Connected accounts" : "Ühendatud kasutajakontod",
     "Public link copied!" : "Avalik link kopeeritud!",
     "Copy to clipboard" : "Kopeeri lõikepuhvrisse",
     "Enabled" : "Lubatud",
@@ -10,6 +15,7 @@ OC.L10N.register(
     "Create" : "Loo",
     "Login" : "Logi sisse",
     "Password" : "Parool",
+    "Connected as {user}" : "Ühendatud kui {user}",
     "You joined {name}" : "Liitusid {name}-ga",
     "Conversations" : "Vestlused",
     "Users" : "Kasutajad",
