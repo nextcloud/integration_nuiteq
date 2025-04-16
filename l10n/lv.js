@@ -10,7 +10,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Kopēt starpliktuvē",
     "Enabled" : "Iespējots",
     "Disabled" : "Atspējots",
-    "Delete" : "Dzēst",
+    "Delete" : "Izdzēst",
     "Cancel" : "Atcelt",
     "Create" : "Izveidot",
     "Login" : "Autorizēties",
