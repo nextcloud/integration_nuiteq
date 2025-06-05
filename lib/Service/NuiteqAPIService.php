@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -133,7 +134,7 @@ class NuiteqAPIService {
 					foreach ($params as $key => $value) {
 						if (is_array($value)) {
 							foreach ($value as $oneArrayValue) {
-								$paramsContent .= $key . '[]=' . urlencode($oneArrayValue) . '&';
+								$paramsContent .= (string)$key . '[]=' . urlencode($oneArrayValue) . '&';
 							}
 							unset($params[$key]);
 						}
@@ -166,7 +167,7 @@ class NuiteqAPIService {
 				try {
 					return json_decode($body, true);
 				} catch (Exception|Throwable $e) {
-					$this->logger->warning('NUITEQ invalid request response : '.$e->getMessage(), ['app' => $this->appName]);
+					$this->logger->warning('NUITEQ invalid request response : ' . $e->getMessage(), ['app' => $this->appName]);
 					return ['error' => $this->l10n->t('Invalid response')];
 				}
 			}
@@ -181,7 +182,7 @@ class NuiteqAPIService {
 			}
 			return ['error' => $e->getMessage()];
 		} catch (Exception|Throwable $e) {
-			$this->logger->warning('Nuiteq API error : '.$e->getMessage(), ['app' => $this->appName]);
+			$this->logger->warning('Nuiteq API error : ' . $e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
 	}
@@ -219,7 +220,7 @@ class NuiteqAPIService {
 				try {
 					return json_decode($body, true);
 				} catch (Exception|Throwable $e) {
-					$this->logger->warning('NUITEQ invalid login response : '.$e->getMessage(), ['app' => $this->appName]);
+					$this->logger->warning('NUITEQ invalid login response : ' . $e->getMessage(), ['app' => $this->appName]);
 					return ['error' => $this->l10n->t('Invalid response')];
 				}
 			}
@@ -234,7 +235,7 @@ class NuiteqAPIService {
 			}
 			return ['error' => $e->getMessage()];
 		} catch (Exception|Throwable $e) {
-			$this->logger->warning('NUITEQ login error : '.$e->getMessage(), ['app' => $this->appName]);
+			$this->logger->warning('NUITEQ login error : ' . $e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
 	}

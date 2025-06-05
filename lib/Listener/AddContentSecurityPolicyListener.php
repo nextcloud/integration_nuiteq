@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -13,7 +14,11 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
 
+/**
+ * @implements IEventListener<AddContentSecurityPolicyEvent|Event>
+ */
 class AddContentSecurityPolicyListener implements IEventListener {
+
 	/**
 	 * @var IConfig
 	 */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -17,10 +18,10 @@ class NuiteqAPIController extends Controller {
 	private NuiteqAPIService $nuiteqAPIService;
 
 	public function __construct(
-		string            $appName,
-		IRequest          $request,
-		NuiteqAPIService  $nuiteqAPIService,
-		private ?string   $userId,
+		string $appName,
+		IRequest $request,
+		NuiteqAPIService $nuiteqAPIService,
+		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
 		$this->nuiteqAPIService = $nuiteqAPIService;

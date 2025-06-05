@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
@@ -43,7 +44,7 @@ class Application extends App implements IBootstrap {
 		$context->injectFn(function (
 			IInitialState $initialState,
 			IConfig $config,
-			?string $userId
+			?string $userId,
 		) {
 			$adminBaseUrl = $config->getAppValue(Application::APP_ID, 'base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
 			if ($userId === null) {
