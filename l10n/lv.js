@@ -14,7 +14,7 @@ OC.L10N.register(
     "Delete" : "Izdzēst",
     "Cancel" : "Atcelt",
     "Create" : "Izveidot",
-    "Login" : "Pieteikumvārds",
+    "Login" : "Pieteikties",
     "Password" : "Parole",
     "Users" : "Lietotāji",
     "Groups" : "Grupas",

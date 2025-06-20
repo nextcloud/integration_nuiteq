@@ -5,6 +5,8 @@ OC.L10N.register(
     "Delete" : "Futa",
     "Cancel" : "Cancel",
     "Create" : "Tengeneza",
+    "Login" : "Ingia",
+    "Password" : "Nenosiri",
     "Board name" : "Jina la bodi"
 },
 "nplurals=2; plural=(n != 1);");
