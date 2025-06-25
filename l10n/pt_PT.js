@@ -3,6 +3,7 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Método HTTP incorreto",
     "Bad credentials" : "Credenciais inválidas",
+    "Public link copied!" : "Public link copied!",
     "Copy to clipboard" : "Copiar para área de transferência",
     "Enabled" : "Ativado",
     "Disabled" : "Desativado",
