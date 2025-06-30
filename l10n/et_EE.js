@@ -39,6 +39,7 @@ OC.L10N.register(
     "Conversations" : "Vestlused",
     "Users" : "Kasutajad",
     "Groups" : "Grupid",
-    "Send" : "Saada"
+    "Send" : "Saada",
+    "Board name" : "Tahvli nimi"
 },
 "nplurals=2; plural=(n != 1);");
