@@ -16,6 +16,7 @@ OC.L10N.register(
     "Conversations" : "Mazungumzo",
     "Users" : "Watumiaji",
     "Groups" : "Makundi",
+    "Send" : "Tuma",
     "Board name" : "Jina la bodi"
 },
 "nplurals=2; plural=(n != 1);");
