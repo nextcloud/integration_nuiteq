@@ -54,7 +54,7 @@ OC.L10N.register(
     "Connected as {user}" : "{user} olarak bağlantı kuruldu",
     "Disconnect from NUITEQ" : "NUITEQ bağlantısını kes",
     "You created a conversation with {name}" : "{name} adıyla bir görüşme oluşturdunuz",
-    "Failed to join" : "Katılınamadı",
+    "Failed to join" : "Girilemedi",
     "You joined {name}" : "{name} görüşmesine katıldınız",
     "NUITEQ board \"{name}\": {link}" : "NUITEQ panosu \"{name}\": {link}",
     "Link sent to {name}" : "{name} için bağlantı gönderildi",
