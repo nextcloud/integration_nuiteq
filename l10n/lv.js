@@ -16,6 +16,7 @@ OC.L10N.register(
     "Create" : "Izveidot",
     "Login" : "Pieteikumvārds",
     "Password" : "Parole",
+    "Connected as {user}" : "Savienojies kā {user}",
     "Users" : "Lietotāji",
     "Groups" : "Grupas",
     "Send" : "Sūtīt"
