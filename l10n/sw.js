@@ -14,6 +14,7 @@ OC.L10N.register(
     "Login" : "Ingia",
     "Password" : "Nenosiri",
     "Connected as {user}" : "Imeunganishwa kama {user}",
+    "You joined {name}" : "You joined {name}",
     "Conversations" : "Mazungumzo",
     "Users" : "Watumiaji",
     "Groups" : "Makundi",
