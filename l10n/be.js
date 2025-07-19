@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Copy to clipboard" : "Капіяваць у буфер абмену",
     "Delete" : "Delete",
-    "Cancel" : "Cancel",
+    "Cancel" : "Скасаваць",
     "Login" : "Login",
     "Password" : "Password"
 },
