@@ -4,6 +4,7 @@ OC.L10N.register(
     "Copy to clipboard" : "Капіяваць у буфер абмену",
     "Delete" : "Выдаліць",
     "Cancel" : "Скасаваць",
+    "Create" : "Стварыць",
     "Login" : "Лагін",
     "Password" : "Пароль"
 },
