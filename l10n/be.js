@@ -8,6 +8,7 @@ OC.L10N.register(
     "Login" : "Лагін",
     "Password" : "Пароль",
     "You joined {name}" : "Вы далучыліся да {name}",
+    "Users" : "Карыстальнікі",
     "Groups" : "Групы",
     "Send" : "Адправіць"
 },
