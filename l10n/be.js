@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Public link copied!" : "Публічная спасылка скапіявана!",
     "Copy to clipboard" : "Капіяваць у буфер абмену",
     "Delete" : "Выдаліць",
     "Cancel" : "Скасаваць",
