@@ -15,7 +15,7 @@ OC.L10N.register(
     "Failed to create new board" : "Produciuse un erro ao crear o novo encerado",
     "Failed to delete the board" : "Produciuse un erro ao eliminar o taboleiro",
     "{name} deleted" : "{name} foi eliminado",
-    "You are not connected to NUITEQ Stage" : "No está conectado a NUITEQ Stage",
+    "You are not connected to NUITEQ Stage" : "Vde. non está conectado a NUITEQ Stage",
     "You haven't created any boards yet" : "Aínda non creou ningún encerado",
     "Create a board" : "Crear un encerado",
     "No selected board" : "Non seleccionou ningún encerado",
