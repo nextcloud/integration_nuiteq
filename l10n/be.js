@@ -6,6 +6,7 @@ OC.L10N.register(
     "Open here" : "Адкрыць тут",
     "Open in a new tab" : "Адкрыць у новай укладцы",
     "Copy to clipboard" : "Капіяваць у буфер абмену",
+    "Disabled" : "Адключана",
     "Delete" : "Выдаліць",
     "Choose color" : "Выберыце колер",
     "Cancel" : "Скасаваць",
