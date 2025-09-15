@@ -7,6 +7,7 @@ OC.L10N.register(
     "Invalid credentials" : "Virheelliset kirjautumistiedot",
     "Connected accounts" : "Yhdistetyt tilit",
     "Public link copied!" : "Julkinen linkki kopioitu!",
+    "Link could not be copied to clipboard" : "Linkkiä ei voitu kopioida leikepöydälle",
     "Copy to clipboard" : "Kopioi leikepöydälle",
     "Enabled" : "Käytössä",
     "Disabled" : "Pois käytöstä",
