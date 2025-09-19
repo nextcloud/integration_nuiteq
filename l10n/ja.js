@@ -14,6 +14,7 @@ OC.L10N.register(
     "Login" : "ログイン",
     "Password" : "パスワード",
     "Connected as {user}" : "{user} に接続済み",
+    "You created a conversation with {name}" : "{name}との会話を作成しました",
     "Conversations" : "会話",
     "Users" : "ユーザー",
     "Groups" : "グループ",
