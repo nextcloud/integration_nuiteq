@@ -1,7 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
-    "Copy to clipboard" : "Copier dans le presse-papiers",
+    "Copy to clipboard" : "Nɣel-it ar tecfawit",
     "Enabled" : "Yermed",
     "Disabled" : "Ittwarermed",
     "Delete" : "Kkes",
@@ -9,6 +9,7 @@ OC.L10N.register(
     "Create" : "Snulfu-d",
     "Login" : "Aseqdac",
     "Password" : "Awal uffir",
+    "Connected as {user}" : "D uqqin am {user}",
     "Conversations" : "Idiwenniyen",
     "Users" : "Iseqdacen",
     "Groups" : "Igrawen",
