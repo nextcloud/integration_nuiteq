@@ -13,6 +13,7 @@ OC.L10N.register(
     "Login" : "Најава",
     "Password" : "Лозинка",
     "Connected as {user}" : "Поврзан како {user}",
+    "You joined {name}" : "Се приклучивте кон тимот {name}",
     "Conversations" : "Разговори",
     "Users" : "Корисници",
     "Groups" : "Групи",
