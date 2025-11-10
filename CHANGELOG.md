@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.1.1 - 2025-11-10
+### Changed
+- Added support for NC 33
+- Updated dependencies & translations
+
 ## 1.1.0 - 2025-07-10
 ### Changed
 - Added support for NC 32, removed support for NC 28/29 [#17](https://github.com/nextcloud/integration_nuiteq/pull/17)
