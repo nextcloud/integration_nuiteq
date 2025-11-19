@@ -1,11 +1,17 @@
 { "translations": {
     "Copy to clipboard" : "ສຳເນົາໃສ່ຄລິບບອດ",
+    "Enabled" : "Enabled",
+    "Disabled" : "Disabled",
     "Delete" : "ລຶບ",
     "Cancel" : "ຍົກເລີກ",
     "Create" : "ສ້າງ",
     "Login" : "ເຂົ້າສູ່ລະບົບ",
     "Password" : "ລະຫັດຜ່ານ",
+    "You joined {name}" : "You joined {name}",
+    "Conversations" : "Conversations",
     "Users" : "ຜູ້ໃຊ້",
-    "Send" : "ສົ່ງ"
+    "Groups" : "ກຸ່ມ",
+    "Send" : "ສົ່ງ",
+    "Board name" : "Board name"
 },"pluralForm" :"nplurals=1; plural=0;"
 }
