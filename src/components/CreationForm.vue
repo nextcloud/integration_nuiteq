@@ -72,7 +72,7 @@
 						:model-value="newBoard[fieldId]"
 						@input="updateColor($event, fieldId)">
 						<NcButton
-							v-tooltip.top="{ content: t('integration_nuiteq', 'Choose color') }"
+							:title="t('integration_nuiteq', 'Choose color')"
 							:style="{ backgroundColor: newBoard[fieldId] }" />
 					</NcColorPicker>
 				</div>
