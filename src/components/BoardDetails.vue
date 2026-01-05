@@ -187,7 +187,7 @@ import ClippyIcon from './icons/ClippyIcon.vue'
 import SendModal from './talk/SendModal.vue'
 // import NuiteqModal from './NuiteqModal'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { fields, Timer } from '../utils.js'

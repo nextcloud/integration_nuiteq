@@ -12,7 +12,7 @@
 			:name="name"
 			:border-radius="borderRadius"
 			@update:checked="onUpdateValue">
-			<template v-if="$scopedSlots.icon || option.icon" #icon>
+			<template v-if="$slots.icon || option.icon" #icon>
 				<slot name="icon" :option="option">
 					<component :is="option.icon"
 						v-if="option.icon" />

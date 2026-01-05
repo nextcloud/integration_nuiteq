@@ -18,8 +18,8 @@
 						v-if="field.icon"
 						:size="20" />
 					<NcCheckboxRadioSwitch v-if="field.togglable"
-						:checked.sync="field.enabled"
-						@update:checked="newBoard[fieldId] = ''">
+						v-model="field.enabled"
+						@update:model-value="newBoard[fieldId] = ''">
 						{{ field.label }}
 					</NcCheckboxRadioSwitch>
 					<label v-else
@@ -69,7 +69,7 @@
 					:confirm="true" />
 				<div v-else-if="field.type === 'ncColor'">
 					<NcColorPicker
-						:value="newBoard[fieldId]"
+						:model-value="newBoard[fieldId]"
 						@input="updateColor($event, fieldId)">
 						<NcButton
 							v-tooltip.top="{ content: t('integration_nuiteq', 'Choose color') }"
@@ -77,11 +77,11 @@
 					</NcColorPicker>
 				</div>
 				<NcSelect v-else-if="field.type === 'select'"
-					:value="newBoard[fieldId]"
+					:model-value="newBoard[fieldId]"
 					:options="Object.values(field.options)"
 					label="label"
 					:placeholder="field.placeholder"
-					@input="setSelectValue(fieldId, $event)"
+					@update:model-value="setSelectValue(fieldId, $event)"
 					@search-change="query = $event">
 					<template #option="{option}">
 						<component :is="option.icon"
@@ -115,7 +115,7 @@
 				<div v-else-if="field.type === 'ncRadioSet'">
 					<NcCheckboxRadioSwitch v-for="(option, id) in field.options"
 						:key="id"
-						:checked.sync="newBoard[fieldId]"
+						v-model="newBoard[fieldId]"
 						:value="id"
 						:name="fieldId + '_radio'"
 						type="radio"
@@ -132,7 +132,7 @@
 				<div v-else-if="field.type === 'ncCheckboxSet'">
 					<NcCheckboxRadioSwitch v-for="(option, id) in field.options"
 						:key="id"
-						:checked.sync="newBoard[fieldId]"
+						v-model="newBoard[fieldId]"
 						:value="id"
 						:name="fieldId + '_checkbox'"
 						class="ncradio">
@@ -147,7 +147,7 @@
 				</div>
 				<div v-else-if="field.type === 'ncSwitch'">
 					<NcCheckboxRadioSwitch
-						:checked.sync="newBoard[fieldId]"
+						v-model="newBoard[fieldId]"
 						type="switch"
 						class="ncradio">
 						<component :is="field.icon"
@@ -159,7 +159,7 @@
 				</div>
 				<div v-else-if="field.type === 'ncCheckbox'">
 					<NcCheckboxRadioSwitch
-						:checked.sync="newBoard[fieldId]"
+						v-model="newBoard[fieldId]"
 						class="ncradio">
 						<component :is="field.icon"
 							v-if="field.icon"
@@ -191,12 +191,12 @@ import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
 import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
-import NcDateTimePicker from '@nextcloud/vue/dist/Components/NcDateTimePicker.js'
-import NcHighlight from '@nextcloud/vue/dist/Components/NcHighlight.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
+import NcHighlight from '@nextcloud/vue/components/NcHighlight'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 
 import { showError } from '@nextcloud/dialogs'
 
