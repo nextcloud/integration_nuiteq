@@ -11,48 +11,50 @@
 				{{ t('integration_nuiteq', 'Nuiteq integration') }}
 			</label>
 		</h2>
-		<div class="fields">
-			<div class="field">
-				<ServerIcon :size="20" />
-				<label for="base-url">
-					{{ t('integration_nuiteq', 'Default NUITEQ Stage URL for users') }}
-				</label>
-				<input id="base-url"
-					v-model="state.base_url"
-					type="text"
-					placeholder="https://nuiteqstage.se"
-					@input="onInput">
-			</div>
-			<div class="field">
-				<KeyIcon :size="20" />
-				<label for="base-url">
-					{{ t('integration_nuiteq', 'Default NUITEQ Stage client key for users') }}
-				</label>
-				<input id="base-url"
-					v-model="state.client_key"
-					type="password"
-					:placeholder="t('integration_nuiteq', 'Client key')"
-					@input="onInput">
-				<p class="settings-hint">
-					<InformationOutlineIcon :size="20" />
-					{{ t('integration_nuiteq', 'Leave this empty to use the default client key.') }}
-				</p>
-			</div>
+		<div class="nuiteq-content">
+			<NcTextField
+				v-model="state.base_url"
+				:label="t('integration_nuiteq', 'Default NUITEQ Stage URL for users')"
+				placeholder="https://nuiteqstage.se"
+				:show-trailing-button="!!state.base_url"
+				@trailing-button-click="state.base_url = ''; onInput()"
+				@update:model-value="onInput">
+				<template #icon>
+					<ServerOutlineIcon :size="20" />
+				</template>
+			</NcTextField>
+			<NcTextField
+				v-model="state.client_key"
+				type="password"
+				:label="t('integration_nuiteq', 'Default NUITEQ Stage client key for users')"
+				:placeholder="t('integration_nuiteq', 'Client key')"
+				:show-trailing-button="!!state.client_key"
+				@trailing-button-click="state.client_key = ''; onInput()"
+				@update:model-value="onInput">
+				<template #icon>
+					<KeyOutlineIcon :size="20" />
+				</template>
+			</NcTextField>
+			<NcNoteCard type="info">
+				{{ t('integration_nuiteq', 'Leave this empty to use the default client key.') }}
+			</NcNoteCard>
 		</div>
 	</div>
 </template>
 
 <script>
+import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
+import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
+import NuiteqIcon from './icons/NuiteqIcon.vue'
+
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
+
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 import { delay } from '../utils.js'
 import { showSuccess, showError } from '@nextcloud/dialogs'
-
-import ServerIcon from 'vue-material-design-icons/Server.vue'
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
-import KeyIcon from 'vue-material-design-icons/Key.vue'
-import NuiteqIcon from './icons/NuiteqIcon.vue'
 import { confirmPassword } from '@nextcloud/password-confirmation'
 
 export default {
@@ -60,9 +62,10 @@ export default {
 
 	components: {
 		NuiteqIcon,
-		ServerIcon,
-		InformationOutlineIcon,
-		KeyIcon,
+		ServerOutlineIcon,
+		KeyOutlineIcon,
+		NcNoteCard,
+		NcTextField,
 	},
 
 	props: [],
@@ -116,38 +119,17 @@ export default {
 #nuiteq_prefs {
 	h2 {
 		display: flex;
-		label {
-			margin-left: 8px;
-		}
+		align-items: center;
+		gap: 8px;
+		justify-content: start;
 	}
 
-	.fields {
+	.nuiteq-content {
+		margin-left: 40px;
 		display: flex;
 		flex-direction: column;
-
-		.field {
-			display: flex;
-			align-items: center;
-			margin: 5px 0 5px 0;
-
-			> * {
-				margin: 0 5px 0 5px;
-			}
-
-			label {
-				width: 300px;
-			}
-
-			input {
-				width: 200px;
-			}
-		}
-	}
-	.settings-hint {
-		display: flex;
-		> * {
-			margin: 0 4px;
-		}
+		gap: 4px;
+		max-width: 800px;
 	}
 }
 
