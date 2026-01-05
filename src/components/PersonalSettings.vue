@@ -108,7 +108,7 @@ import KeyIcon from 'vue-material-design-icons/Key.vue'
 
 import NuiteqIcon from './icons/NuiteqIcon.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
@@ -190,7 +190,7 @@ export default {
 				} else {
 					showError(
 						t('integration_nuiteq', 'Failed to save NUITEQ options')
-						+ ': ' + (error.response?.request?.responseText ?? '')
+						+ ': ' + (error.response?.request?.responseText ?? ''),
 					)
 				}
 				console.error(error)

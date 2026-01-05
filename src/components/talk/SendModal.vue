@@ -115,10 +115,10 @@ import SendIcon from 'vue-material-design-icons/Send.vue'
 
 import TalkIcon from './TalkIcon.vue'
 
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NcAvatar from '@nextcloud/vue/dist/Components/NcAvatar.js'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcListItem from '@nextcloud/vue/dist/Components/NcListItem.js'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcListItem from '@nextcloud/vue/components/NcListItem'
 
 import { showSuccess, showError } from '@nextcloud/dialogs'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -336,7 +336,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to join')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 				this.sending = false
@@ -357,7 +357,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to join')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 				this.sending = false
@@ -380,7 +380,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to send link')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 			}).then(() => {

@@ -103,7 +103,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to save Nuiteq admin options')
-						+ ': ' + (error.response?.request?.responseText ?? '')
+						+ ': ' + (error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 			})
