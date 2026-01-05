@@ -54,7 +54,7 @@
 					<div class="rightPart linkInputWrapper">
 						<input type="text" :readonly="true" :value="publicLink">
 						<a :href="publicLink" @click.prevent.stop="copyLink(false)">
-							<NcButton v-tooltip.bottom="{ content: t('integration_nuiteq', 'Copy to clipboard') }">
+							<NcButton :title="t('integration_nuiteq', 'Copy to clipboard')">
 								<template #icon>
 									<CheckIcon v-if="publicLinkCopied"
 										class="copiedIcon"
@@ -266,7 +266,7 @@ export default {
 		async copyLink() {
 			const link = this.publicLink
 			try {
-				await this.$copyText(link)
+				await navigator.clipboard.writeText(link)
 				this.publicLinkCopied = true
 				showSuccess(t('integration_nuiteq', 'Public link copied!'))
 				// eslint-disable-next-line
