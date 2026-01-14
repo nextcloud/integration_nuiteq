@@ -14,6 +14,7 @@ OC.L10N.register(
     "Login" : "Masuk",
     "Password" : "Kata sandi",
     "Connected as {user}" : "Terhubung sebagai {user}",
+    "You joined {name}" : "Anda bergabung dengan {name}",
     "Users" : "Pengguna",
     "Groups" : "Grup",
     "Send" : "Kirim"
