@@ -15,6 +15,7 @@
     "You joined {name}" : "Anda bergabung dengan {name}",
     "Users" : "Pengguna",
     "Groups" : "Grup",
-    "Send" : "Kirim"
+    "Send" : "Kirim",
+    "Board name" : "Nama papan"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

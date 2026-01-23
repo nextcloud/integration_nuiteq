@@ -17,6 +17,7 @@ OC.L10N.register(
     "You joined {name}" : "Anda bergabung dengan {name}",
     "Users" : "Pengguna",
     "Groups" : "Grup",
-    "Send" : "Kirim"
+    "Send" : "Kirim",
+    "Board name" : "Nama papan"
 },
 "nplurals=1; plural=0;");
