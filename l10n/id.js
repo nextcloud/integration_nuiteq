@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Metode HTTP tidak benar",
     "Bad credentials" : "Kredensial tidak benar",
+    "Invalid response" : "Respons tidak valid",
+    "Invalid credentials" : "Kredensial tidak valid",
     "Connected accounts" : "Akun terhubung",
     "Public link copied!" : "Tautan publik disalin!",
     "Link could not be copied to clipboard" : "Tautan tidak dapat disalin ke papan klip",
@@ -10,6 +12,7 @@ OC.L10N.register(
     "Enabled" : "Diaktifkan",
     "Disabled" : "Dinonaktifkan",
     "Delete" : "Hapus",
+    "Choose color" : "Pilih warna",
     "Cancel" : "Membatalkan",
     "Create" : "Buat",
     "Login" : "Masuk",
