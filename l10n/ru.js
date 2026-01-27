@@ -30,7 +30,7 @@ OC.L10N.register(
     "Connected as {user}" : "Подключено под именем {user}",
     "Send link to a Talk room" : "Отправить ссылку на обсуждение",
     "Search for users, groups or conversations" : "Поиск пользователей, групп или бесед",
-    "Conversations" : "Разговоры",
+    "Conversations" : "Обсуждения",
     "Users" : "Пользователи",
     "Groups" : "Группы",
     "Send" : "Отправить",
