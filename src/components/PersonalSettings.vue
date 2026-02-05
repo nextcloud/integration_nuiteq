@@ -11,104 +11,96 @@
 				{{ t('integration_nuiteq', 'Nuiteq integration') }}
 			</label>
 		</h2>
-		<div class="fields">
-			<div class="field">
-				<ServerIcon :size="20" />
-				<label for="base-url">
-					{{ t('integration_nuiteq', 'NUITEQ Stage URL') }}
-				</label>
-				<input id="base-url"
-					v-model="state.base_url"
-					type="text"
-					placeholder="https://nuiteqstage.se"
-					:disabled="connected === true"
-					@input="onInput">
-			</div>
-			<p v-show="!connected" class="settings-hint">
-				<InformationOutlineIcon :size="20" />
-				<span>
-					{{ t('integration_nuiteq', 'Leave the client key empty to use the default one.') }}
-				</span>
-			</p>
-			<div v-show="!connected" class="field">
-				<KeyIcon :size="20" />
-				<label for="client-key">
-					{{ t('integration_nuiteq', 'Client key') }}
-				</label>
-				<input id="client-key"
-					v-model="state.client_key"
-					type="password"
-					:placeholder="t('integration_nuiteq', 'client key')"
-					@input="onInput">
-			</div>
-			<div v-show="!connected" class="field">
-				<AccountIcon :size="20" />
-				<label
-					for="nuiteq-login">
-					{{ t('integration_nuiteq', 'Login') }}
-				</label>
-				<input
-					id="nuiteq-login"
-					v-model="login"
-					type="text"
-					:placeholder="t('integration_nuiteq', 'NUITEQ login')"
-					@keyup.enter="onConnectClick">
-			</div>
-			<div v-show="!connected" class="field">
-				<LockIcon :size="20" />
-				<label
-					for="nuiteq-password">
-					{{ t('integration_nuiteq', 'Password') }}
-				</label>
-				<input
-					id="nuiteq-password"
-					v-model="password"
-					type="password"
-					:placeholder="t('integration_nuiteq', 'NUITEQ password')"
-					@keyup.enter="onConnectClick">
-			</div>
-		</div>
-		<NcButton v-if="!connected"
-			id="nuiteq-connect"
-			:disabled="loading || !login || !password"
-			:class="{ loading }"
-			@click="onConnectClick">
-			<template #icon>
-				<OpenInNewIcon />
-			</template>
-			{{ t('integration_nuiteq', 'Connect to NUITEQ Stage') }}
-		</NcButton>
-		<div v-if="connected" class="nuiteq-connected-wrapper">
-			<label class="nuiteq-connected">
-				<CheckIcon />
-				<label>
-					{{ t('integration_nuiteq', 'Connected as {user}', { user: state.user_name }) }}
-				</label>
-			</label>
-			<NcButton id="nuiteq-rm-cred" @click="onLogoutClick">
+		<div class="nuiteq-content">
+			<NcTextField
+				v-model="state.base_url"
+				:label="t('integration_nuiteq', 'NUITEQ Stage URL')"
+				placeholder="https://nuiteqstage.se"
+				:disabled="connected === true"
+				:show-trailing-button="!!state.base_url"
+				@trailing-button-click="state.base_url = ''; onInput()"
+				@update:model-value="onInput">
 				<template #icon>
-					<CloseIcon />
+					<ServerOutlineIcon :size="20" />
 				</template>
-				{{ t('integration_nuiteq', 'Disconnect from NUITEQ') }}
+			</NcTextField>
+			<NcNoteCard v-if="!connected" type="info">
+				{{ t('integration_nuiteq', 'Leave the client key empty to use the default one.') }}
+			</NcNoteCard>
+			<NcTextField v-if="!connected"
+				v-model="state.client_key"
+				type="password"
+				:label="t('integration_nuiteq', 'Client key')"
+				:placeholder="t('integration_nuiteq', 'Client key')"
+				:show-trailing-button="!!state.client_key"
+				@trailing-button-click="state.client_key = ''; onInput()"
+				@update:model-value="onInput">
+				<template #icon>
+					<KeyOutlineIcon :size="20" />
+				</template>
+			</NcTextField>
+			<NcTextField v-if="!connected"
+				v-model="login"
+				:label="t('integration_nuiteq', 'Login')"
+				:placeholder="t('integration_nuiteq', 'NUITEQ login')"
+				@keyup.enter="onConnectClick">
+				<template #icon>
+					<AccountIcon :size="20" />
+				</template>
+			</NcTextField>
+			<NcTextField v-if="!connected"
+				v-model="password"
+				type="password"
+				:label="t('integration_nuiteq', 'Password')"
+				:placeholder="t('integration_nuiteq', 'NUITEQ password')"
+				@keyup.enter="onConnectClick">
+				<template #icon>
+					<LockIcon :size="20" />
+				</template>
+			</NcTextField>
+			<NcButton v-if="!connected"
+				id="nuiteq-connect"
+				:disabled="loading || !login || !password"
+				:class="{ loading }"
+				@click="onConnectClick">
+				<template #icon>
+					<OpenInNewIcon />
+				</template>
+				{{ t('integration_nuiteq', 'Connect to NUITEQ Stage') }}
 			</NcButton>
-			<span />
+			<div v-if="connected" class="nuiteq-connected-wrapper">
+				<label class="nuiteq-connected">
+					<CheckIcon />
+					<label>
+						{{ t('integration_nuiteq', 'Connected as {user}', { user: state.user_name }) }}
+					</label>
+				</label>
+				<NcButton id="nuiteq-rm-cred" @click="onLogoutClick">
+					<template #icon>
+						<CloseIcon />
+					</template>
+					{{ t('integration_nuiteq', 'Disconnect from NUITEQ') }}
+				</NcButton>
+				<span />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import ServerIcon from 'vue-material-design-icons/Server.vue'
+import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import AccountIcon from 'vue-material-design-icons/Account.vue'
 import LockIcon from 'vue-material-design-icons/Lock.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import InformationOutlineIcon from 'vue-material-design-icons/InformationOutline.vue'
-import KeyIcon from 'vue-material-design-icons/Key.vue'
+import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
 
 import NuiteqIcon from './icons/NuiteqIcon.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
@@ -122,15 +114,16 @@ export default {
 
 	components: {
 		NcButton,
+		NcNoteCard,
+		NcTextField,
 		NuiteqIcon,
-		ServerIcon,
+		ServerOutlineIcon,
 		CheckIcon,
 		OpenInNewIcon,
 		AccountIcon,
 		LockIcon,
 		CloseIcon,
-		KeyIcon,
-		InformationOutlineIcon,
+		KeyOutlineIcon,
 	},
 
 	props: {
@@ -190,7 +183,7 @@ export default {
 				} else {
 					showError(
 						t('integration_nuiteq', 'Failed to save NUITEQ options')
-						+ ': ' + (error.response?.request?.responseText ?? '')
+						+ ': ' + (error.response?.request?.responseText ?? ''),
 					)
 				}
 				console.error(error)
@@ -220,33 +213,17 @@ export default {
 #nuiteq_prefs {
 	h2 {
 		display: flex;
-		label {
-			margin-left: 8px;
-		}
+		align-items: center;
+		justify-content: start;
+		gap: 8px;
 	}
 
-	.fields {
+	.nuiteq-content {
+		margin-left: 40px;
 		display: flex;
 		flex-direction: column;
-		margin-left: 30px;
-
-		.field {
-			display: flex;
-			align-items: center;
-			margin: 5px 0 5px 0;
-
-			> * {
-				margin: 0 5px 0 5px;
-			}
-
-			label {
-				width: 150px;
-			}
-
-			input {
-				width: 200px;
-			}
-		}
+		gap: 4px;
+		max-width: 800px;
 	}
 
 	#nuiteq-connect {
@@ -264,16 +241,6 @@ export default {
 			> label {
 				margin-left: 8px;
 			}
-		}
-	}
-
-	.settings-hint {
-		display: flex;
-		align-items: center;
-		opacity: 0.7;
-		margin-top: 8px;
-		> * {
-			margin: 0 4px;
 		}
 	}
 }
