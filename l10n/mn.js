@@ -1,6 +1,10 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Bad HTTP method" : "Буруу HTTP арга",
+    "Bad credentials" : "Буруу нэвтрэх мэдээлэл",
+    "Public link copied!" : "Нийтийн холбоос хуулагдлаа!",
+    "Copy to clipboard" : "Санах ойд хуулах",
     "Enabled" : "Идэвхижүүлэх",
     "Disabled" : "идэвхигүй",
     "Delete" : "Устгах",
@@ -8,8 +12,10 @@ OC.L10N.register(
     "Create" : "Үүсгэх",
     "Login" : "Нэвтрэх",
     "Password" : "Нууц үг",
+    "Conversations" : "Яриа",
     "Users" : "хэрэглэгч",
     "Groups" : "бүлэгүүд",
-    "Send" : "илгээх"
+    "Send" : "илгээх",
+    "Board name" : "Самбарын нэр"
 },
 "nplurals=2; plural=(n != 1);");

@@ -1,4 +1,8 @@
 { "translations": {
+    "Bad HTTP method" : "Буруу HTTP арга",
+    "Bad credentials" : "Буруу нэвтрэх мэдээлэл",
+    "Public link copied!" : "Нийтийн холбоос хуулагдлаа!",
+    "Copy to clipboard" : "Санах ойд хуулах",
     "Enabled" : "Идэвхижүүлэх",
     "Disabled" : "идэвхигүй",
     "Delete" : "Устгах",
@@ -6,8 +10,10 @@
     "Create" : "Үүсгэх",
     "Login" : "Нэвтрэх",
     "Password" : "Нууц үг",
+    "Conversations" : "Яриа",
     "Users" : "хэрэглэгч",
     "Groups" : "бүлэгүүд",
-    "Send" : "илгээх"
+    "Send" : "илгээх",
+    "Board name" : "Самбарын нэр"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
