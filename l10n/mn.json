@@ -1,6 +1,7 @@
 { "translations": {
     "Bad HTTP method" : "Буруу HTTP арга",
     "Bad credentials" : "Буруу нэвтрэх мэдээлэл",
+    "Connected accounts" : "Холбогдсон бүртгэлүүд",
     "Public link copied!" : "Нийтийн холбоос хуулагдлаа!",
     "Copy to clipboard" : "Санах ойд хуулах",
     "Enabled" : "Идэвхижүүлэх",
