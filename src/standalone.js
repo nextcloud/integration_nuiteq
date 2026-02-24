@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import Vue from 'vue'
-import './bootstrap.js'
+import { createApp } from 'vue'
 import { loadState } from '@nextcloud/initial-state'
 import NuiteqModalWrapper from './components/NuiteqModalWrapper.vue'
 
@@ -21,8 +20,9 @@ function init() {
 	wrapperElement.id = wrapperId
 	document.body.append(wrapperElement)
 
-	const View = Vue.extend(NuiteqModalWrapper)
-	OCA.Nuiteq.NuiteqModalWrapperVue = new View().$mount('#' + wrapperId)
+	const app = createApp(NuiteqModalWrapper)
+	app.mixin({ methods: { t, n } })
+	OCA.Nuiteq.NuiteqModalWrapperVue = app.mount(wrapperElement)
 
 	OCA.Nuiteq.openModal = (roomUrl) => {
 		OCA.Nuiteq.NuiteqModalWrapperVue.openOn(roomUrl)
