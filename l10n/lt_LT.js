@@ -21,7 +21,7 @@ OC.L10N.register(
     "Connected as {user}" : "Prisijungta kaip {user}",
     "Failed to send link" : "Nepavyko išsiųsti nuorodos",
     "Conversations" : "Pokalbiai",
-    "Users" : "Naudotojai",
+    "Users" : "Vartotojai",
     "Groups" : "Grupės",
     "Send" : "Siųsti",
     "Board name" : "Lentos pavadinimas"
