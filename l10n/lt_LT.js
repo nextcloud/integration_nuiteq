@@ -4,6 +4,8 @@ OC.L10N.register(
     "Bad HTTP method" : "Blogas HTTP metodas",
     "Bad credentials" : "Blogi prisijungimo duomenys",
     "Connected accounts" : "Prijungtos paskyros",
+    "NUITEQ Stage whiteboard integration" : "„NUITEQ Stage“ integracija su skaitmenine lenta",
+    "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "„NUITEQ Stage“ užtikrina natūralią dalyvių sąveiką šiuolaikiniame susitikime, sujungdama bendro kūrybinio darbo ant skaitmeninės lentos patirtį su diskusijomis vaizdo skambučio ir pokalbių metu. Paruoškite ir įkelkite failus bei pristatymus, dalinkitės jais su kitais susitikimo dalyviais. Sukurta pirmiausia bendradarbiavimui, siekiant įtraukti komandos narius – „NUITEQ Stage“ yra saugi, paprasta ir efektyvi naudoti.\n\nŠi programa siūlo paprastą sąsają, skirtą „NUITEQ Stage“ skaitmeninių lentų peržiūrai, kūrimui ir dalijimuisi.",
     "{name} deleted" : "{name} ištrintas",
     "Public link copied!" : "Viešoji nuoroda nukopijuota!",
     "Link could not be copied to clipboard" : "Nepavyko nukopijuoti nuorodos į iškarpinę",
