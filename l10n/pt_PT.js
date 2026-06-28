@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Método HTTP incorreto",
     "Bad credentials" : "Credenciais inválidas",
+    "Invalid credentials" : "Credenciais inválidas",
+    "Connected accounts" : "Contas conectadas",
     "Public link copied!" : "Public link copied!",
     "Copy to clipboard" : "Copiar para área de transferência",
     "Enabled" : "Ativado",
@@ -12,6 +14,7 @@ OC.L10N.register(
     "Create" : "Criar",
     "Login" : "Iniciar sessão",
     "Password" : "Palavra-passe",
+    "Failed to join" : "Falha ao entrar",
     "Conversations" : "Conversações",
     "Users" : "Utilizadores",
     "Groups" : "Grupos",
