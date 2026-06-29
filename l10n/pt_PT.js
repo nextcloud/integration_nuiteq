@@ -5,7 +5,9 @@ OC.L10N.register(
     "Bad credentials" : "Credenciais inválidas",
     "Invalid credentials" : "Credenciais inválidas",
     "Connected accounts" : "Contas conectadas",
+    "New board was created in NUITEQ stage" : "Novo quadro foi criado no NUITEQ Stage",
     "Public link copied!" : "Public link copied!",
+    "Link could not be copied to clipboard" : "Não foi possível copiar o link para a área de transferência",
     "Copy to clipboard" : "Copiar para área de transferência",
     "Enabled" : "Ativado",
     "Disabled" : "Desativado",
@@ -15,9 +17,11 @@ OC.L10N.register(
     "Login" : "Iniciar sessão",
     "Password" : "Palavra-passe",
     "Failed to join" : "Falha ao entrar",
+    "Link sent to {name}" : "Link enviado para {name}",
     "Conversations" : "Conversações",
     "Users" : "Utilizadores",
     "Groups" : "Grupos",
-    "Send" : "Enviar"
+    "Send" : "Enviar",
+    "board name" : "nome do quadro"
 },
 "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;");
