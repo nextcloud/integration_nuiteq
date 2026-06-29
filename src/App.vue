@@ -77,11 +77,11 @@
 import CogIcon from 'vue-material-design-icons/Cog.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcAppContent from '@nextcloud/vue/dist/Components/NcAppContent.js'
-import NcContent from '@nextcloud/vue/dist/Components/NcContent.js'
-import NcModal from '@nextcloud/vue/dist/Components/NcModal.js'
-import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 
 import { generateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
@@ -174,7 +174,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to get boards')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 			}).then(() => {
@@ -203,7 +203,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to create new board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 			}).then(() => {
@@ -224,7 +224,7 @@ export default {
 			}).catch((error) => {
 				showError(
 					t('integration_nuiteq', 'Failed to delete the board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? '')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
 				)
 				console.debug(error)
 			})
@@ -252,7 +252,7 @@ export default {
 					deletionTimer.pause()
 					board.trash = false
 				},
-				{ timeout: 10000 }
+				{ timeout: 10000 },
 			)
 		},
 	},
