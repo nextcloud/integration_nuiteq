@@ -4,7 +4,7 @@ OC.L10N.register(
     "Bad HTTP method" : "Поганий метод HTTP",
     "Bad credentials" : "Погані облікові дані",
     "Invalid response" : "Неправильна відповідь",
-    "Invalid credentials" : "Невірні облікові дані",
+    "Invalid credentials" : "Недійсні облікові дані",
     "Connected accounts" : "Підключені облікові записи",
     "NUITEQ Stage whiteboard integration" : "Інтеграція дошки NUITEQ Stage",
     "Nuiteq" : "Nuiteq",
