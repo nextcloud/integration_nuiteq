@@ -48,8 +48,8 @@
     "@nextcloud/password-confirmation": "^5.1.1"
   },
   "engines": {
-    "node": "^20.0.0",
-    "npm": "^9.0.0 || ^10.0.0"
+    "node": "^24.0.0",
+    "npm": "^11.3.0"
   },
   "devDependencies": {
     "@nextcloud/babel-config": "^1.0.0",
