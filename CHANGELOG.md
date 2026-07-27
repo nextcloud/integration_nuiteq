@@ -10,6 +10,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 1.2.0
+### Changed
+- Migrated to Vue 3 and @nextcloud/vue 9 [#38](https://github.com/nextcloud/integration_nuiteq/pull/38)
+- Added support for NC 35, dropped NC 32
+- Minimum required PHP raised from 8.1 to 8.2
+- Synced the npm build, Psalm and php-cs workflows with the current organization templates
+- Updated dependencies & translations
+
 ## 1.1.2 - 2026-04-20
 ### Changed
 - Added support for NC 34, dropped NC 30 and NC 31
