@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## 1.2.0
+## 1.2.0 - 2026-07-27
 ### Changed
 - Migrated to Vue 3 and @nextcloud/vue 9 [#38](https://github.com/nextcloud/integration_nuiteq/pull/38)
 - Added support for NC 35, dropped NC 32
