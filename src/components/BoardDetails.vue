@@ -266,6 +266,12 @@ export default {
 		async copyLink() {
 			const link = this.publicLink
 			try {
+				// the clipboard API is only usable in a secure context: on plain HTTP
+				// writeText() does not return a promise, so awaiting it would silently
+				// succeed and we would wrongly tell the user the link was copied
+				if (!window.isSecureContext || typeof navigator.clipboard?.writeText !== 'function') {
+					throw new Error('Clipboard is only available in a secure context (HTTPS)')
+				}
 				await navigator.clipboard.writeText(link)
 				this.publicLinkCopied = true
 				showSuccess(t('integration_nuiteq', 'Public link copied!'))
