@@ -288,7 +288,7 @@ export default {
 		setSelectValue(fieldId, newValue) {
 			// this fixes the issue when selecting the currently select option
 			if (newValue !== null) {
-				this.$set(this.newBoard, fieldId, newValue)
+				this.newBoard[fieldId] = newValue
 			}
 		},
 		updateColor(color, fieldId) {
