@@ -43,7 +43,6 @@
     "Failed to save NUITEQ options" : "تعذّر حفظ خيارات Nuiteq",
     "NUITEQ Stage URL" : "عنوان Nuiteq Satge",
     "Leave the client key empty to use the default one." : "أُترُك خانة مفتاح العميل client key فارغة حتى يتم استعمال المفتاح التلقائي.",
-    "client key" : "مفتاح العميل",
     "Login" : "الدخول",
     "NUITEQ login" : "دخول Nuiteq",
     "Password" : "كلمة المرور",

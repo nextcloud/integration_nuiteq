@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "Nepavyko išsaugoti „NUITEQ“ parinkčių",
     "NUITEQ Stage URL" : "„NUITEQ Stage“ URL",
     "Leave the client key empty to use the default one." : "Palikite kliento raktą tuščią, kad būtų naudojamas numatytasis.",
-    "client key" : "kliento raktas",
     "Login" : "Prisijungti",
     "NUITEQ login" : "„NUITEQ“ prisijungimas",
     "Password" : "Slaptažodis",

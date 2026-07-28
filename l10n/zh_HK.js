@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "儲存 NUITEQ 選項失敗",
     "NUITEQ Stage URL" : "NUITEQ Stage URL",
     "Leave the client key empty to use the default one." : "將客戶端密鑰留空以使用默認密鑰。",
-    "client key" : "客戶端密鑰",
     "Login" : "登入",
     "NUITEQ login" : "NUITEQ 登入",
     "Password" : "密碼",

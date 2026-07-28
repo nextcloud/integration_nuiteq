@@ -23,7 +23,6 @@ OC.L10N.register(
     "Create" : "Создать",
     "NUITEQ Stage URL" : "URL-адрес этапа NUITEQ",
     "Leave the client key empty to use the default one." : "Оставьте ключ клиента пустым, чтобы использовать ключ по умолчанию.",
-    "client key" : "ключ клиента",
     "Login" : "Войти",
     "NUITEQ login" : "Вход в систему NUITEQ",
     "Password" : "Пароль",

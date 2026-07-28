@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "ذخیره گزینه‌های NUITEQ با شکست مواجه شد",
     "NUITEQ Stage URL" : "آدرس NUITEQ Stage",
     "Leave the client key empty to use the default one." : "برای استفاده از کلید مشتری پیش‌فرض، کلید مشتری را خالی بگذارید.",
-    "client key" : "کلید مشتری",
     "Login" : "ورود",
     "NUITEQ login" : "ورود به NUITEQ",
     "Password" : "رمز عبور",

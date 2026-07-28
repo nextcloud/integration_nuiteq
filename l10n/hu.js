@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "A NUITEQ beállításainak mentése sikertelen",
     "NUITEQ Stage URL" : "NUITEQ Stage webcíme",
     "Leave the client key empty to use the default one." : "A klienskulcsot hagyja üresen az alapértelmezett használatához.",
-    "client key" : "klienskulcs",
     "Login" : "Bejelentkezés",
     "NUITEQ login" : "NUITEQ bejelentkezés",
     "Password" : "Jelszó",

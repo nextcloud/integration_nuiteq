@@ -29,7 +29,6 @@ OC.L10N.register(
     "Choose color" : "Aukeratu kolorea",
     "Cancel" : "Utzi",
     "Create" : "Sortu",
-    "client key" : "bezeroaren gakoa",
     "Login" : "Hasi saioa",
     "NUITEQ login" : "NUITEQ erabiltzailea",
     "Password" : "Pasahitza",

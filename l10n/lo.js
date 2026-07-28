@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "ບັນທຶກຕົວເລືອກ NUITEQ ບໍ່ສຳເລັດ",
     "NUITEQ Stage URL" : "URL ຂອງ NUITEQ Stage",
     "Leave the client key empty to use the default one." : "ປະວ່າງຄີລູກຂ່າຍໄວ້ເພື່ອໃຊ້ຄ່າເລີ່ມຕົ້ນ.",
-    "client key" : "ຄີລູກຂ່າຍ",
     "Login" : "ເຂົ້າສູ່ລະບົບ",
     "NUITEQ login" : "ຊື່ເຂົ້າໃຊ້ NUITEQ",
     "Password" : "ລະຫັດຜ່ານ",

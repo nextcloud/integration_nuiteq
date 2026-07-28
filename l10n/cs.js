@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "Nepodařilo se uložit předvolby pro NUITEQ",
     "NUITEQ Stage URL" : "URL NUITEQ Stage",
     "Leave the client key empty to use the default one." : "Pokud chcete využít výchozí klíč klienta, nevyplňujte.",
-    "client key" : "klíč klienta",
     "Login" : "Přihlásit",
     "NUITEQ login" : "Přihlašovací jméno do NUITEQ",
     "Password" : "Heslo",

@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "Det gick inte att spara NUITEQ-alternativen",
     "NUITEQ Stage URL" : "URL till NUITEQ Stage",
     "Leave the client key empty to use the default one." : "Lämna klientnyckeln tom för att använda den förvalda.",
-    "client key" : "klientnyckel",
     "Login" : "Logga in",
     "NUITEQ login" : "NUITEQ-användarnamn",
     "Password" : "Lösenord",

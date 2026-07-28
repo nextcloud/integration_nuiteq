@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "NUITEQ تاللانمىلىرىنى ساقلىيالمىدى",
     "NUITEQ Stage URL" : "NUITEQ باسقۇچ URL",
     "Leave the client key empty to use the default one." : "سۈكۈتتىكى كۇنۇپكىنى ئىشلىتىش ئۈچۈن خېرىدار ئاچقۇچىنى بوش قويۇڭ.",
-    "client key" : "خېرىدار ئاچقۇچى",
     "Login" : "Login",
     "NUITEQ login" : "NUITEQ كىرىش",
     "Password" : "ئىم",

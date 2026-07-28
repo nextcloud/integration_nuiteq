@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "Αποτυχία αποθήκευσης των επιλογών NUITEQ",
     "NUITEQ Stage URL" : "URL NUITEQ Stage",
     "Leave the client key empty to use the default one." : "Αφήστε το κλειδί πελάτη κενό για να χρησιμοποιήσετε το προεπιλεγμένο.",
-    "client key" : "κλειδί πελάτη",
     "Login" : "Σύνδεση",
     "NUITEQ login" : "Όνομα χρήστη NUITEQ",
     "Password" : "Συνθηματικό",

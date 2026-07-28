@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "Imeshindwa kuhifadhi chaguo za NUITEQ",
     "NUITEQ Stage URL" : "URL ya Hatua ya NUITEQ",
     "Leave the client key empty to use the default one." : "Acha ufunguo wa mteja utumie ufunguo chaguo-msingi.",
-    "client key" : "ufunguo wa mteja",
     "Login" : "Ingia",
     "NUITEQ login" : "NUITEQ login",
     "Password" : "Nenosiri",

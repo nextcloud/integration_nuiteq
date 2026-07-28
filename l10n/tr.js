@@ -45,7 +45,6 @@ OC.L10N.register(
     "Failed to save NUITEQ options" : "NUITEQ ayarları kaydedilemedi",
     "NUITEQ Stage URL" : "NUITEQ Stage adresi",
     "Leave the client key empty to use the default one." : "Varsayılan istemci anahtarının kullanılması için bu alanı boş bırakın.",
-    "client key" : "İstemci anahtarı",
     "Login" : "Kullanıcı adı",
     "NUITEQ login" : "NUITEQ kullanıcı adı",
     "Password" : "Parola",

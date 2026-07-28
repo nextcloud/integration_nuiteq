@@ -18,7 +18,6 @@ OC.L10N.register(
     "Choose color" : "Vælg farve",
     "Cancel" : "Annuller",
     "Create" : "Opret",
-    "client key" : "klientnøgle",
     "Login" : "Log på",
     "Password" : "Adgangskode",
     "Connected as {user}" : "Forbundet som {user}",
