@@ -2,6 +2,7 @@ OC.L10N.register(
     "integration_nuiteq",
     {
     "Connected accounts" : "Tilkopla kontoar",
+    "Copy to clipboard" : "Kopiert til utklippstavla",
     "Enabled" : "Aktivert",
     "Disabled" : "Deaktivert",
     "Delete" : "Slett",
