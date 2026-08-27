@@ -59,7 +59,7 @@ OC.L10N.register(
     "Link sent to {name}" : "Link an {name} versandt",
     "Failed to send link" : "Link konnte nicht gesendet werden",
     "Send link to a Talk room" : "Link zu einem Unterhaltungsraum senden",
-    "Search for users, groups or conversations" : "Nach Benutzern, Gruppen oder Konversationen suchen",
+    "Search for users, groups or conversations" : "Nach Benutzern, Gruppen oder Unterhaltungen suchen",
     "Conversations" : "Unterhaltungen",
     "Users" : "Benutzer",
     "Groups" : "Gruppen",
