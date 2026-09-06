@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Zlá metóda HTTP",
     "Bad credentials" : "Nesprávne prihlasovacie údaje",
+    "Invalid response" : "Neplatná odpoveď",
+    "Invalid credentials" : "Neplatné prihlasovacie údaje",
     "Connected accounts" : "Prepojené účty",
     "{name} deleted" : "{name} zmazané",
     "Public link copied!" : "Verejný odkaz bol skopírovaný!",
