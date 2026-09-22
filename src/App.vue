@@ -26,7 +26,7 @@
 				:talk-enabled="state.talk_enabled" />
 			<div v-else-if="!connected">
 				<NcEmptyContent
-					:title="t('integration_nuiteq', 'You are not connected to NUITEQ Stage')">
+					:name="t('integration_nuiteq', 'You are not connected to NUITEQ Stage')">
 					<template #icon>
 						<CogIcon />
 					</template>
@@ -37,7 +37,7 @@
 					@connected="onConnected" />
 			</div>
 			<NcEmptyContent v-else-if="activeBoardCount === 0"
-				:title="t('integration_nuiteq', 'You haven\'t created any boards yet')">
+				:name="t('integration_nuiteq', 'You haven\'t created any boards yet')">
 				<template #icon>
 					<NuiteqIcon />
 				</template>
@@ -55,7 +55,7 @@
 				</template>
 			</NcEmptyContent>
 			<NcEmptyContent v-else
-				:title="t('integration_nuiteq', 'No selected board')">
+				:name="t('integration_nuiteq', 'No selected board')">
 				<template #icon>
 					<NuiteqIcon />
 				</template>
