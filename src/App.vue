@@ -4,26 +4,26 @@
 -->
 
 <template>
-	<NcContent app-name="integration_nuiteq">
+	<NcContent appName="integration_nuiteq">
 		<NuiteqNavigation
 			:boards="activeBoards"
-			:selected-board-id="selectedBoardId"
-			:is-configured="connected"
-			@create-board-clicked="onCreateBoardClick"
-			@board-clicked="onBoardClicked"
-			@delete-board="onBoardDeleted" />
+			:selectedBoardId="selectedBoardId"
+			:isConfigured="connected"
+			@createBoardClicked="onCreateBoardClick"
+			@boardClicked="onBoardClicked"
+			@deleteBoard="onBoardDeleted" />
 		<NcAppContent
-			:list-max-width="50"
-			:list-min-width="20"
-			:list-size="20"
-			:show-details="false"
+			:listMaxWidth="50"
+			:listMinWidth="20"
+			:listSize="20"
+			:showDetails="false"
 			@update:showDetails="a = 2">
 			<!--template slot="list">
 			</template-->
 			<BoardDetails v-if="selectedBoard"
 				:board="selectedBoard"
-				:nuiteq-url="state.base_url"
-				:talk-enabled="state.talk_enabled" />
+				:nuiteqUrl="state.base_url"
+				:talkEnabled="state.talk_enabled" />
 			<div v-else-if="!connected">
 				<NcEmptyContent
 					:name="t('integration_nuiteq', 'You are not connected to NUITEQ Stage')">
@@ -33,7 +33,7 @@
 				</NcEmptyContent>
 				<PersonalSettings
 					class="settings"
-					:show-title="false"
+					:showTitle="false"
 					@connected="onConnected" />
 			</div>
 			<NcEmptyContent v-else-if="activeBoardCount === 0"
@@ -66,32 +66,29 @@
 			@close="closeCreationModal">
 			<CreationForm
 				:loading="creating"
-				focus-on-field="name"
-				@ok-clicked="onCreationValidate"
-				@cancel-clicked="closeCreationModal" />
+				focusOnField="name"
+				@okClicked="onCreationValidate"
+				@cancelClicked="closeCreationModal" />
 		</NcModal>
 	</NcContent>
 </template>
 
 <script>
+import axios from '@nextcloud/axios'
+import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcContent from '@nextcloud/vue/components/NcContent'
+import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
+import NcModal from '@nextcloud/vue/components/NcModal'
 import CogIcon from 'vue-material-design-icons/Cog.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
-
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcAppContent from '@nextcloud/vue/components/NcAppContent'
-import NcContent from '@nextcloud/vue/components/NcContent'
-import NcModal from '@nextcloud/vue/components/NcModal'
-import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
-
-import { generateUrl } from '@nextcloud/router'
-import { loadState } from '@nextcloud/initial-state'
-import axios from '@nextcloud/axios'
-import { showSuccess, showError, showUndo } from '@nextcloud/dialogs'
-
-import NuiteqNavigation from './components/NuiteqNavigation.vue'
-import CreationForm from './components/CreationForm.vue'
 import BoardDetails from './components/BoardDetails.vue'
+import CreationForm from './components/CreationForm.vue'
 import NuiteqIcon from './components/icons/NuiteqIcon.vue'
+import NuiteqNavigation from './components/NuiteqNavigation.vue'
 import PersonalSettings from './components/PersonalSettings.vue'
 import { Timer } from './utils.js'
 
@@ -130,18 +127,22 @@ export default {
 		connected() {
 			return !!this.state.base_url && !!this.state.user_name && !!this.state.api_key
 		},
+
 		activeBoards() {
 			return this.state.board_list.filter((b) => !b.trash)
 		},
+
 		activeBoardsById() {
 			return this.activeBoards.reduce((object, item) => {
 				object[item.id] = item
 				return object
 			}, {})
 		},
+
 		activeBoardCount() {
 			return this.activeBoards.length
 		},
+
 		selectedBoard() {
 			return this.selectedBoardId
 				? this.activeBoardsById[this.selectedBoardId]
@@ -167,25 +168,27 @@ export default {
 			// window.location.reload()
 			this.getBoards()
 		},
+
 		getBoards() {
 			const url = generateUrl('/apps/integration_nuiteq/list')
 			axios.get(url).then((response) => {
 				this.state.board_list.push(...response.data)
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to get boards')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to get boards')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 			}).then(() => {
 			})
 		},
+
 		onCreateBoardClick() {
 			this.creationModalOpen = true
 		},
+
 		closeCreationModal() {
 			this.creationModalOpen = false
 		},
+
 		onCreationValidate(board) {
 			this.creating = true
 			board.trash = false
@@ -201,34 +204,33 @@ export default {
 				this.selectedBoardId = board.id
 				this.creationModalOpen = false
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to create new board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to create new board')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 			}).then(() => {
 				this.creating = false
 			})
 		},
+
 		onBoardClicked(boardId) {
 			console.debug('select board', boardId)
 			this.selectedBoardId = boardId
 		},
+
 		deleteBoard(boardId) {
 			console.debug('DELETE board', boardId)
 			const req = {
 				boardId,
 			}
 			const url = generateUrl('/apps/integration_nuiteq/delete')
-			axios.post(url, req).then((response) => {
+			axios.post(url, req).then(() => {
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to delete the board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to delete the board')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 			})
 		},
+
 		onBoardDeleted(boardId) {
 			// deselect the board
 			if (boardId === this.selectedBoardId) {

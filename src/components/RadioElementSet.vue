@@ -10,7 +10,7 @@
 			:checked="value"
 			:value="optionId"
 			:name="name"
-			:border-radius="borderRadius"
+			:borderRadius="borderRadius"
 			@update:checked="onUpdateValue">
 			<template v-if="$slots.icon || option.icon" #icon>
 				<slot name="icon" :option="option">
@@ -36,15 +36,18 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		value: {
 			type: String,
 			required: true,
 		},
+
 		// to make sure the sub ids are unique
 		name: {
 			type: String,
 			required: true,
 		},
+
 		borderRadius: {
 			type: Number,
 			default: undefined,

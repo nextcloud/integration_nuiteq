@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
+import LockIcon from 'vue-material-design-icons/Lock.vue'
 // import ClockOutlineIcon from 'vue-material-design-icons/ClockOutline.vue'
 // import ShareVariantIcon from 'vue-material-design-icons/ShareVariant.vue'
 // import HomeGroupIcon from 'vue-material-design-icons/HomeGroup.vue'
 // import AccountGroupIcon from 'vue-material-design-icons/AccountGroup.vue'
 // import AccountGroupOutlineIcon from 'vue-material-design-icons/AccountGroupOutline.vue'
 import TextIcon from 'vue-material-design-icons/Text.vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
 // import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 // import PaletteSwatchIcon from 'vue-material-design-icons/PaletteSwatch.vue'
 // import PaletteSwatchOutlineIcon from 'vue-material-design-icons/PaletteSwatchOutline.vue'

@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-import { createApp } from 'vue'
 import { loadState } from '@nextcloud/initial-state'
+import { createApp } from 'vue'
 import NuiteqModalWrapper from './components/NuiteqModalWrapper.vue'
 
 function init() {
@@ -35,8 +35,8 @@ function listen(baseUrl) {
 		const link = (e.target.tagName === 'A')
 			? e.target
 			: (e.target.parentElement?.tagName === 'A')
-				? e.target.parentElement
-				: null
+					? e.target.parentElement
+					: null
 		if (link !== null) {
 			const href = link.getAttribute('href')
 			if (!href) {

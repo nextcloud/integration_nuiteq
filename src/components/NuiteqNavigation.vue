@@ -8,7 +8,7 @@
 		<template #list>
 			<NcAppNavigationNew v-if="isConfigured"
 				:text="t('integration_nuiteq', 'Create a board')"
-				button-class="icon-add"
+				buttonClass="icon-add"
 				@click="onCreateBoardClick">
 				<template #icon>
 					<PlusIcon />
@@ -19,18 +19,17 @@
 				class="boardItem"
 				:board="board"
 				:selected="board.id === selectedBoardId"
-				@board-clicked="onBoardClicked"
-				@delete-board="onBoardDeleted" />
+				@boardClicked="onBoardClicked"
+				@deleteBoard="onBoardDeleted" />
 		</template>
 		<!--template #footer></template-->
 	</NcAppNavigation>
 </template>
 
 <script>
-import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
-
+import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import BoardNavigationItem from './BoardNavigationItem.vue'
 
 export default {
@@ -48,10 +47,12 @@ export default {
 			type: Array,
 			required: true,
 		},
+
 		selectedBoardId: {
 			type: String,
 			required: true,
 		},
+
 		isConfigured: {
 			type: Boolean,
 			required: true,
@@ -74,13 +75,15 @@ export default {
 
 	methods: {
 		onCreateBoardClick() {
-			this.$emit('create-board-clicked')
+			this.$emit('createBoardClicked')
 		},
+
 		onBoardClicked(boardId) {
-			this.$emit('board-clicked', boardId)
+			this.$emit('boardClicked', boardId)
 		},
+
 		onBoardDeleted(boardId) {
-			this.$emit('delete-board', boardId)
+			this.$emit('deleteBoard', boardId)
 		},
 	},
 }
