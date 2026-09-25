@@ -8,7 +8,7 @@ import App from './App.vue'
 
 import '../css/main.scss'
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
 	const app = createApp(App)
 	app.mixin({ methods: { t, n } })
 	app.mount('#content')

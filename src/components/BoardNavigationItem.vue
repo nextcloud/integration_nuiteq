@@ -7,7 +7,7 @@
 	<NcAppNavigationItem
 		:title="board.name"
 		:class="{ selectedBoard: selected }"
-		:force-menu="true"
+		:forceMenu="true"
 		@click="onBoardClick">
 		<template #icon>
 			<ClipboardEditIcon v-if="selected"
@@ -17,7 +17,7 @@
 		</template>
 		<template #actions>
 			<NcActionButton
-				:close-after-click="true"
+				:closeAfterClick="true"
 				@click="onDeleteClick">
 				<template #icon>
 					<DeleteIcon :size="20" />
@@ -29,12 +29,11 @@
 </template>
 
 <script>
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import ClipboardEditIcon from 'vue-material-design-icons/ClipboardEdit.vue'
-import ClipboardEditOutlineIcon from 'vue-material-design-icons/ClipboardEditOutline.vue'
-
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import ClipboardEditIcon from 'vue-material-design-icons/ClipboardEdit.vue'
+import ClipboardEditOutlineIcon from 'vue-material-design-icons/ClipboardEditOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 export default {
 	name: 'BoardNavigationItem',
@@ -45,30 +44,37 @@ export default {
 		ClipboardEditOutlineIcon,
 		DeleteIcon,
 	},
+
 	props: {
 		board: {
 			type: Object,
 			required: true,
 		},
+
 		selected: {
 			type: Boolean,
 			required: true,
 		},
 	},
+
 	data() {
 		return {
 		}
 	},
+
 	computed: {
 	},
+
 	beforeMount() {
 	},
+
 	methods: {
-		onBoardClick(e) {
-			this.$emit('board-clicked', this.board.id)
+		onBoardClick() {
+			this.$emit('boardClicked', this.board.id)
 		},
+
 		onDeleteClick() {
-			this.$emit('delete-board', this.board.id)
+			this.$emit('deleteBoard', this.board.id)
 		},
 	},
 }

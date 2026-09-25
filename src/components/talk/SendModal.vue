@@ -42,10 +42,10 @@
 								<NcAvatar v-if="c.type === CONVERSATION_TYPE.ONE_TO_ONE"
 									:size="34"
 									:user="c.name"
-									:disable-menu="true" />
+									:disableMenu="true" />
 								<NcAvatar v-else
 									:size="34"
-									icon-class="icon-group" />
+									iconClass="icon-group" />
 							</template>
 						</NcListItem>
 					</ul>
@@ -65,7 +65,7 @@
 								<NcAvatar
 									:size="34"
 									:user="c.name"
-									:disable-menu="true" />
+									:disableMenu="true" />
 							</template>
 						</NcListItem>
 					</ul>
@@ -84,7 +84,7 @@
 							<template #icon>
 								<NcAvatar
 									:size="34"
-									icon-class="icon-group" />
+									iconClass="icon-group" />
 							</template>
 						</NcListItem>
 					</ul>
@@ -95,7 +95,7 @@
 				<NcButton @click="$emit('close')">
 					{{ t('integration_nuiteq', 'Cancel') }}
 				</NcButton>
-				<NcButton type="primary"
+				<NcButton variant="primary"
 					:disabled="selectedRoom === null"
 					@click="onSendLinkClick">
 					<template #icon>
@@ -110,19 +110,16 @@
 
 <script>
 
-import CloseIcon from 'vue-material-design-icons/Close.vue'
-import SendIcon from 'vue-material-design-icons/Send.vue'
-
-import TalkIcon from './TalkIcon.vue'
-
-import NcModal from '@nextcloud/vue/components/NcModal'
+import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { generateOcsUrl } from '@nextcloud/router'
 import NcAvatar from '@nextcloud/vue/components/NcAvatar'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcListItem from '@nextcloud/vue/components/NcListItem'
-
-import { showSuccess, showError } from '@nextcloud/dialogs'
-import { generateOcsUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
+import NcModal from '@nextcloud/vue/components/NcModal'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import SendIcon from 'vue-material-design-icons/Send.vue'
+import TalkIcon from './TalkIcon.vue'
 import { delay } from '../../utils.js'
 
 const CONVERSATION_TYPE = {
@@ -150,6 +147,7 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		nuiteqUrl: {
 			type: String,
 			required: true,
@@ -175,12 +173,14 @@ export default {
 		publicLink() {
 			return this.nuiteqUrl + '/board/' + this.board.id
 		},
+
 		conversationsToShow() {
 			return [
 				...this.myRooms.filter((r) => r.name.includes(this.query) || r.displayName.includes(this.query)),
 				...this.openRooms,
 			]
 		},
+
 		usersToShow() {
 			return [
 				...this.usersAndGroups.filter((item) => {
@@ -190,6 +190,7 @@ export default {
 				}),
 			]
 		},
+
 		groupsToShow() {
 			return [
 				...this.usersAndGroups.filter((item) => {
@@ -216,6 +217,7 @@ export default {
 				console.debug(error)
 			})
 		},
+
 		searchQueryChanged(event) {
 			this.query = event.target.value
 			this.selectedRoom = null
@@ -228,13 +230,14 @@ export default {
 				}, 400)()
 			}
 		},
+
 		search() {
 			const allPromises = [
 				this.findOpenRooms(this.query),
 				this.findUsersAndGroups(this.query),
 			]
 			Promise.all(allPromises)
-				.catch(error => {
+				.catch((error) => {
 					console.error(error)
 					showError(error?.response?.data?.error || error.message)
 				})
@@ -271,6 +274,7 @@ export default {
 					})
 				})
 		},
+
 		resetQuery() {
 			this.query = ''
 			this.selectedRoom = null
@@ -278,6 +282,7 @@ export default {
 			this.openRooms = []
 			this.$refs.query.focus()
 		},
+
 		findUsersAndGroups(query) {
 			if (query === '') {
 				this.usersAndGroups = []
@@ -296,6 +301,7 @@ export default {
 				},
 			})
 		},
+
 		findOpenRooms(query) {
 			if (query === '') {
 				this.openRooms = []
@@ -311,6 +317,7 @@ export default {
 			}
 			return axios.get(url, req)
 		},
+
 		onSendLinkClick() {
 			if (this.selectedRoom.isOpenRoom) {
 				this.joinOpenRoom()
@@ -320,6 +327,7 @@ export default {
 				this.sendLink()
 			}
 		},
+
 		createRoom() {
 			this.sending = true
 			const url = generateOcsUrl('/apps/spreed/api/v4/room')
@@ -334,14 +342,13 @@ export default {
 				this.selectedRoom.token = response.data.ocs.data.token
 				this.sendLink()
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to join')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to join')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 				this.sending = false
 			})
 		},
+
 		joinOpenRoom() {
 			this.sending = true
 			const token = this.selectedRoom.token
@@ -355,14 +362,13 @@ export default {
 				showSuccess(t('integration_nuiteq', 'You joined {name}', { name: this.selectedRoom.displayName }))
 				this.sendLink()
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to join')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to join')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 				this.sending = false
 			})
 		},
+
 		sendLink() {
 			const token = this.selectedRoom.token
 			const url = generateOcsUrl('/apps/spreed/api/v1/chat/{token}', { token })
@@ -378,10 +384,8 @@ export default {
 				showSuccess(t('integration_nuiteq', 'Link sent to {name}', { name: this.selectedRoom.displayName }))
 				this.$emit('close')
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to send link')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to send link')
+					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
 			}).then(() => {
 				this.sending = false

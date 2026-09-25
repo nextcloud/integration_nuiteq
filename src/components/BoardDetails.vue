@@ -40,7 +40,7 @@
 						</NcButton>
 						<SendModal v-if="showTalkModal"
 							:board="board"
-							:nuiteq-url="nuiteqUrl"
+							:nuiteqUrl="nuiteqUrl"
 							@close="showTalkModal = false" />
 					</div>
 				</div>
@@ -169,29 +169,25 @@
 </template>
 
 <script>
-import ShieldLinkVariantIcon from 'vue-material-design-icons/ShieldLinkVariant.vue'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import moment from '@nextcloud/moment'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline.vue'
+import CheckboxMarkedIcon from 'vue-material-design-icons/CheckboxMarked.vue'
+import DockWindowIcon from 'vue-material-design-icons/DockWindow.vue'
+import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
+import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
 import LinkVariantIcon from 'vue-material-design-icons/LinkVariant.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import ShieldLinkVariantIcon from 'vue-material-design-icons/ShieldLinkVariant.vue'
 import ToggleSwitchIcon from 'vue-material-design-icons/ToggleSwitch.vue'
 import ToggleSwitchOffOutlineIcon from 'vue-material-design-icons/ToggleSwitchOffOutline.vue'
-import CheckboxMarkedIcon from 'vue-material-design-icons/CheckboxMarked.vue'
-import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline.vue'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
-import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
-import DockWindowIcon from 'vue-material-design-icons/DockWindow.vue'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-
-import TalkIcon from './talk/TalkIcon.vue'
-import ClippyIcon from './icons/ClippyIcon.vue'
-
-import SendModal from './talk/SendModal.vue'
 // import NuiteqModal from './NuiteqModal'
-
-import NcButton from '@nextcloud/vue/components/NcButton'
-
-import { showSuccess, showError } from '@nextcloud/dialogs'
+import ClippyIcon from './icons/ClippyIcon.vue'
+import SendModal from './talk/SendModal.vue'
+import TalkIcon from './talk/TalkIcon.vue'
 import { fields, Timer } from '../utils.js'
-import moment from '@nextcloud/moment'
 
 export default {
 	name: 'BoardDetails',
@@ -220,10 +216,12 @@ export default {
 			type: Object,
 			required: true,
 		},
+
 		nuiteqUrl: {
 			type: String,
 			required: true,
 		},
+
 		talkEnabled: {
 			type: Boolean,
 			default: false,
@@ -243,6 +241,7 @@ export default {
 		publicLink() {
 			return this.nuiteqUrl + '/board/' + this.board.id
 		},
+
 		fieldsToDisplay() {
 			const result = {}
 			Object.keys(this.fields).forEach((fieldId) => {
@@ -275,7 +274,7 @@ export default {
 				await navigator.clipboard.writeText(link)
 				this.publicLinkCopied = true
 				showSuccess(t('integration_nuiteq', 'Public link copied!'))
-				// eslint-disable-next-line
+
 				new Timer(() => {
 					this.publicLinkCopied = false
 				}, 5000)
@@ -284,12 +283,15 @@ export default {
 				showError(t('integration_nuiteq', 'Link could not be copied to clipboard'))
 			}
 		},
+
 		getFormattedDate(date) {
 			return moment(date).format('LL')
 		},
+
 		getFormattedDatetime(date) {
 			return moment(date).format('LLL')
 		},
+
 		discify(string) {
 			return '•'.repeat(string.length)
 		},
