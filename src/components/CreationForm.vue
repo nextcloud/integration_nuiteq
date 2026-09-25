@@ -19,7 +19,7 @@
 						:size="20" />
 					<NcCheckboxRadioSwitch v-if="field.togglable"
 						v-model="field.enabled"
-						@update:model-value="newBoard[fieldId] = ''">
+						@update:modelValue="newBoard[fieldId] = ''">
 						{{ field.label }}
 					</NcCheckboxRadioSwitch>
 					<label v-else
@@ -64,12 +64,12 @@
 					v-model="newBoard[fieldId]"
 					type="datetime"
 					:placeholder="field.placeholder"
-					:minute-step="1"
+					:minuteStep="1"
 					:clearable="true"
 					:confirm="true" />
 				<div v-else-if="field.type === 'ncColor'">
 					<NcColorPicker
-						:model-value="newBoard[fieldId]"
+						:modelValue="newBoard[fieldId]"
 						@input="updateColor($event, fieldId)">
 						<NcButton
 							:title="t('integration_nuiteq', 'Choose color')"
@@ -77,12 +77,12 @@
 					</NcColorPicker>
 				</div>
 				<NcSelect v-else-if="field.type === 'select'"
-					:model-value="newBoard[fieldId]"
+					:modelValue="newBoard[fieldId]"
 					:options="Object.values(field.options)"
 					label="label"
 					:placeholder="field.placeholder"
-					@update:model-value="setSelectValue(fieldId, $event)"
-					@search-change="query = $event">
+					@update:modelValue="setSelectValue(fieldId, $event)"
+					@searchChange="query = $event">
 					<template #option="{option}">
 						<component :is="option.icon"
 							v-if="option.icon"
@@ -172,10 +172,10 @@
 		</div>
 		<div class="nuiteq-footer">
 			<div class="spacer" />
-			<NcButton @click="$emit('cancel-clicked')">
+			<NcButton @click="$emit('cancelClicked')">
 				{{ t('integration_nuiteq', 'Cancel') }}
 			</NcButton>
-			<NcButton type="primary" @click="onOkClick">
+			<NcButton variant="primary" @click="onOkClick">
 				<template #icon>
 					<CheckIcon :class="{ 'icon-loading': loading }" />
 				</template>
@@ -186,22 +186,19 @@
 </template>
 
 <script>
-import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
-import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
-import PaletteIcon from 'vue-material-design-icons/Palette.vue'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-
+import { showError } from '@nextcloud/dialogs'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcDateTimePicker from '@nextcloud/vue/components/NcDateTimePicker'
 import NcHighlight from '@nextcloud/vue/components/NcHighlight'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
-
-import { showError } from '@nextcloud/dialogs'
-
-import { fields } from '../utils.js'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
+import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
+import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 import RadioElementSet from './RadioElementSet.vue'
+import { fields } from '../utils.js'
 
 export default {
 	name: 'CreationForm',
@@ -225,6 +222,7 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
 		focusOnField: {
 			type: String,
 			default: null,
@@ -280,17 +278,19 @@ export default {
 				}
 			})
 			if (isFormValid) {
-				this.$emit('ok-clicked', {
+				this.$emit('okClicked', {
 					...this.newBoard,
 				})
 			}
 		},
+
 		setSelectValue(fieldId, newValue) {
 			// this fixes the issue when selecting the currently select option
 			if (newValue !== null) {
 				this.newBoard[fieldId] = newValue
 			}
 		},
+
 		updateColor(color, fieldId) {
 			this.newBoard[fieldId] = color
 		},

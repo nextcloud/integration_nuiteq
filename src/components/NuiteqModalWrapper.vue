@@ -6,7 +6,7 @@
 <template>
 	<div id="nuiteqModalWrapper">
 		<NuiteqModal v-if="open && roomUrl"
-			:board-url="roomUrl"
+			:boardUrl="roomUrl"
 			@close="onClose" />
 	</div>
 </template>
@@ -45,6 +45,7 @@ export default {
 			this.roomUrl = roomUrl
 			this.open = true
 		},
+
 		onClose() {
 			this.open = false
 			this.$emit('close')

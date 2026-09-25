@@ -16,9 +16,9 @@
 				v-model="state.base_url"
 				:label="t('integration_nuiteq', 'Default NUITEQ Stage URL for users')"
 				placeholder="https://nuiteqstage.se"
-				:show-trailing-button="!!state.base_url"
-				@trailing-button-click="state.base_url = ''; onInput()"
-				@update:model-value="onInput">
+				:showTrailingButton="!!state.base_url"
+				@trailingButtonClick="state.base_url = ''; onInput()"
+				@update:modelValue="onInput">
 				<template #icon>
 					<ServerOutlineIcon :size="20" />
 				</template>
@@ -28,9 +28,9 @@
 				type="password"
 				:label="t('integration_nuiteq', 'Default NUITEQ Stage client key for users')"
 				:placeholder="t('integration_nuiteq', 'Client key')"
-				:show-trailing-button="!!state.client_key"
-				@trailing-button-click="state.client_key = ''; onInput()"
-				@update:model-value="onInput">
+				:showTrailingButton="!!state.client_key"
+				@trailingButtonClick="state.client_key = ''; onInput()"
+				@update:modelValue="onInput">
 				<template #icon>
 					<KeyOutlineIcon :size="20" />
 				</template>
@@ -43,19 +43,17 @@
 </template>
 
 <script>
-import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
-import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
-import NuiteqIcon from './icons/NuiteqIcon.vue'
-
+import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
+import { confirmPassword } from '@nextcloud/password-confirmation'
+import { generateUrl } from '@nextcloud/router'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-
-import { loadState } from '@nextcloud/initial-state'
-import { generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
+import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
+import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
+import NuiteqIcon from './icons/NuiteqIcon.vue'
 import { delay } from '../utils.js'
-import { showSuccess, showError } from '@nextcloud/dialogs'
-import { confirmPassword } from '@nextcloud/password-confirmation'
 
 export default {
 	name: 'AdminSettings',
@@ -95,19 +93,18 @@ export default {
 				that.saveOptions(values)
 			}, 2000)()
 		},
+
 		async saveOptions(values) {
 			await confirmPassword()
 			const req = {
 				values,
 			}
 			const url = generateUrl('/apps/integration_nuiteq/admin-config')
-			axios.put(url, req).then((response) => {
+			axios.put(url, req).then(() => {
 				showSuccess(t('integration_nuiteq', 'Nuiteq admin options saved'))
 			}).catch((error) => {
-				showError(
-					t('integration_nuiteq', 'Failed to save Nuiteq admin options')
-						+ ': ' + (error.response?.request?.responseText ?? ''),
-				)
+				showError(t('integration_nuiteq', 'Failed to save Nuiteq admin options')
+					+ ': ' + (error.response?.request?.responseText ?? ''))
 				console.debug(error)
 			})
 		},

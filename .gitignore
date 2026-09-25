@@ -6,5 +6,6 @@
 .vscode-upload.json
 .*.sw*
 /node_modules
+/vendor/
 /test-results/
 /playwright-report/
