@@ -16,6 +16,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 class PageController extends Controller {
 
@@ -27,6 +28,7 @@ class PageController extends Controller {
 		private IInitialState $initialStateService,
 		private NuiteqAPIService $nuiteqAPIService,
 		private ICrypto $crypto,
+		private LoggerInterface $logger,
 		private ?string $userId,
 	) {
 		parent::__construct($appName, $request);
@@ -54,7 +56,18 @@ class PageController extends Controller {
 			'board_list' => [],
 		];
 		if ($baseUrl !== '' && $apiKey !== '') {
-			$pageInitialState['board_list'] = $this->nuiteqAPIService->getBoards($this->userId);
+			$boards = $this->nuiteqAPIService->getBoards($this->userId);
+			if (array_is_list($boards)) {
+				$pageInitialState['board_list'] = $boards;
+			} else {
+				// an answer that is not a list of boards, an error for instance: the page is
+				// rendered without boards, it used to be handed something it cannot work with
+				// and stayed empty
+				$this->logger->warning(
+					'Nuiteq board list of ' . $this->userId . ' could not be read: ' . ($boards['error'] ?? 'unexpected answer'),
+					['app' => Application::APP_ID]
+				);
+			}
 		}
 		$this->initialStateService->provideInitialState('nuiteq-state', $pageInitialState);
 		return new TemplateResponse(Application::APP_ID, 'main', []);
