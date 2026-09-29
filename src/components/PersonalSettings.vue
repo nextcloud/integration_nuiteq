@@ -17,9 +17,9 @@
 				:label="t('integration_nuiteq', 'NUITEQ Stage URL')"
 				placeholder="https://nuiteqstage.se"
 				:disabled="connected === true"
-				:show-trailing-button="!!state.base_url"
-				@trailing-button-click="state.base_url = ''; onInput()"
-				@update:model-value="onInput">
+				:showTrailingButton="!!state.base_url"
+				@trailingButtonClick="state.base_url = ''; onInput()"
+				@update:modelValue="onInput">
 				<template #icon>
 					<ServerOutlineIcon :size="20" />
 				</template>
@@ -32,9 +32,9 @@
 				type="password"
 				:label="t('integration_nuiteq', 'Client key')"
 				:placeholder="t('integration_nuiteq', 'Client key')"
-				:show-trailing-button="!!state.client_key"
-				@trailing-button-click="state.client_key = ''; onInput()"
-				@update:model-value="onInput">
+				:showTrailingButton="!!state.client_key"
+				@trailingButtonClick="state.client_key = ''; onInput()"
+				@update:modelValue="onInput">
 				<template #icon>
 					<KeyOutlineIcon :size="20" />
 				</template>
@@ -88,25 +88,21 @@
 </template>
 
 <script>
-import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
-import CheckIcon from 'vue-material-design-icons/Check.vue'
-import CloseIcon from 'vue-material-design-icons/Close.vue'
-import AccountIcon from 'vue-material-design-icons/Account.vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
-import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
-
-import NuiteqIcon from './icons/NuiteqIcon.vue'
-
+import axios from '@nextcloud/axios'
+import { showError, showSuccess } from '@nextcloud/dialogs'
+import { loadState } from '@nextcloud/initial-state'
+import { generateUrl } from '@nextcloud/router'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-
-import { loadState } from '@nextcloud/initial-state'
-import { generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
-import { showSuccess, showError } from '@nextcloud/dialogs'
-
+import AccountIcon from 'vue-material-design-icons/Account.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import CloseIcon from 'vue-material-design-icons/Close.vue'
+import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
+import LockIcon from 'vue-material-design-icons/Lock.vue'
+import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
+import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
+import NuiteqIcon from './icons/NuiteqIcon.vue'
 import { delay } from '../utils.js'
 
 export default {
@@ -163,6 +159,7 @@ export default {
 				})
 			}, 2000)()
 		},
+
 		saveOptions(values) {
 			const req = {
 				values,
@@ -181,16 +178,15 @@ export default {
 				if (error.response.data.error) {
 					showError(error.response.data.error)
 				} else {
-					showError(
-						t('integration_nuiteq', 'Failed to save NUITEQ options')
-						+ ': ' + (error.response?.request?.responseText ?? ''),
-					)
+					showError(t('integration_nuiteq', 'Failed to save NUITEQ options')
+						+ ': ' + (error.response?.request?.responseText ?? ''))
 				}
 				console.error(error)
 			}).then(() => {
 				this.loading = false
 			})
 		},
+
 		onConnectClick() {
 			this.loading = true
 			this.saveOptions({
@@ -199,6 +195,7 @@ export default {
 				base_url: this.state.base_url,
 			})
 		},
+
 		onLogoutClick() {
 			this.login = ''
 			this.password = ''

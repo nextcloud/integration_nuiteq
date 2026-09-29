@@ -85,7 +85,7 @@ appstore: clean
 	--exclude=webpack.* \
 	--exclude=/vite.* \
 	--exclude=stylelint.config.js \
-	--exclude=.eslintrc.js \
+	--exclude=eslint.config.mjs \
 	--exclude=.github \
 	--exclude=.gitlab-ci.yml \
 	--exclude=crowdin.yml \

@@ -5,7 +5,8 @@
 
 <template>
 	<span
-		:class="{ option: true, selected: value === checked }"
+		class="option"
+		:class="{ selected: value === checked }"
 		:style="{ '--border-radius': borderRadius ? borderRadius + 'px' : borderRadius }">
 		<input :id="name + '-' + value"
 			type="radio"
@@ -36,6 +37,7 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		/**
 		 * the actual radio value
 		 */
@@ -43,6 +45,7 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		/**
 		 * the radio set name, common to all radios in the same set
 		 */
@@ -50,6 +53,7 @@ export default {
 			type: String,
 			required: true,
 		},
+
 		/**
 		 * border radius of the radio set corners
 		 */
