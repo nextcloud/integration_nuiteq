@@ -9,8 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## 1.3.0 - 2026-09-29
 ### Changed
 - Added support for NC 36
+- Updated Psalm, nextcloud/coding-standard and @nextcloud/eslint-config, and synced the lint workflows
+- Updated dependencies & translations
+### Fixed
+- Show the board page of an account whose NUITEQ Stage key is no longer accepted, instead of an empty page [#62](https://github.com/nextcloud/integration_nuiteq/pull/62)
+- Show the text of the empty states on the board page again [#58](https://github.com/nextcloud/integration_nuiteq/pull/58)
+- Show the buttons that create a board and that send a board link to Talk in the primary style again [#59](https://github.com/nextcloud/integration_nuiteq/pull/59)
 
 ## 1.2.0 - 2026-07-27
 ### Changed
