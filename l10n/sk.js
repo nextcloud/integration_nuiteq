@@ -36,7 +36,7 @@ OC.L10N.register(
     "Enabled" : "Zapnuté",
     "Disabled" : "Vypnuté",
     "Delete" : "Vymazať",
-    "Field \"{name}\" is missing" : "Položka \"{name}\" chýba",
+    "Field \"{name}\" is missing" : "Pole \"{name}\" chýba",
     "Choose color" : "Vyberte farbu",
     "Cancel" : "Zrušiť",
     "Create" : "Vytvoriť",
