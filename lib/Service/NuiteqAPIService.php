@@ -47,7 +47,24 @@ class NuiteqAPIService {
 
 		// Decrypt the clientKey if it's encrypted
 		if ($clientKey !== Application::DEFAULT_CLIENT_KEY) {
-			$clientKey = $this->crypto->decrypt($clientKey);
+			try {
+				$clientKey = $this->crypto->decrypt($clientKey);
+			} catch (Exception|Throwable $e) {
+				// a key encrypted under another instance secret: fall back to
+				// the one the admin set, or connecting again is impossible
+				$this->logger->warning(
+					'Nuiteq client key of ' . $userId . ' could not be read, using the configured one: ' . $e->getMessage(),
+					['app' => $this->appName]
+				);
+				$clientKey = $adminClientKey === $clientKey ? Application::DEFAULT_CLIENT_KEY : $adminClientKey;
+				if ($clientKey !== Application::DEFAULT_CLIENT_KEY) {
+					try {
+						$clientKey = $this->crypto->decrypt($clientKey);
+					} catch (Exception|Throwable $e) {
+						$clientKey = Application::DEFAULT_CLIENT_KEY;
+					}
+				}
+			}
 		}
 		return $clientKey;
 	}
@@ -94,17 +111,21 @@ class NuiteqAPIService {
 			return $result;
 		}
 		// NUITEQ answers with the new board's path, whose last segment is its id
-		if (!is_string($result['boardId'] ?? null)) {
+		$answered = $result['boardId'] ?? null;
+		if (is_bool($answered) || !is_scalar($answered)) {
 			$this->logger->warning(
 				'NUITEQ answered with a board id that is not a path: ' . json_encode($result),
 				['app' => $this->appName]
 			);
 			return ['error' => $this->l10n->t('NUITEQ did not say which board it created')];
 		}
-		$path = rtrim($result['boardId'], '/');
-		$slash = strrpos($path, '/');
-		$boardId = trim($slash === false ? $path : substr($path, $slash + 1));
-		if ($boardId === '') {
+		// the path only, so a query or a fragment does not end up in the id,
+		// and the last segment as it stands: a path ending in a separator names
+		// no board, and guessing the segment before it invents one
+		$path = parse_url((string)$answered, PHP_URL_PATH);
+		$segments = explode('/', is_string($path) ? $path : '');
+		$boardId = trim(end($segments));
+		if ($boardId === '' || $boardId === '.' || $boardId === '..') {
 			$this->logger->warning(
 				'NUITEQ created a board without saying which: ' . json_encode($result),
 				['app' => $this->appName]

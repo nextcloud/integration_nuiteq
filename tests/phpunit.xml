@@ -3,7 +3,7 @@
   - SPDX-FileCopyrightText: 2020 Nextcloud GmbH and Nextcloud contributors
   - SPDX-License-Identifier: AGPL-3.0-or-later
 -->
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="bootstrap.php" timeoutForSmallTests="900" timeoutForMediumTests="900" timeoutForLargeTests="900" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" cacheDirectory=".phpunit.cache">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="bootstrap.php" timeoutForSmallTests="900" timeoutForMediumTests="900" timeoutForLargeTests="900" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd" cacheDirectory=".phpunit.cache">
   <testsuite name="Nuiteq integration App Tests">
     <directory suffix="Test.php">.</directory>
   </testsuite>
@@ -13,8 +13,4 @@
       <directory suffix=".php">../lib</directory>
     </include>
   </source>
-  <!-- filters for code coverage -->
-  <logging>
-    <!-- and this is where your report will be written -->
-  </logging>
 </phpunit>
