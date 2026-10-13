@@ -5,7 +5,7 @@
 
 <template>
 	<NcAppNavigationItem
-		:title="board.name"
+		:name="board.name"
 		:class="{ selectedBoard: selected }"
 		:forceMenu="true"
 		@click="onBoardClick">

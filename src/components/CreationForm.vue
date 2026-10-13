@@ -18,7 +18,7 @@
 						v-if="field.icon"
 						:size="20" />
 					<NcCheckboxRadioSwitch v-if="field.togglable"
-						v-model="field.enabled"
+						v-model="enabledFields[fieldId]"
 						@update:modelValue="newBoard[fieldId] = ''">
 						{{ field.label }}
 					</NcCheckboxRadioSwitch>
@@ -35,15 +35,15 @@
 					type="text"
 					:placeholder="field.placeholder"
 					@keyup.enter="onOkClick">
-				<div v-else-if="field.type === 'password' && (!field.togglable || field.enabled)"
+				<div v-else-if="field.type === 'password' && (!field.togglable || enabledFields[fieldId])"
 					class="password-input-wrapper">
 					<input
 						:id="'board-' + fieldId"
 						v-model="newBoard[fieldId]"
-						:type="field.view ? 'text' : 'password'"
+						:type="shownFields[fieldId] ? 'text' : 'password'"
 						:placeholder="field.placeholder">
-					<EyeOutlineIcon v-if="field.view" @click="field.view = false" />
-					<EyeOffOutlineIcon v-else @click="field.view = true" />
+					<EyeOutlineIcon v-if="shownFields[fieldId]" @click="shownFields[fieldId] = false" />
+					<EyeOffOutlineIcon v-else @click="shownFields[fieldId] = true" />
 				</div>
 				<span v-else-if="field.type === 'textarea'"
 					class="textarea-wrapper">
@@ -52,14 +52,14 @@
 						v-model="newBoard[fieldId]"
 						:placeholder="field.placeholder" />
 				</span>
-				<NcDatetimePicker v-else-if="field.type === 'ncDate'"
+				<NcDateTimePicker v-else-if="field.type === 'ncDate'"
 					:id="'board-' + fieldId"
 					v-model="newBoard[fieldId]"
 					type="date"
 					:placeholder="field.placeholder"
 					:clearable="true"
 					:confirm="false" />
-				<NcDatetimePicker v-else-if="field.type === 'ncDatetime'"
+				<NcDateTimePicker v-else-if="field.type === 'ncDatetime'"
 					:id="'board-' + fieldId"
 					v-model="newBoard[fieldId]"
 					type="datetime"
@@ -187,6 +187,7 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
+import { markRaw } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
@@ -232,7 +233,11 @@ export default {
 	data() {
 		return {
 			newBoard: {},
-			fields,
+			// the field definitions are shared across components: which fields
+			// are on and which values are revealed belong to this form
+			fields: markRaw(fields),
+			enabledFields: {},
+			shownFields: {},
 			query: '',
 		}
 	},

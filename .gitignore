@@ -9,3 +9,4 @@
 /vendor/
 /test-results/
 /playwright-report/
+/coverage/

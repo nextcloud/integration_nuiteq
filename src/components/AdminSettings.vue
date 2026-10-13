@@ -95,7 +95,13 @@ export default {
 		},
 
 		async saveOptions(values) {
-			await confirmPassword()
+			try {
+				await confirmPassword()
+			} catch (error) {
+				showError(t('integration_nuiteq', 'Password confirmation is required to save these options'))
+				console.debug(error)
+				return
+			}
 			const req = {
 				values,
 			}

@@ -116,10 +116,10 @@
 							<label
 								:id="'board-' + fieldId + '-value'"
 								class="fieldValue">
-								{{ field.view ? board[fieldId] : discify(board[fieldId]) }}
+								{{ shownFields[fieldId] ? board[fieldId] : discify(board[fieldId]) }}
 							</label>
-							<EyeOutlineIcon v-if="field.view" @click="field.view = false" />
-							<EyeOffOutlineIcon v-else @click="field.view = true" />
+							<EyeOutlineIcon v-if="shownFields[fieldId]" @click="shownFields[fieldId] = false" />
+							<EyeOffOutlineIcon v-else @click="shownFields[fieldId] = true" />
 						</div>
 						<label v-else-if="['ncDate'].includes(field.type)"
 							:id="'board-' + fieldId + '-value'"
@@ -171,6 +171,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import { markRaw } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline.vue'
@@ -230,7 +231,10 @@ export default {
 
 	data() {
 		return {
-			fields,
+			// the field definitions are shared across components: whether a value
+			// is revealed belongs to this board and this mount
+			fields: markRaw(fields),
+			shownFields: {},
 			publicLinkCopied: false,
 			showTalkModal: false,
 			showNuiteqModal: false,
