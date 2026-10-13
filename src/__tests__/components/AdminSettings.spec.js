@@ -118,12 +118,24 @@ describe('AdminSettings', () => {
 	})
 
 	it('reports what the server said when saving fails', async () => {
-		axios.put.mockRejectedValue(httpError(500, 'read-only config'))
+		axios.put.mockRejectedValue({ response: { status: 400, data: { error: 'read-only config' } } })
 		const wrapper = mountSettings()
 
 		await wrapper.vm.saveOptions({ base_url: 'https://new.example.com' })
 		await flushPromises()
 
 		expect(showError).toHaveBeenCalledWith('Failed to save Nuiteq admin options: read-only config')
+	})
+
+	it('describes a failure by its status rather than printing the page it answered with', async () => {
+		axios.put.mockRejectedValue(httpError(500, '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>'))
+		const wrapper = mountSettings()
+
+		await wrapper.vm.saveOptions({ base_url: 'https://new.example.com' })
+		await flushPromises()
+
+		// the body used to be printed whole, and an answer without one left
+		// the message ending in a colon
+		expect(showError).toHaveBeenCalledWith('Failed to save Nuiteq admin options: The server answered 500')
 	})
 })

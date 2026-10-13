@@ -100,7 +100,7 @@ describe('PersonalSettings', () => {
 		await connect(wrapper)
 		await flushPromises()
 
-		expect(showError).toHaveBeenCalledWith('Failed to save NUITEQ options: gateway timeout')
+		expect(showError).toHaveBeenCalledWith('Failed to save NUITEQ options: The server answered 500')
 		expect(wrapper.vm.loading).toBe(false)
 	})
 })

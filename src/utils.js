@@ -45,8 +45,35 @@ export function delay(callback, ms) {
 		clearTimeout(mytimer)
 		mytimer = setTimeout(function() {
 			callback.apply(context, args)
-		}, ms || 0)
+		}, ms)
 	}
+}
+
+/**
+ * What to tell the user about a request that failed.
+ *
+ * The response body is not it: a server error page put its whole HTML, the
+ * exception class and a file path into a toast. An error this app threw itself
+ * carries a message meant for reading; anything else is described by its
+ * status, so the string stays translatable.
+ *
+ * @param {object|undefined} error what the request rejected with
+ * @param {(app: string, text: string, vars?: object) => string} t the translation function
+ * @return {string} the reason, ready to show
+ */
+export function failureReason(error, t) {
+	const fromServer = error?.response?.data?.error
+	if (typeof fromServer === 'string' && fromServer !== '') {
+		return fromServer
+	}
+	const status = error?.response?.status
+	if (typeof status === 'number' && status > 0) {
+		return t('integration_nuiteq', 'The server answered {status}', { status })
+	}
+	if (error instanceof Error && error.message && !('response' in error)) {
+		return error.message
+	}
+	return t('integration_nuiteq', 'The server could not be reached')
 }
 
 export const fields = {

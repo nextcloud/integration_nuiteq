@@ -43,6 +43,7 @@ function mountApp(state = {}) {
 	})
 	const slotOnly = { template: '<div><slot /></div>' }
 	return mount(App, {
+		attachTo: document.body,
 		global: { stubs: { NcContent: slotOnly, NcAppContent: slotOnly, NcModal: slotOnly } },
 	})
 }
@@ -85,17 +86,92 @@ describe('the board list', () => {
 		expect(wrapper.find('#board-password-value').text()).not.toContain('secret-two')
 	})
 
+	it('keeps a renamed board on the same navigation row', async () => {
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		const row = wrapper.findAll('.boardItem')[0].element
+
+		wrapper.vm.state.board_list[0].name = 'Planning'
+		await flushPromises()
+
+		// a board is its id: keying the list on the name tears the row down
+		// and builds another one whenever a board is renamed
+		expect(wrapper.findAll('.boardItem')[0].element).toBe(row)
+		expect(wrapper.findAll('.boardItem')[0].text()).toContain('Planning')
+	})
+
+	it('settles the reload before it hands back', async () => {
+		const wrapper = mountApp({ board_list: [] })
+		// two microtasks deep, so awaiting nothing is not enough
+		axios.get.mockReturnValue(Promise.resolve().then(() => Promise.resolve({ data: [board({ id: 'b-9', name: 'Retro' })] })))
+
+		await wrapper.vm.getBoards()
+
+		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Retro'])
+	})
+
+	it('settles the creation before it hands back', async () => {
+		axios.post.mockReturnValue(Promise.resolve().then(() => Promise.resolve({ data: { id: 'b-9' } })))
+		const wrapper = mountApp({ board_list: [] })
+
+		await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+
+		expect(wrapper.vm.selectedBoardId).toBe('b-9')
+	})
+
+	it('keeps the boards it already had when a new one is created', async () => {
+		axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+
+		await wrapper.vm.onCreationValidate({ name: 'Planning', password: '' })
+		await flushPromises()
+
+		// every creation test started from an empty list, so keeping the
+		// boards that were there and discarding them were the same thing
+		expect(wrapper.vm.activeBoards.map((b) => b.name))
+			.toEqual(['Sprint planning', 'Retro', 'Planning'])
+	})
+
+	it('keeps the board objects a pending deletion holds on to', async () => {
+		axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+		const wrapper = mountApp({ board_list: [board()] })
+		const existing = wrapper.vm.state.board_list[0]
+
+		await wrapper.vm.onCreationValidate({ name: 'Planning', password: '' })
+		await flushPromises()
+
+		// rebuilding the list must not replace the objects a pending deletion
+		// and its undo have already captured
+		expect(wrapper.vm.state.board_list[0]).toBe(existing)
+	})
+
+	it('keeps a board NUITEQ created when the list is not one', async () => {
+		axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+		const wrapper = mountApp({ board_list: { error: 'Server error: 503' } })
+
+		await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+		await flushPromises()
+
+		// pushing onto it threw, and the board NUITEQ had created was lost
+		expect(wrapper.vm.activeBoards.map((b) => b.name)).toEqual(['Retro'])
+		expect(showError).not.toHaveBeenCalled()
+	})
+
 	it('marks the open board in the navigation', async () => {
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
-		expect(wrapper.findAll('.selectedBoard')).toHaveLength(0)
+		expect(wrapper.findAll('.app-navigation-entry.active')).toHaveLength(0)
 
 		await wrapper.findAll('.app-navigation-entry-link')[1].trigger('click')
 
 		const rows = wrapper.findAll('.boardItem')
-		expect(rows[1].classes()).toContain('selectedBoard')
-		expect(rows[0].classes()).not.toContain('selectedBoard')
-		// the open board also carries the filled icon
+		expect(rows[1].find('.app-navigation-entry.active').exists()).toBe(true)
+		expect(rows[0].find('.app-navigation-entry.active').exists()).toBe(false)
+		// the open board also carries the filled icon, and the unselected ones
+		// the outline
 		expect(rows[1].find('.clipboard-edit-icon').exists()).toBe(true)
+		expect(rows[0].find('.clipboard-edit-outline-icon').exists()).toBe(true)
+		// and it says so to a screen reader, which a class cannot
+		expect(rows[1].find('[aria-current="page"]').exists()).toBe(true)
+		expect(rows[0].find('[aria-current]').exists()).toBe(false)
 	})
 
 	describe('creating a board', () => {
@@ -112,8 +188,12 @@ describe('the board list', () => {
 			expect(wrapper.vm.creationModalOpen).toBe(false)
 		})
 
-		it('does not add a board NUITEQ did not name', async () => {
-			axios.post.mockResolvedValue({ data: { status: 'ok' } })
+		it.each([
+			['no id at all', { status: 'ok' }],
+			['an empty id', { id: '' }],
+			['an id that is not a string', { id: 42 }],
+		])('does not add a board NUITEQ answered with %s', async (_, data) => {
+			axios.post.mockResolvedValue({ data })
 			const wrapper = mountApp({ board_list: [] })
 
 			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
@@ -123,7 +203,7 @@ describe('the board list', () => {
 			// the navigation unopenable
 			expect(wrapper.vm.activeBoards).toEqual([])
 			expect(wrapper.vm.selectedBoard).toBeFalsy()
-			expect(showError).toHaveBeenCalledWith(expect.stringContaining('NUITEQ did not say which board it created'))
+			expect(showError).toHaveBeenCalledWith('Failed to create new board: NUITEQ did not say which board it created')
 		})
 
 		it('says why a board could not be created', async () => {
@@ -135,9 +215,22 @@ describe('the board list', () => {
 			await flushPromises()
 
 			expect(wrapper.vm.activeBoards).toEqual([])
-			expect(showError).toHaveBeenCalledWith(expect.stringContaining('name already taken'))
+			expect(showError).toHaveBeenCalledWith('Failed to create new board: name already taken')
 			// closing it would lose what the user typed
 			expect(wrapper.vm.creationModalOpen).toBe(true)
+		})
+
+		it('stops showing itself as busy when the rejection carries nothing', async () => {
+			axios.post.mockRejectedValue(undefined)
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			// reading .response off it threw out of the handler, so the form
+			// stayed busy until the page was reloaded
+			expect(wrapper.vm.creating).toBe(false)
+			expect(showError).toHaveBeenCalledWith('Failed to create new board: The server could not be reached')
 		})
 
 		it('stops showing itself as busy either way', async () => {
@@ -149,6 +242,25 @@ describe('the board list', () => {
 
 			expect(wrapper.vm.creating).toBe(false)
 		})
+	})
+
+	it('starts a deletion from the action in the board\'s row', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		await wrapper.findAll('.action-item__menutoggle')[1].trigger('click')
+		await vi.advanceTimersByTimeAsync(500)
+		const deleteAction = document.querySelector('.action-button')
+		expect(deleteAction.textContent.trim()).toBe('Delete')
+
+		deleteAction.dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+		await flushPromises()
+
+		expect(showUndo).toHaveBeenCalledWith('Retro deleted', expect.any(Function))
+		expect(wrapper.vm.activeBoards.map((b) => b.name)).toEqual(['Sprint planning'])
+		// a deletion of another board leaves the open one open
+		expect(wrapper.vm.selectedBoardId).toBe('b-1')
 	})
 
 	it('closes the board it is deleting', async () => {
@@ -183,6 +295,7 @@ describe('the board list', () => {
 
 		expect(wrapper.vm.selectedBoardId).toBe('b-1')
 		expect(wrapper.vm.activeBoardCount).toBe(2)
+		expect(showError).toHaveBeenCalledWith('Failed to delete the board: board is locked')
 	})
 
 	it('does not move the user onto a board they were not looking at', async () => {
@@ -198,6 +311,64 @@ describe('the board list', () => {
 		await flushPromises()
 
 		expect(wrapper.vm.selectedBoardId).toBe('b-1')
+	})
+
+	it('does not open a board the user never opened when its deletion is refused', async () => {
+		vi.useFakeTimers()
+		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+
+		// nothing is open at page load, and delete is offered on every row, so
+		// restoring a selection that was never made opens a board by itself
+		expect(wrapper.vm.selectedBoardId).toBe('')
+		wrapper.vm.onBoardDeleted('b-2')
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+
+		expect(wrapper.vm.selectedBoardId).toBe('')
+	})
+
+	it('puts the user back on the board they undid the deletion of', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-1')
+		expect(wrapper.vm.selectedBoardId).toBe('')
+		showUndo.mock.calls.at(-1)[1]()
+		await flushPromises()
+
+		// the board came back to the list but the user was left looking at
+		// "no selected board" beside it
+		expect(wrapper.vm.selectedBoardId).toBe('b-1')
+		expect(wrapper.vm.activeBoardCount).toBe(2)
+	})
+
+	it('does not open a board the user never opened when a deletion is undone', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+
+		expect(wrapper.vm.selectedBoardId).toBe('')
+		wrapper.vm.onBoardDeleted('b-2')
+		showUndo.mock.calls.at(-1)[1]()
+		await flushPromises()
+
+		expect(wrapper.vm.selectedBoardId).toBe('')
+	})
+
+	it('leaves the user on the board they opened before undoing another deletion', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-1')
+		wrapper.vm.selectedBoardId = 'b-2'
+		showUndo.mock.calls.at(-1)[1]()
+		await flushPromises()
+
+		// the board comes back, but the user has moved on since
+		expect(wrapper.vm.selectedBoardId).toBe('b-2')
+		expect(wrapper.vm.activeBoardCount).toBe(2)
 	})
 
 	it('leaves the user on the board they opened during the undo window', async () => {
@@ -314,7 +485,22 @@ describe('the board list', () => {
 
 		// emptying the list in silence loses the user boards that still exist
 		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
-		expect(showError).toHaveBeenCalledWith(expect.stringContaining('NUITEQ did not answer with a list of boards'))
+		expect(showError).toHaveBeenCalledWith('Failed to get boards: NUITEQ did not answer with a list of boards')
+	})
+
+	it('renders its own strings, not another app\'s', () => {
+		const wrapper = mountApp({ board_list: [] })
+
+		// every string the board page shows has to be asked for under this app
+		expect(wrapper.text()).not.toContain('[untranslatable')
+		expect(wrapper.text()).toContain('You haven\'t created any boards yet')
+	})
+
+	it('says it is not connected without borrowing another app\'s strings', () => {
+		const wrapper = mountApp({ api_key: '', user_name: '', board_list: [] })
+
+		expect(wrapper.text()).not.toContain('[untranslatable')
+		expect(wrapper.text()).toContain('You are not connected to NUITEQ Stage')
 	})
 
 	it('shows an empty list rather than nothing at all when the page state is not a list', async () => {
@@ -322,6 +508,7 @@ describe('the board list', () => {
 		const wrapper = mountApp({ board_list: { error: 'Server error: 503' } })
 
 		expect(wrapper.vm.activeBoards).toEqual([])
+		expect(wrapper.text()).not.toContain('[untranslatable')
 		expect(wrapper.text()).toContain('Create a board')
 	})
 

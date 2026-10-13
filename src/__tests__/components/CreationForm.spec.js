@@ -43,6 +43,7 @@ describe('CreationForm', () => {
 		const wrapper = mount(CreationForm)
 
 		expect(wrapper.find('#board-name').exists()).toBe(true)
+		expect(wrapper.text()).not.toContain('[untranslatable')
 		expect(wrapper.text()).toContain('Board name')
 	})
 
