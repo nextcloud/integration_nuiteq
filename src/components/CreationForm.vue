@@ -52,14 +52,14 @@
 						v-model="newBoard[fieldId]"
 						:placeholder="field.placeholder" />
 				</span>
-				<NcDatetimePicker v-else-if="field.type === 'ncDate'"
+				<NcDateTimePicker v-else-if="field.type === 'ncDate'"
 					:id="'board-' + fieldId"
 					v-model="newBoard[fieldId]"
 					type="date"
 					:placeholder="field.placeholder"
 					:clearable="true"
 					:confirm="false" />
-				<NcDatetimePicker v-else-if="field.type === 'ncDatetime'"
+				<NcDateTimePicker v-else-if="field.type === 'ncDatetime'"
 					:id="'board-' + fieldId"
 					v-model="newBoard[fieldId]"
 					type="datetime"

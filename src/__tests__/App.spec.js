@@ -102,6 +102,60 @@ describe('the board list', () => {
 		expect(wrapper.vm.activeBoardCount).toBe(1)
 	})
 
+	it('ignores an undo pressed after the deletion already went out', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp()
+
+		wrapper.vm.onBoardDeleted('b-1')
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+		// the toast used to live exactly as long as the deletion timer, so this
+		// click could put back a board NUITEQ had already deleted
+		showUndo.mock.calls[0][1]()
+		await flushPromises()
+
+		expect(axios.post).toHaveBeenCalledOnce()
+		expect(wrapper.vm.activeBoardCount).toBe(0)
+	})
+
+	it('closes the undo offer before the deletion goes out', () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp()
+
+		wrapper.vm.onBoardDeleted('b-1')
+
+		expect(showUndo.mock.calls[0][2].timeout).toBeLessThan(10000)
+	})
+
+	it('does nothing for a board it does not have', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp()
+
+		wrapper.vm.onBoardDeleted('b-does-not-exist')
+		await vi.advanceTimersByTimeAsync(60000)
+
+		expect(showUndo).not.toHaveBeenCalled()
+		expect(axios.post).not.toHaveBeenCalled()
+		expect(wrapper.vm.activeBoardCount).toBe(1)
+	})
+
+	it('replaces the board list it is given rather than adding to it', async () => {
+		const wrapper = mountApp()
+		axios.get.mockResolvedValue({ data: [board({ id: 'b-9', name: 'From the server' })] })
+
+		await wrapper.vm.getBoards()
+		await flushPromises()
+
+		expect(wrapper.vm.state.board_list.map((b) => b.id)).toEqual(['b-9'])
+	})
+
+	it('shows an empty list when the server sent something that is not one', async () => {
+		const wrapper = mountApp({ board_list: { error: 'Server error: 503' } })
+
+		expect(wrapper.vm.activeBoards).toEqual([])
+		expect(wrapper.text()).toContain('Create a board')
+	})
+
 	it('puts the board back when the server refused to delete it', async () => {
 		vi.useFakeTimers()
 		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })

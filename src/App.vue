@@ -129,7 +129,9 @@ export default {
 		},
 
 		activeBoards() {
-			return this.state.board_list.filter((b) => !b.trash)
+			return Array.isArray(this.state.board_list)
+				? this.state.board_list.filter((b) => !b.trash)
+				: []
 		},
 
 		activeBoardsById() {
@@ -172,7 +174,7 @@ export default {
 		getBoards() {
 			const url = generateUrl('/apps/integration_nuiteq/list')
 			axios.get(url).then((response) => {
-				this.state.board_list.push(...response.data)
+				this.state.board_list = Array.isArray(response.data) ? response.data : []
 			}).catch((error) => {
 				showError(t('integration_nuiteq', 'Failed to get boards')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
@@ -244,23 +246,30 @@ export default {
 			}
 
 			// hide the board nav item
-			const boardIndex = this.state.board_list.findIndex((b) => b.id === boardId)
-			const board = this.state.board_list[boardIndex]
-			if (boardIndex !== -1) {
-				board.trash = true
+			const board = this.state.board_list.find((b) => b.id === boardId)
+			if (board === undefined) {
+				return
 			}
+			board.trash = true
 
 			// cancel or delete
+			let deleted = false
 			const deletionTimer = new Timer(() => {
+				deleted = true
 				this.deleteBoard(boardId)
 			}, 10000)
 			showUndo(
 				t('integration_nuiteq', '{name} deleted', { name: board.name }),
 				() => {
+					if (deleted) {
+						// the toast outlived the deletion: pausing an expired
+						// timer does nothing, and the board is gone on NUITEQ
+						return
+					}
 					deletionTimer.pause()
 					board.trash = false
 				},
-				{ timeout: 10000 },
+				{ timeout: 9000 },
 			)
 		},
 	},
