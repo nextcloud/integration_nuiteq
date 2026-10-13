@@ -174,16 +174,18 @@ export default {
 
 		getBoards() {
 			const url = generateUrl('/apps/integration_nuiteq/list')
-			axios.get(url).then((response) => {
+			return axios.get(url).then((response) => {
 				if (!Array.isArray(response.data)) {
-					throw new TypeError('the board list is not a list')
+					throw new TypeError(t('integration_nuiteq', 'NUITEQ did not answer with a list of boards'))
 				}
 				this.state.board_list = response.data
 			}).catch((error) => {
-				showError(t('integration_nuiteq', 'Failed to get boards')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				const reason = error.response?.data?.error
+					?? error.response?.request?.responseText
+					?? error.message
+					?? ''
+				showError(t('integration_nuiteq', 'Failed to get boards') + ': ' + reason)
 				console.debug(error)
-			}).then(() => {
 			})
 		},
 
@@ -203,15 +205,24 @@ export default {
 				password: board.password,
 			}
 			const url = generateUrl('/apps/integration_nuiteq/new')
-			axios.post(url, req).then((response) => {
+			return axios.post(url, req).then((response) => {
+				const id = response.data?.id
+				if (typeof id !== 'string' || id === '') {
+					// the board would sit in the list with no id, which cannot
+					// be opened, deleted or linked to
+					throw new TypeError(t('integration_nuiteq', 'NUITEQ did not say which board it created'))
+				}
 				showSuccess(t('integration_nuiteq', 'New board was created in NUITEQ stage'))
-				board.id = response.data?.id
+				board.id = id
 				this.state.board_list.push(board)
 				this.selectedBoardId = board.id
 				this.creationModalOpen = false
 			}).catch((error) => {
-				showError(t('integration_nuiteq', 'Failed to create new board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				const reason = error.response?.data?.error
+					?? error.response?.request?.responseText
+					?? error.message
+					?? ''
+				showError(t('integration_nuiteq', 'Failed to create new board') + ': ' + reason)
 				console.debug(error)
 			}).then(() => {
 				this.creating = false
@@ -223,7 +234,7 @@ export default {
 			this.selectedBoardId = boardId
 		},
 
-		deleteBoard(boardId) {
+		deleteBoard(boardId, wasSelected = false) {
 			console.debug('DELETE board', boardId)
 			const req = {
 				boardId,
@@ -236,7 +247,11 @@ export default {
 				const board = this.state.board_list.find((b) => b.id === boardId)
 				if (board) {
 					board.trash = false
-					this.selectedBoardId = boardId
+					if (wasSelected && this.selectedBoardId === '') {
+						// only the deletion that deselected it may select it
+						// again, and only if nothing was opened in the meantime
+						this.selectedBoardId = boardId
+					}
 				}
 				showError(t('integration_nuiteq', 'Failed to delete the board')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
@@ -246,7 +261,8 @@ export default {
 
 		onBoardDeleted(boardId) {
 			// deselect the board
-			if (boardId === this.selectedBoardId) {
+			const wasSelected = boardId === this.selectedBoardId
+			if (wasSelected) {
 				this.selectedBoardId = ''
 			}
 
@@ -261,7 +277,7 @@ export default {
 			let deleted = false
 			const deletionTimer = new Timer(() => {
 				deleted = true
-				this.deleteBoard(boardId)
+				this.deleteBoard(boardId, wasSelected)
 			}, 10000)
 			showUndo(
 				t('integration_nuiteq', '{name} deleted', { name: board.name }),
