@@ -17,21 +17,22 @@ use PHPUnit\Framework\TestCase;
 class ConfigControllerTest extends TestCase {
 
 	private IConfig $config;
+	private ICrypto $crypto;
 	private ConfigController $controller;
 
 	public function setUp(): void {
 		parent::setUp();
 
 		$this->config = $this->createMock(IConfig::class);
-		$crypto = $this->createMock(ICrypto::class);
-		$crypto->method('encrypt')->willReturnCallback(fn ($value) => 'encrypted(' . $value . ')');
+		$this->crypto = $this->createMock(ICrypto::class);
+		$this->crypto->method('encrypt')->willReturnCallback(fn ($value) => 'encrypted(' . $value . ')');
 
 		$this->controller = new ConfigController(
 			'integration_nuiteq',
 			$this->createMock(IRequest::class),
 			$this->config,
 			$this->createMock(NuiteqAPIService::class),
-			$crypto,
+			$this->crypto,
 			'admin',
 		);
 	}
@@ -46,9 +47,34 @@ class ConfigControllerTest extends TestCase {
 			->with('integration_nuiteq', 'base_url', 'https://stage.example.com');
 
 		$this->controller->setAdminConfig([
-			'base_url' => 'https://stage.example.com',
 			'client_key' => 'dummySecret',
+			'base_url' => 'https://stage.example.com',
 		]);
+	}
+
+	public function testAUserClientKeyIsStoredEncrypted(): void {
+		$stored = [];
+		$this->config->method('setUserValue')
+			->willReturnCallback(function ($userId, $app, $key, $value) use (&$stored): void {
+				$stored[$key] = $value;
+			});
+		$this->controller->setConfig(['client_key' => 'a-real-key']);
+
+		// a regression here writes every user's key to the database in clear
+		$this->assertSame('encrypted(a-real-key)', $stored['client_key'] ?? null);
+	}
+
+	public function testAUserClientKeyIsTheOnlyValueEncrypted(): void {
+		$stored = [];
+		$this->config->method('setUserValue')
+			->willReturnCallback(function ($userId, $app, $key, $value) use (&$stored): void {
+				$stored[$key] = $value;
+			});
+		$this->crypto->expects($this->once())->method('encrypt')->willReturn('encrypted');
+
+		$this->controller->setConfig(['client_key' => 'a-real-key', 'base_url' => 'https://stage.example.com']);
+
+		$this->assertSame('https://stage.example.com', $stored['base_url'] ?? null);
 	}
 
 	public function testAnAdminClientKeyIsStoredEncrypted(): void {

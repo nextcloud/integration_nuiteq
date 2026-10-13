@@ -94,7 +94,14 @@ class NuiteqAPIService {
 			return $result;
 		}
 		// NUITEQ answers with the new board's path, whose last segment is its id
-		$path = rtrim((string)($result['boardId'] ?? ''), '/');
+		if (!is_string($result['boardId'] ?? null)) {
+			$this->logger->warning(
+				'NUITEQ answered with a board id that is not a path: ' . json_encode($result),
+				['app' => $this->appName]
+			);
+			return ['error' => $this->l10n->t('NUITEQ did not say which board it created')];
+		}
+		$path = rtrim($result['boardId'], '/');
 		$slash = strrpos($path, '/');
 		$boardId = trim($slash === false ? $path : substr($path, $slash + 1));
 		if ($boardId === '') {

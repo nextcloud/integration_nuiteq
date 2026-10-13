@@ -44,6 +44,7 @@ class PageController extends Controller {
 	 */
 	public function index(): TemplateResponse {
 		$clientKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'client_key');
+		$clientKeyUnreadable = false;
 		try {
 			$clientKey = $clientKey === '' ? '' : $this->crypto->decrypt($clientKey);
 		} catch (Exception|Throwable $e) {
@@ -54,8 +55,15 @@ class PageController extends Controller {
 				['app' => Application::APP_ID]
 			);
 			$clientKey = '';
+			$clientKeyUnreadable = true;
 		}
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
+		if ($clientKeyUnreadable) {
+			// every request would fail on a key that cannot be decrypted, so the
+			// page offers to connect again instead of showing a connection that
+			// cannot work: the field that replaces the key is on that form
+			$apiKey = '';
+		}
 		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
 		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
 		$talkEnabled = $this->appManager->isEnabledForUser('spreed');

@@ -14,12 +14,14 @@ use OCP\Http\Client\IResponse;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\Security\ICrypto;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class NuiteqAPIServiceTest extends TestCase {
 
 	private IClient $client;
+	private LoggerInterface $logger;
 	private NuiteqAPIService $apiService;
 
 	public function setUp(): void {
@@ -46,9 +48,11 @@ class NuiteqAPIServiceTest extends TestCase {
 		);
 		$config->method('getAppValue')->willReturn('');
 
+		$this->logger = $this->createMock(LoggerInterface::class);
+
 		$this->apiService = new NuiteqAPIService(
 			'integration_nuiteq',
-			$this->createMock(LoggerInterface::class),
+			$this->logger,
 			$l10n,
 			$config,
 			$crypto,
@@ -66,15 +70,18 @@ class NuiteqAPIServiceTest extends TestCase {
 	/**
 	 * The board page adds whatever it is handed to its list, so an answer
 	 * without an id becomes an entry that cannot be selected or deleted.
-	 *
-	 * @dataProvider provideAnswersWithoutABoardId
 	 */
+	#[DataProvider('provideAnswersWithoutABoardId')]
 	public function testABoardWithNoIdIsReportedAsAFailure(array $body): void {
 		$this->answers($body);
 
 		$result = $this->apiService->newBoard('admin', 'New board', '');
 
-		$this->assertArrayHasKey('error', $result, 'was reported as a created board: ' . json_encode($result));
+		$this->assertSame(
+			'NUITEQ did not say which board it created',
+			$result['error'] ?? null,
+			'was reported as a created board: ' . json_encode($result)
+		);
 		$this->assertArrayNotHasKey('id', $result);
 	}
 
@@ -88,9 +95,7 @@ class NuiteqAPIServiceTest extends TestCase {
 		];
 	}
 
-	/**
-	 * @dataProvider provideBoardPaths
-	 */
+	#[DataProvider('provideBoardPaths')]
 	public function testTheBoardIdIsTheLastSegmentOfThePathNuiteqAnswersWith(string $boardId, string $expected): void {
 		$this->answers(['boardId' => $boardId]);
 
@@ -110,7 +115,23 @@ class NuiteqAPIServiceTest extends TestCase {
 		];
 	}
 
-	public function testAnErrorFromNuiteqIsHandedBackUntouched(): void {
+	public function testAnAnswerWithNoBoardIdAtAllIsLogged(): void {
+		$this->logger->expects($this->once())->method('warning')
+			->with($this->stringContains('not a path'), ['app' => 'integration_nuiteq']);
+		$this->answers(['status' => 'ok']);
+
+		$this->apiService->newBoard('admin', 'New board', '');
+	}
+
+	public function testAPathWithNoUsableSegmentIsLogged(): void {
+		$this->logger->expects($this->once())->method('warning')
+			->with($this->stringContains('without saying which'), ['app' => 'integration_nuiteq']);
+		$this->answers(['boardId' => 'https://stage.example.com/board/  ']);
+
+		$this->apiService->newBoard('admin', 'New board', '');
+	}
+
+	public function testAnAnswerThatIsNotJsonIsReportedAsSuch(): void {
 		$response = $this->createMock(IResponse::class);
 		$response->method('getStatusCode')->willReturn(200);
 		$response->method('getBody')->willReturn('not json at all');
@@ -118,6 +139,45 @@ class NuiteqAPIServiceTest extends TestCase {
 
 		$result = $this->apiService->newBoard('admin', 'New board', '');
 
-		$this->assertArrayHasKey('error', $result);
+		// not "did not say which board it created": the request itself failed
+		$this->assertSame('Invalid response', $result['error'] ?? null);
+	}
+
+	/**
+	 * What NUITEQ said went wrong has to reach the user, rather than being
+	 * reported as a board that was created without an id.
+	 */
+	public function testAFailureFromNuiteqIsHandedBackUntouched(): void {
+		$response = $this->createMock(IResponse::class);
+		$response->method('getStatusCode')->willReturn(401);
+		$response->method('getBody')->willReturn('');
+		$this->client->method('post')->willReturn($response);
+
+		$result = $this->apiService->newBoard('admin', 'New board', '');
+
+		$this->assertSame('Bad credentials', $result['error'] ?? null);
+		$this->assertArrayNotHasKey('id', $result);
+	}
+
+	/**
+	 * @dataProvider provideBoardIdsThatAreNotStrings
+	 */
+	#[DataProvider('provideBoardIdsThatAreNotStrings')]
+	public function testABoardIdThatIsNotAStringIsReportedAsAFailure(mixed $boardId): void {
+		$this->answers(['boardId' => $boardId]);
+
+		$result = $this->apiService->newBoard('admin', 'New board', '');
+
+		$this->assertArrayHasKey('error', $result, 'was accepted: ' . json_encode($result));
+		$this->assertArrayNotHasKey('id', $result);
+	}
+
+	public static function provideBoardIdsThatAreNotStrings(): array {
+		return [
+			'a list' => [['a', 'b']],
+			'an object' => [['nested' => 1]],
+			'a boolean' => [true],
+			'nothing' => [null],
+		];
 	}
 }
