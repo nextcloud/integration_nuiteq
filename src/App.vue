@@ -91,7 +91,7 @@ import CreationForm from './components/CreationForm.vue'
 import NuiteqIcon from './components/icons/NuiteqIcon.vue'
 import NuiteqNavigation from './components/NuiteqNavigation.vue'
 import PersonalSettings from './components/PersonalSettings.vue'
-import { Timer } from './utils.js'
+import { failureReason, Timer } from './utils.js'
 
 export default {
 	name: 'App',
@@ -180,11 +180,7 @@ export default {
 				}
 				this.state.board_list = response.data
 			}).catch((error) => {
-				const reason = error.response?.data?.error
-					?? error.response?.request?.responseText
-					?? error.message
-					?? ''
-				showError(t('integration_nuiteq', 'Failed to get boards') + ': ' + reason)
+				showError(t('integration_nuiteq', 'Failed to get boards') + ': ' + failureReason(error, t))
 				console.debug(error)
 			})
 		},
@@ -214,15 +210,14 @@ export default {
 				}
 				showSuccess(t('integration_nuiteq', 'New board was created in NUITEQ stage'))
 				board.id = id
-				this.state.board_list.push(board)
+				this.state.board_list = [
+					...(Array.isArray(this.state.board_list) ? this.state.board_list : []),
+					board,
+				]
 				this.selectedBoardId = board.id
 				this.creationModalOpen = false
 			}).catch((error) => {
-				const reason = error.response?.data?.error
-					?? error.response?.request?.responseText
-					?? error.message
-					?? ''
-				showError(t('integration_nuiteq', 'Failed to create new board') + ': ' + reason)
+				showError(t('integration_nuiteq', 'Failed to create new board') + ': ' + failureReason(error, t))
 				console.debug(error)
 			}).then(() => {
 				this.creating = false
@@ -234,7 +229,7 @@ export default {
 			this.selectedBoardId = boardId
 		},
 
-		deleteBoard(boardId, wasSelected = false) {
+		deleteBoard(boardId, wasSelected) {
 			console.debug('DELETE board', boardId)
 			const req = {
 				boardId,
@@ -253,8 +248,7 @@ export default {
 						this.selectedBoardId = boardId
 					}
 				}
-				showError(t('integration_nuiteq', 'Failed to delete the board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				showError(t('integration_nuiteq', 'Failed to delete the board') + ': ' + failureReason(error, t))
 				console.debug(error)
 			})
 		},
@@ -289,6 +283,9 @@ export default {
 					}
 					deletionTimer.pause()
 					board.trash = false
+					if (wasSelected && this.selectedBoardId === '') {
+						this.selectedBoardId = boardId
+					}
 				},
 			)
 		},
