@@ -90,15 +90,22 @@ class NuiteqAPIService {
 			'password' => $password,
 		];
 		$result = $this->request($userId, 'new', $params, 'POST');
-		if (isset($result['boardId'])) {
-			$parts = explode('/', $result['boardId']);
-			if (count($parts) > 0) {
-				$result['id'] = array_pop($parts);
-				unset($result['boardId']);
-				return $result;
-			}
-			return ['error' => 'malformed NUITEQ response'];
+		if (isset($result['error'])) {
+			return $result;
 		}
+		// NUITEQ answers with the new board's path, whose last segment is its id
+		$path = rtrim((string)($result['boardId'] ?? ''), '/');
+		$slash = strrpos($path, '/');
+		$boardId = trim($slash === false ? $path : substr($path, $slash + 1));
+		if ($boardId === '') {
+			$this->logger->warning(
+				'NUITEQ created a board without saying which: ' . json_encode($result),
+				['app' => $this->appName]
+			);
+			return ['error' => $this->l10n->t('NUITEQ did not say which board it created')];
+		}
+		$result['id'] = $boardId;
+		unset($result['boardId']);
 		return $result;
 	}
 
