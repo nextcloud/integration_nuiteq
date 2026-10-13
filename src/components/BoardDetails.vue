@@ -171,6 +171,7 @@
 <script>
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import moment from '@nextcloud/moment'
+import { markRaw } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import CheckIcon from 'vue-material-design-icons/Check.vue'
 import CheckboxBlankOutlineIcon from 'vue-material-design-icons/CheckboxBlankOutline.vue'
@@ -187,7 +188,6 @@ import ToggleSwitchOffOutlineIcon from 'vue-material-design-icons/ToggleSwitchOf
 import ClippyIcon from './icons/ClippyIcon.vue'
 import SendModal from './talk/SendModal.vue'
 import TalkIcon from './talk/TalkIcon.vue'
-import { markRaw } from 'vue'
 import { fields, Timer } from '../utils.js'
 
 export default {

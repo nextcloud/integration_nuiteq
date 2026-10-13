@@ -187,6 +187,7 @@
 
 <script>
 import { showError } from '@nextcloud/dialogs'
+import { markRaw } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
@@ -198,7 +199,6 @@ import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
 import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
 import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 import RadioElementSet from './RadioElementSet.vue'
-import { markRaw } from 'vue'
 import { fields } from '../utils.js'
 
 export default {
