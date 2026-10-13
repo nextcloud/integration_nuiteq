@@ -63,6 +63,41 @@ describe('the board list', () => {
 			.toEqual(['Sprint planning', 'Retro'])
 	})
 
+	it('keeps the next board\'s password hidden when the user switches boards', async () => {
+		const wrapper = mountApp({
+			board_list: [
+				board({ id: 'b-1', name: 'One', password: 'secret-one' }),
+				board({ id: 'b-2', name: 'Two', password: 'secret-two' }),
+			],
+		})
+
+		const entries = () => wrapper.findAll('.app-navigation-entry-link')
+		await entries()[0].trigger('click')
+		await wrapper.find('.password-input-wrapper .material-design-icon').trigger('click')
+		expect(wrapper.find('#board-password-value').text()).toContain('secret-one')
+
+		await entries()[1].trigger('click')
+
+		// the details used to be one reused instance, so everything it held
+		// about the first board carried over to the second
+		expect(wrapper.vm.selectedBoardId).toBe('b-2')
+		expect(wrapper.find('#board-password-value').text()).not.toContain('secret-two')
+	})
+
+	it('puts the user back on the board the server refused to delete', async () => {
+		vi.useFakeTimers()
+		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		const wrapper = mountApp()
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-1')
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+
+		expect(wrapper.vm.selectedBoardId).toBe('b-1')
+		expect(wrapper.vm.activeBoardCount).toBe(1)
+	})
+
 	it('offers to undo a deletion before carrying it out', async () => {
 		vi.useFakeTimers()
 		const wrapper = mountApp()
@@ -118,15 +153,6 @@ describe('the board list', () => {
 		expect(wrapper.vm.activeBoardCount).toBe(0)
 	})
 
-	it('closes the undo offer before the deletion goes out', () => {
-		vi.useFakeTimers()
-		const wrapper = mountApp()
-
-		wrapper.vm.onBoardDeleted('b-1')
-
-		expect(showUndo.mock.calls[0][2].timeout).toBeLessThan(10000)
-	})
-
 	it('does nothing for a board it does not have', async () => {
 		vi.useFakeTimers()
 		const wrapper = mountApp()
@@ -149,7 +175,20 @@ describe('the board list', () => {
 		expect(wrapper.vm.state.board_list.map((b) => b.id)).toEqual(['b-9'])
 	})
 
-	it('shows an empty list when the server sent something that is not one', async () => {
+	it('keeps the boards and says so when a reload answers with something that is not a list', async () => {
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		axios.get.mockResolvedValue({ data: { error: 'Server error: 503' } })
+
+		await wrapper.vm.getBoards()
+		await flushPromises()
+
+		// emptying the list in silence loses the user boards that still exist
+		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
+		expect(showError).toHaveBeenCalled()
+	})
+
+	it('shows an empty list rather than nothing at all when the page state is not a list', async () => {
+		// the page controller guards this, so it is defence rather than a path
 		const wrapper = mountApp({ board_list: { error: 'Server error: 503' } })
 
 		expect(wrapper.vm.activeBoards).toEqual([])

@@ -64,8 +64,6 @@ export const fields = {
 		type: 'password',
 		placeholder: t('integration_nuiteq', 'Password'),
 		togglable: true,
-		enabled: false,
-		view: false,
 		default: '',
 	},
 	/*

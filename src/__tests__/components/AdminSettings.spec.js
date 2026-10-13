@@ -6,7 +6,7 @@ import axios from '@nextcloud/axios'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import { confirmPassword } from '@nextcloud/password-confirmation'
 import { flushPromises, mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AdminSettings from '../../components/AdminSettings.vue'
 import { httpError, setInitialState } from '../helpers.js'
 
@@ -26,11 +26,69 @@ function mountSettings(config = {}) {
 	return mount(AdminSettings)
 }
 
+/**
+ * One of the text fields, by the placeholder the admin sees in it.
+ *
+ * @param wrapper the mounted settings
+ * @param placeholder the placeholder text
+ */
+function field(wrapper, placeholder) {
+	return wrapper.find(`input[placeholder="${placeholder}"]`)
+}
+
 describe('AdminSettings', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 		axios.put.mockResolvedValue({ data: {} })
 		confirmPassword.mockResolvedValue()
+	})
+
+	afterEach(() => vi.useRealTimers())
+
+	describe('typing in a field', () => {
+		it('waits for the admin to stop typing before saving', async () => {
+			vi.useFakeTimers()
+			const wrapper = mountSettings()
+
+			await field(wrapper, 'https://nuiteqstage.se').setValue('https://new.example.com')
+			await vi.advanceTimersByTimeAsync(1999)
+			expect(axios.put).not.toHaveBeenCalled()
+
+			await vi.advanceTimersByTimeAsync(1)
+			expect(axios.put).toHaveBeenCalledTimes(1)
+		})
+
+		it('saves the url the admin typed', async () => {
+			vi.useFakeTimers()
+			const wrapper = mountSettings()
+
+			await field(wrapper, 'https://nuiteqstage.se').setValue('https://new.example.com')
+			await vi.advanceTimersByTimeAsync(2000)
+
+			expect(axios.put).toHaveBeenCalledWith(ADMIN_URL, {
+				values: { base_url: 'https://new.example.com', client_key: '' },
+			})
+		})
+
+		it('leaves the stored key alone while the field still shows the placeholder', async () => {
+			vi.useFakeTimers()
+			const wrapper = mountSettings({ client_key: 'dummySecret' })
+
+			await field(wrapper, 'https://nuiteqstage.se').setValue('https://new.example.com')
+			await vi.advanceTimersByTimeAsync(2000)
+
+			expect(axios.put.mock.calls[0][1].values).not.toHaveProperty('client_key')
+		})
+
+		it('sends a key the admin actually typed', async () => {
+			vi.useFakeTimers()
+			const wrapper = mountSettings({ client_key: 'dummySecret' })
+
+			await field(wrapper, 'Client key').setValue('a-real-key')
+			await vi.advanceTimersByTimeAsync(2000)
+
+			expect(axios.put.mock.calls[0][1].values.client_key).toBe('a-real-key')
+		})
 	})
 
 	it('saves what the admin typed once the password is confirmed', async () => {

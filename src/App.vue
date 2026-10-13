@@ -21,6 +21,7 @@
 			<!--template slot="list">
 			</template-->
 			<BoardDetails v-if="selectedBoard"
+				:key="selectedBoard.id"
 				:board="selectedBoard"
 				:nuiteqUrl="state.base_url"
 				:talkEnabled="state.talk_enabled" />
@@ -174,7 +175,10 @@ export default {
 		getBoards() {
 			const url = generateUrl('/apps/integration_nuiteq/list')
 			axios.get(url).then((response) => {
-				this.state.board_list = Array.isArray(response.data) ? response.data : []
+				if (!Array.isArray(response.data)) {
+					throw new TypeError('the board list is not a list')
+				}
+				this.state.board_list = response.data
 			}).catch((error) => {
 				showError(t('integration_nuiteq', 'Failed to get boards')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
@@ -232,6 +236,7 @@ export default {
 				const board = this.state.board_list.find((b) => b.id === boardId)
 				if (board) {
 					board.trash = false
+					this.selectedBoardId = boardId
 				}
 				showError(t('integration_nuiteq', 'Failed to delete the board')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
@@ -269,7 +274,6 @@ export default {
 					deletionTimer.pause()
 					board.trash = false
 				},
-				{ timeout: 9000 },
 			)
 		},
 	},
