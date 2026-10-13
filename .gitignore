@@ -10,3 +10,5 @@
 /test-results/
 /playwright-report/
 /coverage/
+tests/.phpunit.cache/
+.php-cs-fixer.cache

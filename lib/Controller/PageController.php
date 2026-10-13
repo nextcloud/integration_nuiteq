@@ -7,6 +7,7 @@
 
 namespace OCA\Nuiteq\Controller;
 
+use Exception;
 use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
 use OCP\App\IAppManager;
@@ -17,6 +18,7 @@ use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class PageController extends Controller {
 
@@ -42,8 +44,26 @@ class PageController extends Controller {
 	 */
 	public function index(): TemplateResponse {
 		$clientKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'client_key');
-		$clientKey = $clientKey === '' ? '' : $this->crypto->decrypt($clientKey);
+		$clientKeyUnreadable = false;
+		try {
+			$clientKey = $clientKey === '' ? '' : $this->crypto->decrypt($clientKey);
+		} catch (Exception|Throwable $e) {
+			// a key encrypted with another instance secret, or set by hand:
+			// the page is of more use than a server error
+			$this->logger->warning(
+				'Nuiteq client key of ' . $this->userId . ' could not be read: ' . $e->getMessage(),
+				['app' => Application::APP_ID]
+			);
+			$clientKey = '';
+			$clientKeyUnreadable = true;
+		}
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');
+		if ($clientKeyUnreadable) {
+			// every request would fail on a key that cannot be decrypted, so the
+			// page offers to connect again instead of showing a connection that
+			// cannot work: the field that replaces the key is on that form
+			$apiKey = '';
+		}
 		$baseUrl = $this->nuiteqAPIService->getBaseUrl($this->userId);
 		$userName = $this->config->getUserValue($this->userId, Application::APP_ID, 'user_name');
 		$talkEnabled = $this->appManager->isEnabledForUser('spreed');

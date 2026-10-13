@@ -65,6 +65,10 @@ class ConfigController extends Controller {
 	public function setAdminConfig(array $values): DataResponse {
 		foreach ($values as $key => $value) {
 			if (in_array($key, ['client_key']) && $value !== '') {
+				if ($value === 'dummySecret') {
+					// what the settings page shows in place of a stored key
+					continue;
+				}
 				$value = $this->crypto->encrypt($value);
 			}
 			$this->config->setAppValue(Application::APP_ID, $key, $value);
