@@ -66,8 +66,9 @@ describe('the board list', () => {
 	it('keeps the next board\'s password hidden when the user switches boards', async () => {
 		const wrapper = mountApp({
 			board_list: [
-				board({ id: 'b-1', name: 'One', password: 'secret-one' }),
-				board({ id: 'b-2', name: 'Two', password: 'secret-two' }),
+				// one name for both: the key has to be the id
+				board({ id: 'b-1', name: 'Planning', password: 'secret-one' }),
+				board({ id: 'b-2', name: 'Planning', password: 'secret-two' }),
 			],
 		})
 
@@ -84,10 +85,96 @@ describe('the board list', () => {
 		expect(wrapper.find('#board-password-value').text()).not.toContain('secret-two')
 	})
 
+	it('marks the open board in the navigation', async () => {
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		expect(wrapper.findAll('.selectedBoard')).toHaveLength(0)
+
+		await wrapper.findAll('.app-navigation-entry-link')[1].trigger('click')
+
+		const rows = wrapper.findAll('.boardItem')
+		expect(rows[1].classes()).toContain('selectedBoard')
+		expect(rows[0].classes()).not.toContain('selectedBoard')
+		// the open board also carries the filled icon
+		expect(rows[1].find('.clipboard-edit-icon').exists()).toBe(true)
+	})
+
+	describe('creating a board', () => {
+		it('opens the board NUITEQ created', async () => {
+			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+			const wrapper = mountApp({ board_list: [] })
+			wrapper.vm.creationModalOpen = true
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			expect(wrapper.vm.selectedBoardId).toBe('b-9')
+			expect(wrapper.vm.activeBoards.map((b) => b.name)).toEqual(['Retro'])
+			expect(wrapper.vm.creationModalOpen).toBe(false)
+		})
+
+		it('does not add a board NUITEQ did not name', async () => {
+			axios.post.mockResolvedValue({ data: { status: 'ok' } })
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			// the entry used to be added with an undefined id, which left it in
+			// the navigation unopenable
+			expect(wrapper.vm.activeBoards).toEqual([])
+			expect(wrapper.vm.selectedBoard).toBeFalsy()
+			expect(showError).toHaveBeenCalledWith(expect.stringContaining('NUITEQ did not say which board it created'))
+		})
+
+		it('says why a board could not be created', async () => {
+			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			const wrapper = mountApp({ board_list: [] })
+			wrapper.vm.creationModalOpen = true
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			expect(wrapper.vm.activeBoards).toEqual([])
+			expect(showError).toHaveBeenCalledWith(expect.stringContaining('name already taken'))
+			// closing it would lose what the user typed
+			expect(wrapper.vm.creationModalOpen).toBe(true)
+		})
+
+		it('stops showing itself as busy either way', async () => {
+			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			expect(wrapper.vm.creating).toBe(false)
+		})
+	})
+
+	it('closes the board it is deleting', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-1')
+
+		expect(wrapper.vm.selectedBoardId).toBe('')
+	})
+
+	it('leaves the user on their board while another one is being deleted', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-2')
+
+		expect(wrapper.vm.selectedBoardId).toBe('b-1')
+	})
+
 	it('puts the user back on the board the server refused to delete', async () => {
 		vi.useFakeTimers()
 		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
-		const wrapper = mountApp()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
 		wrapper.vm.onBoardDeleted('b-1')
@@ -95,7 +182,50 @@ describe('the board list', () => {
 		await flushPromises()
 
 		expect(wrapper.vm.selectedBoardId).toBe('b-1')
-		expect(wrapper.vm.activeBoardCount).toBe(1)
+		expect(wrapper.vm.activeBoardCount).toBe(2)
+	})
+
+	it('does not move the user onto a board they were not looking at', async () => {
+		vi.useFakeTimers()
+		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		// a refused deletion of another board restored the selection all the
+		// same, which moved the user off the board they were reading
+		wrapper.vm.onBoardDeleted('b-2')
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+
+		expect(wrapper.vm.selectedBoardId).toBe('b-1')
+	})
+
+	it('leaves the user on the board they opened during the undo window', async () => {
+		vi.useFakeTimers()
+		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		wrapper.vm.selectedBoardId = 'b-1'
+
+		wrapper.vm.onBoardDeleted('b-1')
+		wrapper.vm.selectedBoardId = 'b-2'
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+
+		expect(wrapper.vm.selectedBoardId).toBe('b-2')
+	})
+
+	it('waits ten seconds before deleting, which is how long the undo offer lasts', async () => {
+		vi.useFakeTimers()
+		axios.post.mockResolvedValue({ data: '' })
+		const wrapper = mountApp()
+
+		wrapper.vm.onBoardDeleted('b-1')
+		await vi.advanceTimersByTimeAsync(9999)
+		expect(axios.post).not.toHaveBeenCalled()
+
+		// a shorter window deletes the board while the toast still offers undo
+		await vi.advanceTimersByTimeAsync(1)
+		expect(axios.post).toHaveBeenCalledOnce()
 	})
 
 	it('offers to undo a deletion before carrying it out', async () => {
@@ -184,7 +314,7 @@ describe('the board list', () => {
 
 		// emptying the list in silence loses the user boards that still exist
 		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
-		expect(showError).toHaveBeenCalled()
+		expect(showError).toHaveBeenCalledWith(expect.stringContaining('NUITEQ did not answer with a list of boards'))
 	})
 
 	it('shows an empty list rather than nothing at all when the page state is not a list', async () => {
