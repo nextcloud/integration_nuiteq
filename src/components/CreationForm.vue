@@ -18,7 +18,7 @@
 						v-if="field.icon"
 						:size="20" />
 					<NcCheckboxRadioSwitch v-if="field.togglable"
-						v-model="field.enabled"
+						v-model="enabledFields[fieldId]"
 						@update:modelValue="newBoard[fieldId] = ''">
 						{{ field.label }}
 					</NcCheckboxRadioSwitch>
@@ -35,15 +35,15 @@
 					type="text"
 					:placeholder="field.placeholder"
 					@keyup.enter="onOkClick">
-				<div v-else-if="field.type === 'password' && (!field.togglable || field.enabled)"
+				<div v-else-if="field.type === 'password' && (!field.togglable || enabledFields[fieldId])"
 					class="password-input-wrapper">
 					<input
 						:id="'board-' + fieldId"
 						v-model="newBoard[fieldId]"
-						:type="field.view ? 'text' : 'password'"
+						:type="shownFields[fieldId] ? 'text' : 'password'"
 						:placeholder="field.placeholder">
-					<EyeOutlineIcon v-if="field.view" @click="field.view = false" />
-					<EyeOffOutlineIcon v-else @click="field.view = true" />
+					<EyeOutlineIcon v-if="shownFields[fieldId]" @click="shownFields[fieldId] = false" />
+					<EyeOffOutlineIcon v-else @click="shownFields[fieldId] = true" />
 				</div>
 				<span v-else-if="field.type === 'textarea'"
 					class="textarea-wrapper">
@@ -198,6 +198,7 @@ import EyeOffOutlineIcon from 'vue-material-design-icons/EyeOffOutline.vue'
 import EyeOutlineIcon from 'vue-material-design-icons/EyeOutline.vue'
 import PaletteIcon from 'vue-material-design-icons/Palette.vue'
 import RadioElementSet from './RadioElementSet.vue'
+import { markRaw } from 'vue'
 import { fields } from '../utils.js'
 
 export default {
@@ -232,7 +233,11 @@ export default {
 	data() {
 		return {
 			newBoard: {},
-			fields,
+			// the field definitions are shared across components: which fields
+			// are on and which values are revealed belong to this form
+			fields: markRaw(fields),
+			enabledFields: {},
+			shownFields: {},
 			query: '',
 		}
 	},

@@ -225,6 +225,12 @@ export default {
 			const url = generateUrl('/apps/integration_nuiteq/delete')
 			axios.post(url, req).then(() => {
 			}).catch((error) => {
+				// the board was hidden before the request: put it back, or the
+				// user loses sight of a board the server still has
+				const board = this.state.board_list.find((b) => b.id === boardId)
+				if (board) {
+					board.trash = false
+				}
 				showError(t('integration_nuiteq', 'Failed to delete the board')
 					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
 				console.debug(error)
