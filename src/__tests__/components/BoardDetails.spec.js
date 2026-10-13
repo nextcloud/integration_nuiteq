@@ -42,6 +42,18 @@ async function toggleReveal(wrapper) {
 describe('BoardDetails', () => {
 	beforeEach(() => vi.clearAllMocks())
 
+	it('does not ask Vue to make the field icons reactive', () => {
+		const warnings = []
+		vi.spyOn(console, 'warn').mockImplementation((...args) => warnings.push(args.join(' ')))
+
+		mountDetails({ id: 'b-1', name: 'Sprint planning', password: 'secret' })
+
+		// the field definitions carry icon components, which Vue warns about
+		// being wrapped in a reactive proxy on every mount
+		expect(warnings.filter((w) => w.includes('reactive object'))).toEqual([])
+		vi.restoreAllMocks()
+	})
+
 	it('names the board', () => {
 		const wrapper = mountDetails({ id: 'b-1', name: 'Sprint planning', password: '' })
 

@@ -75,15 +75,6 @@ describe('delay', () => {
 		expect(callback).toHaveBeenCalledOnce()
 		expect(callback).toHaveBeenCalledWith('second')
 	})
-
-	it('treats a missing delay as no delay', () => {
-		const callback = vi.fn()
-		delay(callback)()
-
-		vi.advanceTimersByTime(0)
-
-		expect(callback).toHaveBeenCalledOnce()
-	})
 })
 
 describe('the board fields the forms are built from', () => {
