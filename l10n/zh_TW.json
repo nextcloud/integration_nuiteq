@@ -17,6 +17,7 @@
     "You haven't created any boards yet" : "您尚未建立任何白板",
     "Create a board" : "建立白板",
     "No selected board" : "未選取白板",
+    "Password confirmation is required to save these options" : "儲存這些選項時需要密碼確認。",
     "Nuiteq admin options saved" : "已儲存 Nuiteq 管理員選項",
     "Failed to save Nuiteq admin options" : "儲存 Nuiteq 管理員選項失敗",
     "Nuiteq integration" : "Nuiteq 整合",

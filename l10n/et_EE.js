@@ -14,6 +14,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Sa pole veel ühtegi tahvlit lisanud",
     "Create a board" : "Lisa tahvel",
     "No selected board" : "Ühtegi valitud tahvlit pole",
+    "Password confirmation is required to save these options" : "Nende valikute salvestamisel pead seda kinnitama salasõnaga",
     "Nuiteq admin options saved" : "Nuiteqi haldusseadistused on salvestatud",
     "Failed to save Nuiteq admin options" : "Nuiteqi haldusseadistuste salvestamine ei õnnestunud",
     "Nuiteq integration" : "Nuiteqi lõiming",

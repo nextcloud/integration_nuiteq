@@ -19,6 +19,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Níl aon chlár cruthaithe agat fós",
     "Create a board" : "Cruthaigh bord",
     "No selected board" : "Níl bord roghnaithe",
+    "Password confirmation is required to save these options" : "Teastaíonn deimhniú pasfhocail chun na roghanna seo a shábháil",
     "Nuiteq admin options saved" : "Sábháladh roghanna riaracháin Nuiteq",
     "Failed to save Nuiteq admin options" : "Theip ar shábháil roghanna riaracháin Nuiteq",
     "Nuiteq integration" : "Comhtháthú Nuiteq",

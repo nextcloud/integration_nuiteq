@@ -19,6 +19,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Você ainda não criou nenhum quadro",
     "Create a board" : "Criar um quadro",
     "No selected board" : "Nenhum quadro selecionado",
+    "Password confirmation is required to save these options" : "É necessário confirmar a senha para salvar essas opções",
     "Nuiteq admin options saved" : "Opções de administração do Nuiteq salvas",
     "Failed to save Nuiteq admin options" : "Falha ao salvar as opções de administração do Nuiteq",
     "Nuiteq integration" : "Integração Nuiteq",

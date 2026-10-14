@@ -19,6 +19,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Zatiaľ ste nevytvorili žiadne tabule",
     "Create a board" : "Vytvoriť tabuľu",
     "No selected board" : "Nie je vybraná žiadna tabuľa",
+    "Password confirmation is required to save these options" : "Na uloženie týchto nastavení sa vyžaduje potvrdenie hesla",
     "Nuiteq admin options saved" : "Možnosti správcu Nuiteq boli uložené",
     "Failed to save Nuiteq admin options" : "Nepodarilo sa uložiť možnosti správcu Nuiteq",
     "Nuiteq integration" : "Integrácia Nuiteq",

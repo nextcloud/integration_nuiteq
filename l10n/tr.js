@@ -19,6 +19,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Henüz herhangi bir pano oluşturmamışsınız",
     "Create a board" : "Pano oluştur",
     "No selected board" : "Herhangi bir pano seçilmemiş",
+    "Password confirmation is required to save these options" : "Bu seçenekleri kaydetmek için parola ile doğrulama zorunludur",
     "Nuiteq admin options saved" : "NUITEQ yönetici ayarları kaydedildi",
     "Failed to save Nuiteq admin options" : "NUITEQ yönetici ayarları kaydedilemedi",
     "Nuiteq integration" : "NUITEQ bütünleştirmesi",

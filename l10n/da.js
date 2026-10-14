@@ -19,6 +19,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Du har endnu ikke oprettet nogen tavler",
     "Create a board" : "Opret en tavle",
     "No selected board" : "Ingen tavle valgt",
+    "Password confirmation is required to save these options" : "Du skal bekræfte din adgangskode for at gemme disse indstillinger",
     "Nuiteq admin options saved" : "Administratorindstillingerne for Nuiteq er gemt",
     "Failed to save Nuiteq admin options" : "Administratorindstillingerne for Nuiteq kunne ikke gemmes",
     "Nuiteq integration" : "Nuiteq-integration",
