@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "NUITEQ did not say which board it created" : "NUITEQ beyaz tahtanın oluşturduğunu bildirmedi",
     "Bad HTTP method" : "HTTP yöntemi hatalı",
     "Bad credentials" : "Kimlik doğrulama bilgileri hatalı",
     "Invalid response" : "Yanıt geçersiz",

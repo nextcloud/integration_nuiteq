@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "NUITEQ did not say which board it created" : "O NUITEQ não informou qual quadro criou",
     "Bad HTTP method" : "Método HTTP incorreto",
     "Bad credentials" : "Credenciais inválidas",
     "Invalid response" : "Resposta inválida",

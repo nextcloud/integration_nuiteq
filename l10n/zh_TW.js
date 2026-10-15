@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "NUITEQ did not say which board it created" : "NUITEQ 並未說明其建立了哪個看板",
     "Bad HTTP method" : "錯誤的 HTTP 方法",
     "Bad credentials" : "錯誤的憑證",
     "Invalid response" : "無效回應",

@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "NUITEQ did not say which board it created" : "NUITEQ neuviedol, ktorú nástenku vytvoril",
     "Bad HTTP method" : "Zlá metóda HTTP",
     "Bad credentials" : "Nesprávne prihlasovacie údaje",
     "Invalid response" : "Neplatná odpoveď",
