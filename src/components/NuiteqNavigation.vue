@@ -95,15 +95,5 @@ export default {
 
 :deep(.boardItem) {
 	padding-right: 0 !important;
-	&.selectedBoard {
-		> a,
-		> div {
-			background: var(--color-primary-light, lightgrey);
-		}
-
-		> a {
-			font-weight: bold;
-		}
-	}
 }
 </style>

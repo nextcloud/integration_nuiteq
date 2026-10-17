@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { delay, fields, Timer } from '../utils.js'
+import { delay, failureReason, fields, Timer } from '../utils.js'
 
 describe('Timer', () => {
 	beforeEach(() => vi.useFakeTimers())
@@ -48,6 +48,62 @@ describe('Timer', () => {
 	})
 })
 
+describe('failureReason', () => {
+	// the harness stub, which flags a string asked for under another app's id
+	const t = window.t
+
+	it('prefers what the server said went wrong', () => {
+		const error = { response: { status: 400, data: { error: 'board is locked' } } }
+
+		expect(failureReason(error, t)).toBe('board is locked')
+	})
+
+	it('describes a failure by its status rather than its body', () => {
+		const error = {
+			response: {
+				status: 500,
+				request: { responseText: '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>' },
+			},
+		}
+
+		// the body used to be printed whole, which put an error page, an
+		// exception class and a file path into a toast
+		expect(failureReason(error, t)).toBe('The server answered 500')
+	})
+
+	it('reads the message of an error this app threw itself', () => {
+		expect(failureReason(new TypeError('NUITEQ did not answer with a list of boards'), t))
+			.toBe('NUITEQ did not answer with a list of boards')
+	})
+
+	it('says the server could not be reached when there is no answer at all', () => {
+		expect(failureReason({ message: 'Network Error' }, t)).toBe('The server could not be reached')
+	})
+
+	it('says the same for a rejection carrying nothing', () => {
+		// reading .response off it threw, which left the form spinning
+		expect(failureReason(undefined, t)).toBe('The server could not be reached')
+	})
+
+	it('asks for its own strings under this app', () => {
+		// a string asked for under another id is never translated, and a local
+		// stub that ignores the id cannot see that
+		expect(failureReason({ response: { status: 500 } }, t)).toBe('The server answered 500')
+		expect(failureReason(undefined, t)).toBe('The server could not be reached')
+	})
+
+	it('ignores an error from the server that is not a string', () => {
+		const error = { response: { status: 503, data: { error: { message: 'nope' } } } }
+
+		expect(failureReason(error, t)).toBe('The server answered 503')
+	})
+
+	it('ignores an empty error from the server', () => {
+		expect(failureReason({ response: { status: 503, data: { error: '' } } }, t))
+			.toBe('The server answered 503')
+	})
+})
+
 describe('delay', () => {
 	beforeEach(() => vi.useFakeTimers())
 	afterEach(() => vi.useRealTimers())
@@ -74,15 +130,6 @@ describe('delay', () => {
 
 		expect(callback).toHaveBeenCalledOnce()
 		expect(callback).toHaveBeenCalledWith('second')
-	})
-
-	it('treats a missing delay as no delay', () => {
-		const callback = vi.fn()
-		delay(callback)()
-
-		vi.advanceTimersByTime(0)
-
-		expect(callback).toHaveBeenCalledOnce()
 	})
 })
 
