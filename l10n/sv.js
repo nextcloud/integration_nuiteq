@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "NUITEQ did not say which board it created" : "NUITEQ angav inte vilken tavla som skapades",
     "Bad HTTP method" : "Felaktig HTTP-metod",
     "Bad credentials" : "Ogiltiga inloggningsuppgifter",
     "Invalid response" : "Ogiltigt svar",
@@ -19,6 +20,7 @@ OC.L10N.register(
     "You haven't created any boards yet" : "Du har inte skapat några tavlor än",
     "Create a board" : "Skapa en tavla",
     "No selected board" : "Ingen tavla har valts",
+    "Password confirmation is required to save these options" : "Du måste bekräfta ditt lösenord för att spara de här inställningarna",
     "Nuiteq admin options saved" : "Administratörsalternativen för Nuiteq har sparats",
     "Failed to save Nuiteq admin options" : "Det gick inte att spara administratörsalternativen för Nuiteq",
     "Nuiteq integration" : "Nuiteq-integrering",
