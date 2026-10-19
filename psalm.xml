@@ -25,13 +25,5 @@
 		<LessSpecificReturnType errorLevel="error"/>
 		<LessSpecificImplementedReturnType errorLevel="error"/>
 		<MoreSpecificReturnType errorLevel="error"/>
-		<UndefinedClass>
-			<errorLevel type="suppress">
-				<referencedClass name="Symfony\Component\Console\Command\Command" />
-				<referencedClass name="GuzzleHttp\Exception\ServerException" />
-				<referencedClass name="GuzzleHttp\Exception\ClientException" />
-				<referencedClass name="OC\Collaboration\Reference\LinkReferenceProvider" />
-			</errorLevel>
-		</UndefinedClass>
 	</issueHandlers>
 </psalm>

@@ -11,7 +11,6 @@ use Exception;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use OCA\Nuiteq\AppInfo\Application;
-use OCP\AppFramework\Http;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -207,15 +206,8 @@ class NuiteqAPIService {
 				}
 			}
 		} catch (ClientException|ServerException $e) {
-			$response = $e->getResponse();
-			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
-				$body = $response->getBody();
-				try {
-					return json_decode($body, true);
-				} catch (Exception|Throwable $e2) {
-				}
-			}
-			return ['error' => $e->getMessage()];
+			// TRANSLATORS %s is the HTTP status the request was answered with, such as 500
+			return $this->refused($e, $this->l10n->t('The NUITEQ Stage URL answered %s', [$e->getResponse()->getStatusCode()]));
 		} catch (Exception|Throwable $e) {
 			$this->logger->warning('Nuiteq API error : ' . $e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
@@ -260,18 +252,33 @@ class NuiteqAPIService {
 				}
 			}
 		} catch (ClientException|ServerException $e) {
-			$response = $e->getResponse();
-			if ($response->getStatusCode() === Http::STATUS_FORBIDDEN) {
-				$body = $response->getBody();
-				try {
-					return json_decode($body, true);
-				} catch (Exception|Throwable $e2) {
-				}
-			}
-			return ['error' => $e->getMessage()];
+			// TRANSLATORS %s is the HTTP status the login was answered with, such as 401
+			return $this->refused($e, $this->l10n->t('Login failed: the NUITEQ Stage URL answered %s', [$e->getResponse()->getStatusCode()]));
 		} catch (Exception|Throwable $e) {
 			$this->logger->warning('NUITEQ login error : ' . $e->getMessage(), ['app' => $this->appName]);
 			return ['error' => $e->getMessage()];
 		}
+	}
+
+	/**
+	 * What to tell the user about an answer of 400 or above, which Nextcloud's
+	 * client throws on. The exception's own message is not it: it names the
+	 * request that failed.
+	 *
+	 * @param ClientException|ServerException $e what the client threw
+	 * @param string $otherwise what to say when NUITEQ gave no reason, naming the status
+	 * @return array{error: string}
+	 */
+	private function refused(ClientException|ServerException $e, string $otherwise): array {
+		$this->logger->warning('NUITEQ refused the request: ' . $e->getMessage(), ['app' => $this->appName]);
+		$answer = json_decode((string)$e->getResponse()->getBody(), true);
+		$reason = is_array($answer) ? ($answer['error'] ?? null) : null;
+		if (is_string($reason) && trim($reason) !== '') {
+			return ['error' => $reason];
+		}
+		// without NUITEQ's reason the status is all that is told: a 401 or a
+		// 403 may come from a proxy or a firewall rather than NUITEQ, so it is
+		// no verdict on the credentials
+		return ['error' => $otherwise];
 	}
 }
