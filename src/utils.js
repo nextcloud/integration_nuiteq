@@ -52,10 +52,10 @@ export function delay(callback, ms) {
 /**
  * What to tell the user about a request that failed.
  *
- * The response body is not it: a server error page put its whole HTML, the
- * exception class and a file path into a toast. An error this app threw itself
- * carries a message meant for reading; anything else is described by its
- * status, so the string stays translatable.
+ * The response body is not it: a server error page put its whole HTML into a
+ * toast, and in debug mode the exception class and a file path. An error this
+ * app threw itself carries a message meant for reading; anything else is
+ * described by its status, so the string stays translatable.
  *
  * What tells those two apart is not the absence of a response: axios attaches
  * one only when the server answered, so its own error for a request that never
@@ -67,8 +67,12 @@ export function delay(callback, ms) {
  * @return {string} the reason, ready to show
  */
 export function failureReason(error, t) {
-	const fromServer = error?.response?.data?.error
-	if (typeof fromServer === 'string' && fromServer !== '') {
+	const data = error?.response?.data
+	// this app's controllers name the reason error; Nextcloud's own refusals,
+	// an expired session among them, name it message
+	const fromServer = [data?.error, data?.message]
+		.find((reason) => typeof reason === 'string' && reason !== '')
+	if (fromServer !== undefined) {
 		return fromServer
 	}
 	const status = error?.response?.status

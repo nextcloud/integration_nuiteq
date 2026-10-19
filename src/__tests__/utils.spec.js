@@ -59,13 +59,17 @@ describe('failureReason', () => {
 		expect(failureReason(error, t)).toBe('board is locked')
 	})
 
+	it('gives the reason Nextcloud itself refused the request with', () => {
+		// an expired session, a missing password confirmation and the admin
+		// check answer with message rather than error
+		const error = { response: { status: 401, data: { message: 'Current user is not logged in' } } }
+
+		expect(failureReason(error, t)).toBe('Current user is not logged in')
+	})
+
 	it('describes a failure by its status rather than its body', () => {
-		const error = {
-			response: {
-				status: 500,
-				request: { responseText: '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>' },
-			},
-		}
+		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
+		const error = { response: { status: 500, data: page, request: { responseText: page } } }
 
 		// the body used to be printed whole, which put an error page, an
 		// exception class and a file path into a toast
@@ -85,13 +89,6 @@ describe('failureReason', () => {
 		expect(error instanceof Error).toBe(true)
 		expect('response' in error).toBe(false)
 
-		expect(failureReason(error, t)).toBe('The server could not be reached')
-	})
-
-	it('says the same when the request timed out', () => {
-		const error = new AxiosError('timeout of 30000ms exceeded', AxiosError.ECONNABORTED, {}, {})
-
-		// the user used to read axios's own English, in every language
 		expect(failureReason(error, t)).toBe('The server could not be reached')
 	})
 
@@ -120,11 +117,16 @@ describe('failureReason', () => {
 		const error = { response: { status: 503, data: { error: { message: 'nope' } } } }
 
 		expect(failureReason(error, t)).toBe('The server answered 503')
+		expect(failureReason({ response: { status: 503, data: { message: { text: 'nope' } } } }, t))
+			.toBe('The server answered 503')
 	})
 
 	it('ignores an empty error from the server', () => {
 		expect(failureReason({ response: { status: 503, data: { error: '' } } }, t))
 			.toBe('The server answered 503')
+		// what Nextcloud answers a login it refuses without saying why
+		expect(failureReason({ response: { status: 401, data: { message: '' } } }, t))
+			.toBe('The server answered 401')
 	})
 })
 

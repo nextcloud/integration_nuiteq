@@ -244,7 +244,7 @@ export default {
 					board.trash = false
 					if (wasSelected && this.selectedBoardId === '') {
 						// only the deletion that deselected it may select it
-						// again, and only if nothing was opened in the meantime
+						// again, and only if no board is open by then
 						this.selectedBoardId = boardId
 					}
 				}

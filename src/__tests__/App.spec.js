@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import axios from '@nextcloud/axios'
-import { showError, showUndo } from '@nextcloud/dialogs'
+import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App.vue'
@@ -186,6 +186,7 @@ describe('the board list', () => {
 			expect(wrapper.vm.selectedBoardId).toBe('b-9')
 			expect(wrapper.vm.activeBoards.map((b) => b.name)).toEqual(['Retro'])
 			expect(wrapper.vm.creationModalOpen).toBe(false)
+			expect(showSuccess).toHaveBeenCalledWith('New board was created in NUITEQ stage')
 		})
 
 		it.each([
@@ -204,6 +205,7 @@ describe('the board list', () => {
 			expect(wrapper.vm.activeBoards).toEqual([])
 			expect(wrapper.vm.selectedBoard).toBeFalsy()
 			expect(showError).toHaveBeenCalledWith('Failed to create new board: NUITEQ did not say which board it created')
+			expect(showSuccess).not.toHaveBeenCalled()
 		})
 
 		it('says why a board could not be created', async () => {
@@ -525,5 +527,19 @@ describe('the board list', () => {
 		// hidden, or the user loses sight of a board that still exists
 		expect(showError).toHaveBeenCalled()
 		expect(wrapper.vm.activeBoardCount).toBe(1)
+	})
+
+	it('says how a deletion failed when the server sent a page rather than a reason', async () => {
+		vi.useFakeTimers()
+		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
+		axios.post.mockRejectedValue({ response: { status: 500, data: page, request: { responseText: page } } })
+		const wrapper = mountApp()
+
+		wrapper.vm.onBoardDeleted('b-1')
+		await vi.advanceTimersByTimeAsync(10000)
+		await flushPromises()
+
+		// the page used to be printed into the toast whole
+		expect(showError).toHaveBeenCalledWith('Failed to delete the board: The server answered 500')
 	})
 })
