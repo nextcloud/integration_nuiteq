@@ -31,10 +31,19 @@ describe('CreationForm', () => {
 
 	afterEach(() => vi.restoreAllMocks())
 
+	it('does not ask Vue to make the field icons reactive', () => {
+		mount(CreationForm)
+
+		// the field definitions carry icon components, which Vue warns about
+		// being wrapped in a reactive proxy on every mount
+		expect(warnings.filter((w) => w.includes('reactive object'))).toEqual([])
+	})
+
 	it('asks for a board name', () => {
 		const wrapper = mount(CreationForm)
 
 		expect(wrapper.find('#board-name').exists()).toBe(true)
+		expect(wrapper.text()).not.toContain('[untranslatable')
 		expect(wrapper.text()).toContain('Board name')
 	})
 

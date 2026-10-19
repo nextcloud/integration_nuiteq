@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import BoardDetails from '../../components/BoardDetails.vue'
 
 vi.mock('@nextcloud/axios', () => ({ default: { get: vi.fn(), post: vi.fn(), put: vi.fn() } }))
@@ -41,6 +41,18 @@ async function toggleReveal(wrapper) {
 
 describe('BoardDetails', () => {
 	beforeEach(() => vi.clearAllMocks())
+	afterEach(() => vi.restoreAllMocks())
+
+	it('does not ask Vue to make the field icons reactive', () => {
+		const warnings = []
+		vi.spyOn(console, 'warn').mockImplementation((...args) => warnings.push(args.join(' ')))
+
+		mountDetails({ id: 'b-1', name: 'Sprint planning', password: 'secret' })
+
+		// the field definitions carry icon components, which Vue warns about
+		// being wrapped in a reactive proxy on every mount
+		expect(warnings.filter((w) => w.includes('reactive object'))).toEqual([])
+	})
 
 	it('names the board', () => {
 		const wrapper = mountDetails({ id: 'b-1', name: 'Sprint planning', password: '' })

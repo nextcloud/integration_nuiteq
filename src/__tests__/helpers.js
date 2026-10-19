@@ -24,12 +24,13 @@ export function setInitialState(key, value) {
 }
 
 /**
- * A rejection shaped like the ones axios hands the components: they read
- * error.response.status and error.response.request.responseText.
+ * A rejection shaped like the one axios hands the components for an answer
+ * that is not JSON: what the server wrote is both the response's data and
+ * what the request read.
  *
  * @param status the HTTP status
  * @param responseText what the server wrote
  */
 export function httpError(status, responseText = 'server said no') {
-	return { response: { status, request: { responseText } } }
+	return { response: { status, data: responseText, request: { responseText } } }
 }

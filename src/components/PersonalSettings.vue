@@ -103,7 +103,7 @@ import LockIcon from 'vue-material-design-icons/Lock.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
 import NuiteqIcon from './icons/NuiteqIcon.vue'
-import { delay } from '../utils.js'
+import { delay, failureReason } from '../utils.js'
 
 export default {
 	name: 'PersonalSettings',
@@ -178,7 +178,7 @@ export default {
 					showError(error.response.data.error)
 				} else {
 					showError(t('integration_nuiteq', 'Failed to save NUITEQ options')
-						+ ': ' + (error.response?.request?.responseText ?? ''))
+						+ ': ' + failureReason(error, t))
 				}
 				console.error(error)
 			}).finally(() => {

@@ -53,7 +53,7 @@ import NcTextField from '@nextcloud/vue/components/NcTextField'
 import KeyOutlineIcon from 'vue-material-design-icons/KeyOutline.vue'
 import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
 import NuiteqIcon from './icons/NuiteqIcon.vue'
-import { delay } from '../utils.js'
+import { delay, failureReason } from '../utils.js'
 
 export default {
 	name: 'AdminSettings',
@@ -110,7 +110,7 @@ export default {
 				showSuccess(t('integration_nuiteq', 'Nuiteq admin options saved'))
 			}).catch((error) => {
 				showError(t('integration_nuiteq', 'Failed to save Nuiteq admin options')
-					+ ': ' + (error.response?.request?.responseText ?? ''))
+					+ ': ' + failureReason(error, t))
 				console.debug(error)
 			})
 		},

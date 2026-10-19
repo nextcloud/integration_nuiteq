@@ -45,8 +45,44 @@ export function delay(callback, ms) {
 		clearTimeout(mytimer)
 		mytimer = setTimeout(function() {
 			callback.apply(context, args)
-		}, ms || 0)
+		}, ms)
 	}
+}
+
+/**
+ * What to tell the user about a request that failed.
+ *
+ * The response body is not it: a server error page put its whole HTML into a
+ * toast, and in debug mode the exception class and a file path. An error this
+ * app threw itself carries a message meant for reading; anything else is
+ * described by its status, so the string stays translatable.
+ *
+ * What tells those two apart is not the absence of a response: axios attaches
+ * one only when the server answered, so its own error for a request that never
+ * arrived has none either, and its message is untranslated English. Every
+ * error axios makes is marked instead.
+ *
+ * @param {object|undefined} error what the request rejected with
+ * @param {(app: string, text: string, vars?: object) => string} t the translation function
+ * @return {string} the reason, ready to show
+ */
+export function failureReason(error, t) {
+	const data = error?.response?.data
+	// this app's controllers name the reason error; Nextcloud's own refusals,
+	// an expired session among them, name it message
+	const fromServer = [data?.error, data?.message]
+		.find((reason) => typeof reason === 'string' && reason !== '')
+	if (fromServer !== undefined) {
+		return fromServer
+	}
+	const status = error?.response?.status
+	if (typeof status === 'number' && status > 0) {
+		return t('integration_nuiteq', 'The server answered {status}', { status })
+	}
+	if (error instanceof Error && error.message && error.isAxiosError !== true) {
+		return error.message
+	}
+	return t('integration_nuiteq', 'The server could not be reached')
 }
 
 export const fields = {
@@ -64,8 +100,6 @@ export const fields = {
 		type: 'password',
 		placeholder: t('integration_nuiteq', 'Password'),
 		togglable: true,
-		enabled: false,
-		view: false,
 		default: '',
 	},
 	/*

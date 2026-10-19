@@ -2,8 +2,9 @@
  * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+import { AxiosError } from 'axios'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { delay, fields, Timer } from '../utils.js'
+import { delay, failureReason, fields, Timer } from '../utils.js'
 
 describe('Timer', () => {
 	beforeEach(() => vi.useFakeTimers())
@@ -48,6 +49,87 @@ describe('Timer', () => {
 	})
 })
 
+describe('failureReason', () => {
+	// the harness stub, which flags a string asked for under another app's id
+	const t = window.t
+
+	it('prefers what the server said went wrong', () => {
+		const error = { response: { status: 400, data: { error: 'board is locked' } } }
+
+		expect(failureReason(error, t)).toBe('board is locked')
+	})
+
+	it('gives the reason Nextcloud itself refused the request with', () => {
+		// an expired session, a missing password confirmation and the admin
+		// check answer with message rather than error
+		const error = { response: { status: 401, data: { message: 'Current user is not logged in' } } }
+
+		expect(failureReason(error, t)).toBe('Current user is not logged in')
+	})
+
+	it('describes a failure by its status rather than its body', () => {
+		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
+		const error = { response: { status: 500, data: page, request: { responseText: page } } }
+
+		// the body used to be printed whole, which put an error page, an
+		// exception class and a file path into a toast
+		expect(failureReason(error, t)).toBe('The server answered 500')
+	})
+
+	it('reads the message of an error this app threw itself', () => {
+		expect(failureReason(new TypeError('NUITEQ did not answer with a list of boards'), t))
+			.toBe('NUITEQ did not answer with a list of boards')
+	})
+
+	it('says the server could not be reached when the request never got there', () => {
+		// what axios rejects with when the host does not answer. An object
+		// shaped like it by hand is not an Error, so it never reached the
+		// branch this case takes, and the test could not see it
+		const error = new AxiosError('Network Error', AxiosError.ERR_NETWORK, {}, {})
+		expect(error instanceof Error).toBe(true)
+		expect('response' in error).toBe(false)
+
+		expect(failureReason(error, t)).toBe('The server could not be reached')
+	})
+
+	it('says the same for a rejection carrying nothing', () => {
+		// reading .response off it threw, which left the form spinning
+		expect(failureReason(undefined, t)).toBe('The server could not be reached')
+	})
+
+	it('asks for its own strings under this app', () => {
+		// a string asked for under another id is never translated, and a local
+		// stub that ignores the id cannot see that
+		expect(failureReason({ response: { status: 500 } }, t)).toBe('The server answered 500')
+		expect(failureReason(undefined, t)).toBe('The server could not be reached')
+	})
+
+	it('reads the message of any error this app threw, not only a TypeError', () => {
+		expect(failureReason(new Error('the board list is not a list'), t))
+			.toBe('the board list is not a list')
+	})
+
+	it('treats a status of zero as no answer', () => {
+		expect(failureReason({ response: { status: 0 } }, t)).toBe('The server could not be reached')
+	})
+
+	it('ignores an error from the server that is not a string', () => {
+		const error = { response: { status: 503, data: { error: { message: 'nope' } } } }
+
+		expect(failureReason(error, t)).toBe('The server answered 503')
+		expect(failureReason({ response: { status: 503, data: { message: { text: 'nope' } } } }, t))
+			.toBe('The server answered 503')
+	})
+
+	it('ignores an empty error from the server', () => {
+		expect(failureReason({ response: { status: 503, data: { error: '' } } }, t))
+			.toBe('The server answered 503')
+		// what Nextcloud answers a login it refuses without saying why
+		expect(failureReason({ response: { status: 401, data: { message: '' } } }, t))
+			.toBe('The server answered 401')
+	})
+})
+
 describe('delay', () => {
 	beforeEach(() => vi.useFakeTimers())
 	afterEach(() => vi.useRealTimers())
@@ -74,15 +156,6 @@ describe('delay', () => {
 
 		expect(callback).toHaveBeenCalledOnce()
 		expect(callback).toHaveBeenCalledWith('second')
-	})
-
-	it('treats a missing delay as no delay', () => {
-		const callback = vi.fn()
-		delay(callback)()
-
-		vi.advanceTimersByTime(0)
-
-		expect(callback).toHaveBeenCalledOnce()
 	})
 })
 

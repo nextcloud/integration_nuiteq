@@ -21,6 +21,7 @@
 			<!--template slot="list">
 			</template-->
 			<BoardDetails v-if="selectedBoard"
+				:key="selectedBoard.id"
 				:board="selectedBoard"
 				:nuiteqUrl="state.base_url"
 				:talkEnabled="state.talk_enabled" />
@@ -90,7 +91,7 @@ import CreationForm from './components/CreationForm.vue'
 import NuiteqIcon from './components/icons/NuiteqIcon.vue'
 import NuiteqNavigation from './components/NuiteqNavigation.vue'
 import PersonalSettings from './components/PersonalSettings.vue'
-import { Timer } from './utils.js'
+import { failureReason, Timer } from './utils.js'
 
 export default {
 	name: 'App',
@@ -173,13 +174,14 @@ export default {
 
 		getBoards() {
 			const url = generateUrl('/apps/integration_nuiteq/list')
-			axios.get(url).then((response) => {
-				this.state.board_list = Array.isArray(response.data) ? response.data : []
+			return axios.get(url).then((response) => {
+				if (!Array.isArray(response.data)) {
+					throw new TypeError(t('integration_nuiteq', 'NUITEQ did not answer with a list of boards'))
+				}
+				this.state.board_list = response.data
 			}).catch((error) => {
-				showError(t('integration_nuiteq', 'Failed to get boards')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				showError(t('integration_nuiteq', 'Failed to get boards') + ': ' + failureReason(error, t))
 				console.debug(error)
-			}).then(() => {
 			})
 		},
 
@@ -199,15 +201,23 @@ export default {
 				password: board.password,
 			}
 			const url = generateUrl('/apps/integration_nuiteq/new')
-			axios.post(url, req).then((response) => {
+			return axios.post(url, req).then((response) => {
+				const id = response.data?.id
+				if (typeof id !== 'string' || id === '') {
+					// the board would sit in the list with no id, which cannot
+					// be opened, deleted or linked to
+					throw new TypeError(t('integration_nuiteq', 'NUITEQ did not say which board it created'))
+				}
 				showSuccess(t('integration_nuiteq', 'New board was created in NUITEQ stage'))
-				board.id = response.data?.id
-				this.state.board_list.push(board)
+				board.id = id
+				this.state.board_list = [
+					...(Array.isArray(this.state.board_list) ? this.state.board_list : []),
+					board,
+				]
 				this.selectedBoardId = board.id
 				this.creationModalOpen = false
 			}).catch((error) => {
-				showError(t('integration_nuiteq', 'Failed to create new board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				showError(t('integration_nuiteq', 'Failed to create new board') + ': ' + failureReason(error, t))
 				console.debug(error)
 			}).then(() => {
 				this.creating = false
@@ -219,7 +229,7 @@ export default {
 			this.selectedBoardId = boardId
 		},
 
-		deleteBoard(boardId) {
+		deleteBoard(boardId, wasSelected) {
 			console.debug('DELETE board', boardId)
 			const req = {
 				boardId,
@@ -232,16 +242,21 @@ export default {
 				const board = this.state.board_list.find((b) => b.id === boardId)
 				if (board) {
 					board.trash = false
+					if (wasSelected && this.selectedBoardId === '') {
+						// only the deletion that deselected it may select it
+						// again, and only if no board is open by then
+						this.selectedBoardId = boardId
+					}
 				}
-				showError(t('integration_nuiteq', 'Failed to delete the board')
-					+ ': ' + (error.response?.data?.error ?? error.response?.request?.responseText ?? ''))
+				showError(t('integration_nuiteq', 'Failed to delete the board') + ': ' + failureReason(error, t))
 				console.debug(error)
 			})
 		},
 
 		onBoardDeleted(boardId) {
 			// deselect the board
-			if (boardId === this.selectedBoardId) {
+			const wasSelected = boardId === this.selectedBoardId
+			if (wasSelected) {
 				this.selectedBoardId = ''
 			}
 
@@ -256,7 +271,7 @@ export default {
 			let deleted = false
 			const deletionTimer = new Timer(() => {
 				deleted = true
-				this.deleteBoard(boardId)
+				this.deleteBoard(boardId, wasSelected)
 			}, 10000)
 			showUndo(
 				t('integration_nuiteq', '{name} deleted', { name: board.name }),
@@ -268,8 +283,10 @@ export default {
 					}
 					deletionTimer.pause()
 					board.trash = false
+					if (wasSelected && this.selectedBoardId === '') {
+						this.selectedBoardId = boardId
+					}
 				},
-				{ timeout: 9000 },
 			)
 		},
 	},

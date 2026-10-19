@@ -6,7 +6,7 @@
 <template>
 	<NcAppNavigationItem
 		:name="board.name"
-		:class="{ selectedBoard: selected }"
+		:active="selected"
 		:forceMenu="true"
 		@click="onBoardClick">
 		<template #icon>
