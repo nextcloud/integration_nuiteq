@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+import { AxiosError } from 'axios'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { delay, failureReason, fields, Timer } from '../utils.js'
 
@@ -76,8 +77,22 @@ describe('failureReason', () => {
 			.toBe('NUITEQ did not answer with a list of boards')
 	})
 
-	it('says the server could not be reached when there is no answer at all', () => {
-		expect(failureReason({ message: 'Network Error' }, t)).toBe('The server could not be reached')
+	it('says the server could not be reached when the request never got there', () => {
+		// what axios rejects with when the host does not answer. An object
+		// shaped like it by hand is not an Error, so it never reached the
+		// branch this case takes, and the test could not see it
+		const error = new AxiosError('Network Error', AxiosError.ERR_NETWORK, {}, {})
+		expect(error instanceof Error).toBe(true)
+		expect('response' in error).toBe(false)
+
+		expect(failureReason(error, t)).toBe('The server could not be reached')
+	})
+
+	it('says the same when the request timed out', () => {
+		const error = new AxiosError('timeout of 30000ms exceeded', AxiosError.ECONNABORTED, {}, {})
+
+		// the user used to read axios's own English, in every language
+		expect(failureReason(error, t)).toBe('The server could not be reached')
 	})
 
 	it('says the same for a rejection carrying nothing', () => {

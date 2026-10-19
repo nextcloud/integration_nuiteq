@@ -57,6 +57,11 @@ export function delay(callback, ms) {
  * carries a message meant for reading; anything else is described by its
  * status, so the string stays translatable.
  *
+ * What tells those two apart is not the absence of a response: axios attaches
+ * one only when the server answered, so its own error for a request that never
+ * arrived has none either, and its message is untranslated English. Every
+ * error axios makes is marked instead.
+ *
  * @param {object|undefined} error what the request rejected with
  * @param {(app: string, text: string, vars?: object) => string} t the translation function
  * @return {string} the reason, ready to show
@@ -70,7 +75,7 @@ export function failureReason(error, t) {
 	if (typeof status === 'number' && status > 0) {
 		return t('integration_nuiteq', 'The server answered {status}', { status })
 	}
-	if (error instanceof Error && error.message && !('response' in error)) {
+	if (error instanceof Error && error.message && error.isAxiosError !== true) {
 		return error.message
 	}
 	return t('integration_nuiteq', 'The server could not be reached')
