@@ -45,6 +45,13 @@ describe('AdminSettings', () => {
 
 	afterEach(() => vi.useRealTimers())
 
+	it('asks for what it shows under this app', () => {
+		const wrapper = mountSettings()
+
+		expect(wrapper.text()).not.toContain('[untranslatable')
+		expect(wrapper.text()).toContain('Leave this empty to use the default client key.')
+	})
+
 	describe('typing in a field', () => {
 		it('waits for the admin to stop typing before saving', async () => {
 			vi.useFakeTimers()

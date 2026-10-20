@@ -60,6 +60,22 @@ describe('BoardDetails', () => {
 		expect(wrapper.find('h2').text()).toContain('Sprint planning')
 	})
 
+	it('asks for the labels it shows under this app', () => {
+		const wrapper = mountDetails({ id: 'b-1', name: 'Sprint planning', password: 'secret' })
+
+		// a label asked for under another id is never translated, and the
+		// assertions here read board names and passwords, which say nothing
+		// about the labels around them
+		expect(wrapper.text()).not.toContain('[untranslatable')
+		expect(wrapper.text()).toContain('Open in a new tab')
+		expect(wrapper.text()).toContain('Public board link')
+		expect(wrapper.text()).toContain('Share link to a Talk conversation')
+		// a label a user only hovers is an attribute, which the rendered text
+		// of the component never carries
+		expect(wrapper.find('.linkInputWrapper button').attributes('title'))
+			.toBe('Copy to clipboard')
+	})
+
 	it('links to the board on the instance', () => {
 		const wrapper = mountDetails({ id: 'b-1', name: 'Sprint planning', password: '' })
 

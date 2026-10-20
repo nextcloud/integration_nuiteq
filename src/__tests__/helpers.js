@@ -26,7 +26,7 @@ export function setInitialState(key, value) {
 /**
  * A rejection shaped like the one axios hands the components for an answer
  * that is not JSON: what the server wrote is both the response's data and
- * what the request read.
+ * what the request read, which SendModal still prints.
  *
  * @param status the HTTP status
  * @param responseText what the server wrote

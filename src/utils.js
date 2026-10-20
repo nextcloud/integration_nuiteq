@@ -50,6 +50,23 @@ export function delay(callback, ms) {
 }
 
 /**
+ * What the server said went wrong, when it said something worth reading.
+ *
+ * @param {object|undefined} error what the request rejected with
+ * @param {string[]} keys where the answer may carry it, first match wins: this
+ * app's controllers name the reason error, and Nextcloud's own refusals, an
+ * expired session among them, name it message
+ * @return {string} the reason, or an empty string if there is none
+ */
+export function serverReason(error, keys = ['error', 'message']) {
+	const data = error?.response?.data
+	// a reason of only spaces says nothing, so it counts as none
+	const reason = keys.map((key) => data?.[key])
+		.find((candidate) => typeof candidate === 'string' && candidate.trim() !== '')
+	return reason ?? ''
+}
+
+/**
  * What to tell the user about a request that failed.
  *
  * The response body is not it: a server error page put its whole HTML into a
@@ -67,12 +84,8 @@ export function delay(callback, ms) {
  * @return {string} the reason, ready to show
  */
 export function failureReason(error, t) {
-	const data = error?.response?.data
-	// this app's controllers name the reason error; Nextcloud's own refusals,
-	// an expired session among them, name it message
-	const fromServer = [data?.error, data?.message]
-		.find((reason) => typeof reason === 'string' && reason !== '')
-	if (fromServer !== undefined) {
+	const fromServer = serverReason(error)
+	if (fromServer !== '') {
 		return fromServer
 	}
 	const status = error?.response?.status

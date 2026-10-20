@@ -121,6 +121,14 @@ describe('failureReason', () => {
 			.toBe('The server answered 503')
 	})
 
+	it('ignores an error from the server that is only spaces', () => {
+		const error = { response: { status: 500, data: { error: '   ' } } }
+
+		// shown as the message, it read as a toast ending in a colon with
+		// nothing after it, which is the symptom the status answers
+		expect(failureReason(error, t)).toBe('The server answered 500')
+	})
+
 	it('ignores an empty error from the server', () => {
 		expect(failureReason({ response: { status: 503, data: { error: '' } } }, t))
 			.toBe('The server answered 503')

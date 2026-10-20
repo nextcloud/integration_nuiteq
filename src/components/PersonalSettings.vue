@@ -103,7 +103,7 @@ import LockIcon from 'vue-material-design-icons/Lock.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
 import ServerOutlineIcon from 'vue-material-design-icons/ServerOutline.vue'
 import NuiteqIcon from './icons/NuiteqIcon.vue'
-import { delay, failureReason } from '../utils.js'
+import { delay, failureReason, serverReason } from '../utils.js'
 
 export default {
 	name: 'PersonalSettings',
@@ -174,8 +174,13 @@ export default {
 					showSuccess(t('integration_nuiteq', 'Nuiteq options saved'))
 				}
 			}).catch((error) => {
-				if (error.response?.data?.error) {
-					showError(error.response.data.error)
+				// a failed login is the one answer here that names its reason
+				// error, and that reason is the whole message: this form is
+				// where it is read. Anything else keeps the prefix, which on an
+				// autosave or a disconnect is all that says nothing was saved
+				const refusedLogin = serverReason(error, ['error'])
+				if (refusedLogin !== '') {
+					showError(refusedLogin)
 				} else {
 					showError(t('integration_nuiteq', 'Failed to save NUITEQ options')
 						+ ': ' + failureReason(error, t))
