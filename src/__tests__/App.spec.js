@@ -7,7 +7,7 @@ import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App.vue'
-import { setInitialState } from './helpers.js'
+import { refusal, setInitialState } from './helpers.js'
 
 vi.mock('@nextcloud/axios', () => ({ default: { get: vi.fn(), post: vi.fn(), put: vi.fn() } }))
 vi.mock('@nextcloud/dialogs', () => ({
@@ -398,7 +398,7 @@ describe('the board list', () => {
 		})
 
 		it('says why a board could not be created', async () => {
-			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			axios.post.mockRejectedValue(refusal(400, { error: 'name already taken' }))
 			const wrapper = mountApp({ board_list: [] })
 			wrapper.vm.creationModalOpen = true
 
@@ -409,6 +409,22 @@ describe('the board list', () => {
 			expect(showError).toHaveBeenCalledWith('Failed to create new board: name already taken')
 			// closing it would lose what the user typed
 			expect(wrapper.vm.creationModalOpen).toBe(true)
+		})
+
+		it.each([
+			['a page rather than a reason', '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>', 500],
+			['a reason of only spaces', { error: '   ' }, 400],
+		])('says how a creation failed when the server sent %s', async (_, answer, status) => {
+			axios.post.mockRejectedValue(refusal(status, answer))
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			expect(showError).toHaveBeenCalledTimes(1)
+			expect(showError).toHaveBeenCalledWith(`Failed to create new board: The server answered ${status}`)
+			expect(showSuccess).not.toHaveBeenCalled()
+			expect(showUndo).not.toHaveBeenCalled()
 		})
 
 		it('stops showing itself as busy when the rejection carries nothing', async () => {
@@ -425,7 +441,7 @@ describe('the board list', () => {
 		})
 
 		it('stops showing itself as busy either way', async () => {
-			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			axios.post.mockRejectedValue(refusal(400, { error: 'name already taken' }))
 			const wrapper = mountApp({ board_list: [] })
 
 			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
@@ -522,7 +538,7 @@ describe('the board list', () => {
 
 	it('puts the user back on the board the server refused to delete', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -537,7 +553,7 @@ describe('the board list', () => {
 
 	it('does not move the user onto a board they were not looking at', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -552,7 +568,7 @@ describe('the board list', () => {
 
 	it('does not open a board the user never opened when its deletion is refused', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 
 		// nothing is open at page load, and delete is offered on every row, so
@@ -610,7 +626,7 @@ describe('the board list', () => {
 
 	it('leaves the user on the board they opened during the undo window', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -725,6 +741,23 @@ describe('the board list', () => {
 		expect(showError).toHaveBeenCalledWith('Failed to get boards: NUITEQ did not answer with a list of boards')
 	})
 
+	it.each([
+		['a page rather than a reason', '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>', 500],
+		['a reason of only spaces', { error: '   ' }, 400],
+	])('says how a reload failed when the server sent %s', async (_, answer, status) => {
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		axios.get.mockRejectedValue(refusal(status, answer))
+
+		await wrapper.vm.getBoards()
+		await flushPromises()
+
+		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith(`Failed to get boards: The server answered ${status}`)
+		expect(showSuccess).not.toHaveBeenCalled()
+		expect(showUndo).not.toHaveBeenCalled()
+	})
+
 	it('renders its own strings, not another app\'s', () => {
 		const wrapper = mountApp({ board_list: [] })
 
@@ -751,7 +784,7 @@ describe('the board list', () => {
 
 	it('puts the board back when the server refused to delete it', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp()
 
 		wrapper.vm.onBoardDeleted('b-1')
@@ -764,17 +797,23 @@ describe('the board list', () => {
 		expect(wrapper.vm.activeBoardCount).toBe(1)
 	})
 
-	it('says how a deletion failed when the server sent a page rather than a reason', async () => {
+	it.each([
+		['a page rather than a reason', '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>', 500],
+		['a reason of only spaces', { error: '   ' }, 400],
+	])('says how a deletion failed when the server sent %s', async (_, answer, status) => {
 		vi.useFakeTimers()
-		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
-		axios.post.mockRejectedValue({ response: { status: 500, data: page, request: { responseText: page } } })
+		axios.post.mockRejectedValue(refusal(status, answer))
 		const wrapper = mountApp()
 
 		wrapper.vm.onBoardDeleted('b-1')
 		await vi.advanceTimersByTimeAsync(10000)
 		await flushPromises()
 
-		// the page used to be printed into the toast whole
-		expect(showError).toHaveBeenCalledWith('Failed to delete the board: The server answered 500')
+		// a page used to be printed into the toast whole, and a blank reason
+		// after the prefix
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith(`Failed to delete the board: The server answered ${status}`)
+		expect(showSuccess).not.toHaveBeenCalled()
+		expect(showUndo).toHaveBeenCalledTimes(1)
 	})
 })

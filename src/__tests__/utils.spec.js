@@ -5,6 +5,7 @@
 import { AxiosError } from 'axios'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { delay, failureReason, fields, Timer } from '../utils.js'
+import { refusal } from './helpers.js'
 
 describe('Timer', () => {
 	beforeEach(() => vi.useFakeTimers())
@@ -54,22 +55,31 @@ describe('failureReason', () => {
 	const t = window.t
 
 	it('prefers what the server said went wrong', () => {
-		const error = { response: { status: 400, data: { error: 'board is locked' } } }
+		const error = refusal(400, { error: 'board is locked' })
 
 		expect(failureReason(error, t)).toBe('board is locked')
+	})
+
+	it('looks for the reason under error first, then under message', () => {
+		expect(failureReason(refusal(400, { error: 'board is locked', message: 'other' }), t)).toBe('board is locked')
+		// a blank error is no reason, so the message still counts
+		expect(failureReason(refusal(401, { error: '  ', message: 'Current user is not logged in' }), t))
+			.toBe('Current user is not logged in')
+		// and a blank message is none either
+		expect(failureReason(refusal(401, { message: '   ' }), t)).toBe('The server answered 401')
 	})
 
 	it('gives the reason Nextcloud itself refused the request with', () => {
 		// an expired session, a missing password confirmation and the admin
 		// check answer with message rather than error
-		const error = { response: { status: 401, data: { message: 'Current user is not logged in' } } }
+		const error = refusal(401, { message: 'Current user is not logged in' })
 
 		expect(failureReason(error, t)).toBe('Current user is not logged in')
 	})
 
 	it('describes a failure by its status rather than its body', () => {
 		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
-		const error = { response: { status: 500, data: page, request: { responseText: page } } }
+		const error = refusal(500, page)
 
 		// the body used to be printed whole, which put an error page, an
 		// exception class and a file path into a toast
@@ -114,15 +124,15 @@ describe('failureReason', () => {
 	})
 
 	it('ignores an error from the server that is not a string', () => {
-		const error = { response: { status: 503, data: { error: { message: 'nope' } } } }
+		const error = refusal(503, { error: { message: 'nope' } })
 
 		expect(failureReason(error, t)).toBe('The server answered 503')
-		expect(failureReason({ response: { status: 503, data: { message: { text: 'nope' } } } }, t))
+		expect(failureReason(refusal(503, { message: { text: 'nope' } }), t))
 			.toBe('The server answered 503')
 	})
 
 	it('ignores an error from the server that is only spaces', () => {
-		const error = { response: { status: 500, data: { error: '   ' } } }
+		const error = refusal(500, { error: '   ' })
 
 		// shown as the message, it read as a toast ending in a colon with
 		// nothing after it, which is the symptom the status answers
@@ -130,10 +140,10 @@ describe('failureReason', () => {
 	})
 
 	it('ignores an empty error from the server', () => {
-		expect(failureReason({ response: { status: 503, data: { error: '' } } }, t))
+		expect(failureReason(refusal(503, { error: '' }), t))
 			.toBe('The server answered 503')
 		// what Nextcloud answers a login it refuses without saying why
-		expect(failureReason({ response: { status: 401, data: { message: '' } } }, t))
+		expect(failureReason(refusal(401, { message: '' }), t))
 			.toBe('The server answered 401')
 	})
 })

@@ -8,7 +8,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { AxiosError } from 'axios'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import PersonalSettings from '../../components/PersonalSettings.vue'
-import { httpError, setInitialState } from '../helpers.js'
+import { refusal, setInitialState } from '../helpers.js'
 
 vi.mock('@nextcloud/axios', () => ({ default: { get: vi.fn(), put: vi.fn() } }))
 vi.mock('@nextcloud/dialogs', () => ({ showError: vi.fn(), showSuccess: vi.fn() }))
@@ -43,6 +43,28 @@ async function connect(wrapper) {
 	const button = wrapper.find('#nuiteq-connect')
 	expect(button.attributes('disabled')).toBeUndefined()
 	await button.trigger('click')
+}
+
+/**
+ * Change the server address and let the two second wait run out, the way the
+ * settings save on their own.
+ *
+ * @param wrapper the mounted settings
+ */
+async function changeSetting(wrapper) {
+	vi.useFakeTimers()
+	await wrapper.find('input[placeholder="https://nuiteqstage.se"]').setValue('https://new.example.com')
+	await vi.advanceTimersByTimeAsync(2000)
+	vi.useRealTimers()
+}
+
+/**
+ * Press Disconnect.
+ *
+ * @param wrapper the mounted settings, connected
+ */
+async function disconnect(wrapper) {
+	await wrapper.find('#nuiteq-rm-cred').trigger('click')
 }
 
 describe('PersonalSettings', () => {
@@ -89,12 +111,13 @@ describe('PersonalSettings', () => {
 	})
 
 	it('reports what the server said about a refused connection', async () => {
-		axios.put.mockRejectedValue({ response: { data: { error: 'wrong password' } } })
+		axios.put.mockRejectedValue(refusal(400, { error: 'wrong password' }))
 		const wrapper = mountSettings()
 
 		await connect(wrapper)
 		await flushPromises()
 
+		expect(showError).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledWith('wrong password')
 		expect(wrapper.vm.loading).toBe(false)
 	})
@@ -114,7 +137,7 @@ describe('PersonalSettings', () => {
 	})
 
 	it('does not read a server error that is not a sentence out to the user', async () => {
-		axios.put.mockRejectedValue({ response: { status: 503, data: { error: { message: 'nope' } } } })
+		axios.put.mockRejectedValue(refusal(503, { error: { message: 'nope' } }))
 		const wrapper = mountSettings()
 
 		await connect(wrapper)
@@ -160,7 +183,7 @@ describe('PersonalSettings', () => {
 	})
 
 	it('does not show a reason that is only spaces as the message', async () => {
-		axios.put.mockRejectedValue({ response: { status: 500, data: { error: '   ' } } })
+		axios.put.mockRejectedValue(refusal(500, { error: '   ' }))
 		const wrapper = mountSettings()
 
 		await connect(wrapper)
@@ -180,6 +203,23 @@ describe('PersonalSettings', () => {
 		// the server keeps the key until it is told to forget it
 		expect(axios.put).toHaveBeenCalledWith(CONFIG_URL, { values: { api_key: '' } })
 		expect(wrapper.text()).toContain('Connect to NUITEQ Stage')
+	})
+
+	it.each([
+		['a connection', {}, connect],
+		['a changed setting', {}, changeSetting],
+		['a disconnect', { user_name: 'jane', api_key: true }, disconnect],
+	])('says nothing was saved when Nextcloud itself refuses %s', async (_, state, act) => {
+		axios.put.mockRejectedValue(refusal(401, { message: 'Current user is not logged in' }))
+		const wrapper = mountSettings(state)
+
+		await act(wrapper)
+		await flushPromises()
+
+		// after a change or a disconnect the form already shows what the user
+		// asked for, so the prefix is all that says it was not saved
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith('Failed to save NUITEQ options: Current user is not logged in')
 	})
 
 	it('offers no connection until both credentials are typed', async () => {
@@ -258,7 +298,7 @@ describe('PersonalSettings', () => {
 	})
 
 	it('describes a failure the server did not explain by its status', async () => {
-		axios.put.mockRejectedValue(httpError(500, 'gateway timeout'))
+		axios.put.mockRejectedValue(refusal(500, 'gateway timeout'))
 		const wrapper = mountSettings()
 
 		await connect(wrapper)

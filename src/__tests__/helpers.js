@@ -2,6 +2,7 @@
  * SPDX-FileCopyrightText: 2026 Nextcloud GmbH and Nextcloud contributors
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
+import { AxiosError } from 'axios'
 
 /**
  * Put an initial state on the page the way the server does, so the components
@@ -24,13 +25,19 @@ export function setInitialState(key, value) {
 }
 
 /**
- * A rejection shaped like the one axios hands the components for an answer
- * that is not JSON: what the server wrote is both the response's data and
- * what the request read, which SendModal still prints.
+ * The rejection axios hands the components for an answer outside 2xx, built
+ * the way its settle() builds it: an Error, marked as axios's, whose message is
+ * axios's own English, which no toast should show. What the server wrote is
+ * the response's data, parsed when it is JSON, and what the request read,
+ * which SendModal still prints; that text is rebuilt here, so for JSON it
+ * lacks the server's escaping, which no spec reads.
  *
  * @param status the HTTP status
- * @param responseText what the server wrote
+ * @param data what the server answered: an object for JSON, a string otherwise
  */
-export function httpError(status, responseText = 'server said no') {
-	return { response: { status, data: responseText, request: { responseText } } }
+export function refusal(status, data) {
+	const request = { responseText: typeof data === 'string' ? data : JSON.stringify(data) }
+	const response = { status, data, request }
+	const code = status >= 400 && status < 500 ? AxiosError.ERR_BAD_REQUEST : AxiosError.ERR_BAD_RESPONSE
+	return new AxiosError(`Request failed with status code ${status}`, code, {}, request, response)
 }

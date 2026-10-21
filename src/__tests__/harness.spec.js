@@ -3,7 +3,10 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 import { config, mount } from '@vue/test-utils'
+import axios from 'axios'
+import settle from 'axios/unsafe/core/settle.js'
 import { describe, expect, it } from 'vitest'
+import { refusal } from './helpers.js'
 
 // The translation stub exists to make an untranslatable string visible: a
 // string asked for under another app's id resolves in no language, however well
@@ -40,5 +43,30 @@ describe('the translation stub the specs run against', () => {
 	it('counts through the same stub', () => {
 		expect(config.global.mocks.t).toBe(window.t)
 		expect(config.global.mocks.n).toBe(window.n)
+	})
+})
+
+// A toast check is only as good as the rejection it is fed: one whose message
+// were empty, say, would stop catching a toast that shows axios's own English.
+describe('the refusal the specs reject with', () => {
+	it.each([
+		[400, { error: 'board is locked' }],
+		[500, '<!DOCTYPE html><p>Exception</p>'],
+	])('is what axios itself rejects a %i with', async (status, data) => {
+		// a real axios whose adapter, standing in for the network, settles the
+		// answer the way axios's own adapters do
+		const real = await axios.create({
+			adapter: (config) => new Promise((resolve, reject) => {
+				settle(resolve, reject, { status, statusText: '', headers: {}, config, request: {}, data })
+			}),
+		}).get('/x').catch((error) => error)
+		const built = refusal(status, data)
+
+		expect(Object.getPrototypeOf(built)).toBe(Object.getPrototypeOf(real))
+		expect(built.isAxiosError).toBe(true)
+		expect(built.message).toBe(real.message)
+		expect(built.code).toBe(real.code)
+		expect(built.response.status).toBe(real.response.status)
+		expect(built.response.data).toEqual(real.response.data)
 	})
 })
