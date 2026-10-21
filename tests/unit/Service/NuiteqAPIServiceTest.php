@@ -8,6 +8,9 @@
 namespace OCA\Nuiteq\Tests;
 
 use Exception;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
 use OCP\Http\Client\IClient;
@@ -36,7 +39,7 @@ class NuiteqAPIServiceTest extends TestCase {
 		$clientService->method('newClient')->willReturn($this->client);
 
 		$l10n = $this->createMock(IL10N::class);
-		$l10n->method('t')->willReturnArgument(0);
+		$l10n->method('t')->willReturnCallback(fn (string $text, array $parameters = []) => vsprintf($text, $parameters));
 
 		$this->crypto = $this->createMock(ICrypto::class);
 		$this->crypto->method('decrypt')->willReturnCallback(
@@ -244,6 +247,135 @@ class NuiteqAPIServiceTest extends TestCase {
 		return [
 			'an integer' => [12345, '12345'],
 			'a zero' => [0, '0'],
+		];
+	}
+
+	/**
+	 * What Nextcloud's client throws for an answer of 400 or above, built by
+	 * Guzzle itself, so its message is the one the client really carries.
+	 */
+	private function refuses(int $status, string $body, string $endPoint): void {
+		$url = 'https://stage.example.com/api/v1/' . $endPoint;
+		$type = str_starts_with($body, '<') ? 'text/html' : 'application/json';
+		$response = new Response($status, ['Content-Type' => $type], $body);
+		$this->client->expects($this->once())->method('post')
+			->with($url, $this->anything())
+			->willThrowException(RequestException::create(new Request('POST', $url), $response));
+	}
+
+	private function call(string $endPoint): array {
+		return match ($endPoint) {
+			'login' => $this->apiService->login('admin', 'jane', 'not-her-password'),
+			'list' => $this->apiService->getBoards('admin'),
+			'delete' => $this->apiService->deleteBoard('admin', 'b-1'),
+		};
+	}
+
+	/**
+	 * NUITEQ answers an unknown username and password with a 401 and its
+	 * reason, and the settings showed the request that failed instead: the
+	 * URL, the status line and NUITEQ's answer as it came.
+	 */
+	public function testARefusedLoginIsToldInNuiteqsWords(): void {
+		$this->refuses(401, '{"error":"Invalid username or password"}', 'login');
+
+		$this->assertSame(['error' => 'Invalid username or password'], $this->call('login'));
+	}
+
+	#[DataProvider('provideRefusedLogins')]
+	public function testALoginRefusedWithoutAReasonIsToldByItsStatus(int $status, string $body, string $expected): void {
+		$this->refuses($status, $body, 'login');
+
+		$this->assertSame(['error' => $expected], $this->call('login'));
+	}
+
+	public static function provideRefusedLogins(): array {
+		return [
+			'401 whose body has no error' => [401, '{"message":"Unauthorized"}', 'Login failed: the NUITEQ Stage URL answered 401'],
+			'403 whose body has no error' => [403, '{"status":"denied"}', 'Login failed: the NUITEQ Stage URL answered 403'],
+			'403 with a firewall\'s page' => [403, '<html><body>Forbidden</body></html>', 'Login failed: the NUITEQ Stage URL answered 403'],
+			'401 with a page asking for a password' => [401, '<html><body>Authorization Required</body></html>', 'Login failed: the NUITEQ Stage URL answered 401'],
+			'401 with a JSON string' => [401, '"Unauthorized"', 'Login failed: the NUITEQ Stage URL answered 401'],
+			'401 with nothing in the body' => [401, '', 'Login failed: the NUITEQ Stage URL answered 401'],
+			'400 whose error is inside a list' => [400, '[{"error":"Board is locked"}]', 'Login failed: the NUITEQ Stage URL answered 400'],
+			'400, which says nothing of the credentials' => [400, '{}', 'Login failed: the NUITEQ Stage URL answered 400'],
+			'a Stage URL that is not NUITEQ\'s' => [404, '<html><body>Not Found</body></html>', 'Login failed: the NUITEQ Stage URL answered 404'],
+			'too many attempts' => [429, '', 'Login failed: the NUITEQ Stage URL answered 429'],
+			'an outage' => [500, '<!DOCTYPE html><p>Fatal error</p>', 'Login failed: the NUITEQ Stage URL answered 500'],
+		];
+	}
+
+	/**
+	 * NUITEQ's own reason is the one part of its answer meant for reading.
+	 */
+	#[DataProvider('provideReasons')]
+	public function testTheReasonNuiteqGivesIsHandedBack(string $endPoint, int $status, string $body, string $reason): void {
+		$this->refuses($status, $body, $endPoint);
+
+		$this->assertSame(['error' => $reason], $this->call($endPoint));
+	}
+
+	public static function provideReasons(): array {
+		return [
+			'an unknown key, listing the boards' => ['list', 403, '{"error":"Permission denied"}', 'Permission denied'],
+			'a deletion refused with a 403' => ['delete', 403, '{"error":"Permission denied"}', 'Permission denied'],
+			'a deletion refused with a 400' => ['delete', 400, '{"error":"This board is locked"}', 'This board is locked'],
+			'a login refused with a 400' => ['login', 400, '{"error":"This account is locked"}', 'This account is locked'],
+			'an outage that says why' => ['list', 503, '{"error":"Down for maintenance"}', 'Down for maintenance'],
+			'a reason beside other keys' => ['login', 403, '{"error":"Permission denied","apiKey":"not-for-the-user"}', 'Permission denied'],
+			'a request refused with a 401' => ['list', 401, '{"error":"Token expired"}', 'Token expired'],
+		];
+	}
+
+	/**
+	 * A 403 whose body was a JSON object was handed back as NUITEQ wrote it,
+	 * so a deletion refused without an error key read as success, and the
+	 * board page took the board off the list.
+	 */
+	public function testARefusedDeletionIsAFailureEvenWithoutAReason(): void {
+		$this->refuses(403, '{"status":"denied"}', 'delete');
+
+		$this->assertSame(['error' => 'The NUITEQ Stage URL answered 403'], $this->call('delete'));
+	}
+
+	#[DataProvider('provideRefusalsWithoutAReason')]
+	public function testARefusalWithoutAReasonDoesNotShowTheRequest(int $status, string $body, string $expected): void {
+		$this->refuses($status, $body, 'list');
+
+		$this->assertSame(['error' => $expected], $this->call('list'));
+	}
+
+	public static function provideRefusalsWithoutAReason(): array {
+		return [
+			'401 whose body has no error' => [401, '{"message":"Unauthorized"}', 'The NUITEQ Stage URL answered 401'],
+			'401 with a page asking for a password' => [401, '<html><body>Authorization Required</body></html>', 'The NUITEQ Stage URL answered 401'],
+			'an error page' => [500, '<!DOCTYPE html><p>Fatal error in /srv/stage/index.php</p>', 'The NUITEQ Stage URL answered 500'],
+			'an error made of spaces' => [400, '{"error":"   "}', 'The NUITEQ Stage URL answered 400'],
+			'an error that is an object' => [400, '{"error":{"code":7}}', 'The NUITEQ Stage URL answered 400'],
+			'an error that is a number' => [400, '{"error":7}', 'The NUITEQ Stage URL answered 400'],
+		];
+	}
+
+	/**
+	 * The request that failed still matters to whoever reads the log.
+	 */
+	#[DataProvider('provideLoggedRefusals')]
+	public function testARefusalIsLoggedWithTheRequestThatFailed(string $endPoint, int $status, string $body, string $statusLine): void {
+		$this->refuses($status, $body, $endPoint);
+		$this->logger->expects($this->once())->method('warning')
+			->with($this->logicalAnd(
+				$this->stringContains('https://stage.example.com/api/v1/' . $endPoint),
+				$this->stringContains($statusLine),
+			), ['app' => 'integration_nuiteq']);
+
+		$this->call($endPoint);
+	}
+
+	public static function provideLoggedRefusals(): array {
+		return [
+			'a login without a reason' => ['login', 401, '{"message":"Unauthorized"}', '401 Unauthorized'],
+			'a listing with a reason' => ['list', 403, '{"error":"Permission denied"}', '403 Forbidden'],
+			'a listing answered with a proxy\'s page' => ['list', 502, '<html><body>Bad Gateway</body></html>', '502 Bad Gateway'],
 		];
 	}
 }
