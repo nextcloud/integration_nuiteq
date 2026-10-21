@@ -8,7 +8,7 @@ import { confirmPassword } from '@nextcloud/password-confirmation'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AdminSettings from '../../components/AdminSettings.vue'
-import { httpError, setInitialState } from '../helpers.js'
+import { refusal, setInitialState } from '../helpers.js'
 
 vi.mock('@nextcloud/axios', () => ({ default: { put: vi.fn() } }))
 vi.mock('@nextcloud/dialogs', () => ({ showError: vi.fn(), showSuccess: vi.fn() }))
@@ -44,6 +44,13 @@ describe('AdminSettings', () => {
 	})
 
 	afterEach(() => vi.useRealTimers())
+
+	it('asks for what it shows under this app', () => {
+		const wrapper = mountSettings()
+
+		expect(wrapper.text()).not.toContain('[untranslatable')
+		expect(wrapper.text()).toContain('Leave this empty to use the default client key.')
+	})
 
 	describe('typing in a field', () => {
 		it('waits for the admin to stop typing before saving', async () => {
@@ -113,22 +120,28 @@ describe('AdminSettings', () => {
 
 		expect(axios.put).not.toHaveBeenCalled()
 		expect(showSuccess).not.toHaveBeenCalled()
+		expect(showError).toHaveBeenCalledTimes(1)
 		expect(showError)
 			.toHaveBeenCalledWith('Password confirmation is required to save these options')
 	})
 
 	it('reports what the server said when saving fails', async () => {
-		axios.put.mockRejectedValue({ response: { status: 400, data: { error: 'read-only config' } } })
+		axios.put.mockRejectedValue(refusal(400, { error: 'read-only config' }))
 		const wrapper = mountSettings()
 
 		await wrapper.vm.saveOptions({ base_url: 'https://new.example.com' })
 		await flushPromises()
 
+		expect(showError).toHaveBeenCalledTimes(1)
 		expect(showError).toHaveBeenCalledWith('Failed to save Nuiteq admin options: read-only config')
+		expect(showSuccess).not.toHaveBeenCalled()
 	})
 
-	it('describes a failure by its status rather than printing the page it answered with', async () => {
-		axios.put.mockRejectedValue(httpError(500, '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>'))
+	it.each([
+		['the page it answered with', '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>', 500],
+		['a reason of only spaces', { error: '   ' }, 400],
+	])('describes a failure by its status rather than printing %s', async (_, answer, status) => {
+		axios.put.mockRejectedValue(refusal(status, answer))
 		const wrapper = mountSettings()
 
 		await wrapper.vm.saveOptions({ base_url: 'https://new.example.com' })
@@ -136,6 +149,8 @@ describe('AdminSettings', () => {
 
 		// the body used to be printed whole, and an answer without one left
 		// the message ending in a colon
-		expect(showError).toHaveBeenCalledWith('Failed to save Nuiteq admin options: The server answered 500')
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith(`Failed to save Nuiteq admin options: The server answered ${status}`)
+		expect(showSuccess).not.toHaveBeenCalled()
 	})
 })

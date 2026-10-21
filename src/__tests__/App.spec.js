@@ -7,7 +7,7 @@ import { showError, showSuccess, showUndo } from '@nextcloud/dialogs'
 import { flushPromises, mount } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../App.vue'
-import { setInitialState } from './helpers.js'
+import { refusal, setInitialState } from './helpers.js'
 
 vi.mock('@nextcloud/axios', () => ({ default: { get: vi.fn(), post: vi.fn(), put: vi.fn() } }))
 vi.mock('@nextcloud/dialogs', () => ({
@@ -23,6 +23,21 @@ vi.mock('@nextcloud/dialogs', () => ({
  */
 function board(over = {}) {
 	return { id: 'b-1', name: 'Sprint planning', ...over }
+}
+
+/**
+ * The button a user would press, by the words on it.
+ *
+ * @param wrapper the mounted app
+ * @param name what the button says
+ */
+function buttonNamed(wrapper, name) {
+	const button = wrapper.findAll('button').find((candidate) => candidate.text() === name)
+	if (button === undefined) {
+		throw new Error(`no button says "${name}", only: `
+			+ JSON.stringify(wrapper.findAll('button').map((candidate) => candidate.text())))
+	}
+	return button
 }
 
 /**
@@ -45,6 +60,28 @@ function mountApp(state = {}) {
 	return mount(App, {
 		attachTo: document.body,
 		global: { stubs: { NcContent: slotOnly, NcAppContent: slotOnly, NcModal: slotOnly } },
+	})
+}
+
+/**
+ * Mount the app with the real modal, which teleports its content to the
+ * document and owns the close button and the backdrop.
+ *
+ * @param state what to add or override
+ */
+function mountAppWithModal(state = {}) {
+	setInitialState('nuiteq-state', {
+		base_url: 'https://stage.example.com',
+		user_name: 'jane',
+		api_key: 'a-key',
+		talk_enabled: true,
+		board_list: [],
+		...state,
+	})
+	const slotOnly = { template: '<div><slot /></div>' }
+	return mount(App, {
+		attachTo: document.body,
+		global: { stubs: { NcContent: slotOnly, NcAppContent: slotOnly } },
 	})
 }
 
@@ -175,6 +212,158 @@ describe('the board list', () => {
 	})
 
 	describe('creating a board', () => {
+		it('creates the board the user typed, from the entry in the navigation', async () => {
+			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+			const wrapper = mountApp({ board_list: [board()] })
+
+			// every test of this chain called onCreationValidate, so none of
+			// the hops between the entry the user presses and the request was
+			// pinned: the entry, the form it opens, and its Create button
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+			expect(wrapper.find('.creationForm').exists()).toBe(true)
+
+			await wrapper.find('#board-name').setValue('Retro')
+			await buttonNamed(wrapper, 'Create').trigger('click')
+			await flushPromises()
+
+			expect(axios.post).toHaveBeenCalledWith(
+				'/index.php/apps/integration_nuiteq/new',
+				{ name: 'Retro', password: '' },
+			)
+			expect(wrapper.vm.activeBoards.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
+			expect(wrapper.find('.creationForm').exists()).toBe(false)
+		})
+
+		it('creates the board when the user presses Enter in the name', async () => {
+			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			await wrapper.find('#board-name').setValue('Retro')
+			await wrapper.find('#board-name').trigger('keyup.enter')
+			await flushPromises()
+
+			// Enter in the name submits the form, as its Create button does
+			expect(axios.post).toHaveBeenCalledWith(
+				'/index.php/apps/integration_nuiteq/new',
+				{ name: 'Retro', password: '' },
+			)
+		})
+
+		it('protects the board with the password the user typed', async () => {
+			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			await wrapper.find('#board-name').setValue('Retro')
+			await wrapper.find('.creationForm input[type="checkbox"]').setValue(true)
+			await wrapper.find('#board-password').setValue('hunter2')
+			await buttonNamed(wrapper, 'Create').trigger('click')
+			await flushPromises()
+
+			expect(axios.post).toHaveBeenCalledWith(
+				'/index.php/apps/integration_nuiteq/new',
+				{ name: 'Retro', password: 'hunter2' },
+			)
+		})
+
+		it('drops a password the user switched off again', async () => {
+			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			await wrapper.find('#board-name').setValue('Retro')
+			await wrapper.find('.creationForm input[type="checkbox"]').setValue(true)
+			await wrapper.find('#board-password').setValue('hunter2')
+			await wrapper.find('.creationForm input[type="checkbox"]').setValue(false)
+			await buttonNamed(wrapper, 'Create').trigger('click')
+			await flushPromises()
+
+			// the field is gone, so a password still sent is one the user
+			// cannot see they set
+			expect(axios.post).toHaveBeenCalledWith(
+				'/index.php/apps/integration_nuiteq/new',
+				{ name: 'Retro', password: '' },
+			)
+		})
+
+		it('shows itself as busy while NUITEQ answers', async () => {
+			let answer
+			axios.post.mockReturnValue(new Promise((resolve) => {
+				answer = () => resolve({ data: { id: 'b-9' } })
+			}))
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			await buttonNamed(wrapper, 'Create').trigger('click')
+			await wrapper.vm.$nextTick()
+			expect(wrapper.find('.creationForm .icon-loading').exists()).toBe(true)
+
+			answer()
+			await flushPromises()
+			expect(wrapper.find('.creationForm').exists()).toBe(false)
+		})
+
+		it('closes the form when the user cancels it', async () => {
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			await buttonNamed(wrapper, 'Cancel').trigger('click')
+
+			// Cancel, Escape and the close button all go through here, and
+			// nothing pinned any of them
+			expect(wrapper.find('.creationForm').exists()).toBe(false)
+			expect(axios.post).not.toHaveBeenCalled()
+		})
+
+		it('closes the form from the modal\'s own close button', async () => {
+			const wrapper = mountAppWithModal()
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+			expect(document.querySelector('.creationForm')).not.toBe(null)
+
+			document.querySelector('.modal-container__close')
+				.dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+			// the modal hides itself and asks the page to close it 300 ms later
+			await new Promise((settle) => setTimeout(settle, 400))
+
+			expect(document.querySelector('.creationForm')).toBe(null)
+			expect(axios.post).not.toHaveBeenCalled()
+		})
+
+		it('puts the user in the name, ready to be typed over', async () => {
+			const wrapper = mountAppWithModal()
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+			await flushPromises()
+
+			const name = document.querySelector('#board-name')
+			expect(document.activeElement).toBe(name)
+			expect([name.selectionStart, name.selectionEnd]).toEqual([0, name.value.length])
+			expect(name.value).not.toBe('')
+		})
+
+		it('offers the same form from the empty state', async () => {
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.find('.createButton').trigger('click')
+
+			// the empty state's own button, beside the navigation's
+			expect(wrapper.find('.creationForm').exists()).toBe(true)
+		})
+
+		it('asks NUITEQ for nothing when the user clears the name', async () => {
+			const wrapper = mountApp({ board_list: [] })
+			await buttonNamed(wrapper, 'Create a board').trigger('click')
+
+			// the form opens with a name already in it, so this is the one way
+			// a user reaches the mandatory-field check
+			await wrapper.find('#board-name').setValue('')
+			await buttonNamed(wrapper, 'Create').trigger('click')
+			await flushPromises()
+
+			expect(axios.post).not.toHaveBeenCalled()
+			expect(showError).toHaveBeenCalledWith('Field "Board name" is missing')
+		})
+
 		it('opens the board NUITEQ created', async () => {
 			axios.post.mockResolvedValue({ data: { id: 'b-9' } })
 			const wrapper = mountApp({ board_list: [] })
@@ -209,7 +398,7 @@ describe('the board list', () => {
 		})
 
 		it('says why a board could not be created', async () => {
-			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			axios.post.mockRejectedValue(refusal(400, { error: 'name already taken' }))
 			const wrapper = mountApp({ board_list: [] })
 			wrapper.vm.creationModalOpen = true
 
@@ -220,6 +409,22 @@ describe('the board list', () => {
 			expect(showError).toHaveBeenCalledWith('Failed to create new board: name already taken')
 			// closing it would lose what the user typed
 			expect(wrapper.vm.creationModalOpen).toBe(true)
+		})
+
+		it.each([
+			['a page rather than a reason', '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>', 500],
+			['a reason of only spaces', { error: '   ' }, 400],
+		])('says how a creation failed when the server sent %s', async (_, answer, status) => {
+			axios.post.mockRejectedValue(refusal(status, answer))
+			const wrapper = mountApp({ board_list: [] })
+
+			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
+			await flushPromises()
+
+			expect(showError).toHaveBeenCalledTimes(1)
+			expect(showError).toHaveBeenCalledWith(`Failed to create new board: The server answered ${status}`)
+			expect(showSuccess).not.toHaveBeenCalled()
+			expect(showUndo).not.toHaveBeenCalled()
 		})
 
 		it('stops showing itself as busy when the rejection carries nothing', async () => {
@@ -236,13 +441,59 @@ describe('the board list', () => {
 		})
 
 		it('stops showing itself as busy either way', async () => {
-			axios.post.mockRejectedValue({ response: { data: { error: 'name already taken' } } })
+			axios.post.mockRejectedValue(refusal(400, { error: 'name already taken' }))
 			const wrapper = mountApp({ board_list: [] })
 
 			await wrapper.vm.onCreationValidate({ name: 'Retro', password: '' })
 			await flushPromises()
 
 			expect(wrapper.vm.creating).toBe(false)
+		})
+	})
+
+	it('says no board is open once the open one is deleted', async () => {
+		vi.useFakeTimers()
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		await wrapper.findAll('.app-navigation-entry-link')[0].trigger('click')
+
+		await wrapper.findAll('.action-item__menutoggle')[0].trigger('click')
+		await vi.advanceTimersByTimeAsync(500)
+		document.querySelector('.action-button')
+			.dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
+		await flushPromises()
+
+		// without this the content pane is simply blank, with nothing saying
+		// why
+		expect(wrapper.text()).toContain('No selected board')
+		expect(wrapper.text()).not.toContain('[untranslatable')
+	})
+
+	describe('connecting from the board page', () => {
+		it('offers the settings to a user who is not connected', () => {
+			const wrapper = mountApp({ user_name: '', api_key: false, board_list: [] })
+
+			expect(wrapper.text()).toContain('You are not connected to NUITEQ Stage')
+			expect(wrapper.find('#nuiteq-connect').exists()).toBe(true)
+		})
+
+		it('lists the boards of the account the user just connected', async () => {
+			axios.put.mockResolvedValue({ data: { user_name: 'jane' } })
+			axios.get.mockResolvedValue({ data: [board({ id: 'b-7', name: 'Retro' })] })
+			const wrapper = mountApp({ user_name: '', api_key: false, board_list: [] })
+
+			await wrapper.find('input[placeholder="NUITEQ login"]').setValue('jane')
+			await wrapper.find('input[placeholder="NUITEQ password"]').setValue('hunter2')
+			await wrapper.find('#nuiteq-connect').trigger('click')
+			await flushPromises()
+
+			// the boards were asked for by nothing but a direct call: the form,
+			// what it announces and the fetch it leads to were each unpinned
+			expect(axios.get).toHaveBeenCalledWith('/index.php/apps/integration_nuiteq/list')
+			expect(wrapper.findAll('.app-navigation-entry-link').map((entry) => entry.text()))
+				.toEqual(['Retro'])
+			// and the page has to know it, or it keeps offering the settings
+			expect(wrapper.text()).not.toContain('You are not connected to NUITEQ Stage')
+			expect(wrapper.text()).toContain('No selected board')
 		})
 	})
 
@@ -287,7 +538,7 @@ describe('the board list', () => {
 
 	it('puts the user back on the board the server refused to delete', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -302,7 +553,7 @@ describe('the board list', () => {
 
 	it('does not move the user onto a board they were not looking at', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -317,7 +568,7 @@ describe('the board list', () => {
 
 	it('does not open a board the user never opened when its deletion is refused', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 
 		// nothing is open at page load, and delete is offered on every row, so
@@ -375,7 +626,7 @@ describe('the board list', () => {
 
 	it('leaves the user on the board they opened during the undo window', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
 		wrapper.vm.selectedBoardId = 'b-1'
 
@@ -490,6 +741,23 @@ describe('the board list', () => {
 		expect(showError).toHaveBeenCalledWith('Failed to get boards: NUITEQ did not answer with a list of boards')
 	})
 
+	it.each([
+		['a page rather than a reason', '<!DOCTYPE html><p>Exception: in /var/www/x.php</p>', 500],
+		['a reason of only spaces', { error: '   ' }, 400],
+	])('says how a reload failed when the server sent %s', async (_, answer, status) => {
+		const wrapper = mountApp({ board_list: [board(), board({ id: 'b-2', name: 'Retro' })] })
+		axios.get.mockRejectedValue(refusal(status, answer))
+
+		await wrapper.vm.getBoards()
+		await flushPromises()
+
+		expect(wrapper.vm.state.board_list.map((b) => b.name)).toEqual(['Sprint planning', 'Retro'])
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith(`Failed to get boards: The server answered ${status}`)
+		expect(showSuccess).not.toHaveBeenCalled()
+		expect(showUndo).not.toHaveBeenCalled()
+	})
+
 	it('renders its own strings, not another app\'s', () => {
 		const wrapper = mountApp({ board_list: [] })
 
@@ -516,7 +784,7 @@ describe('the board list', () => {
 
 	it('puts the board back when the server refused to delete it', async () => {
 		vi.useFakeTimers()
-		axios.post.mockRejectedValue({ response: { data: { error: 'board is locked' } } })
+		axios.post.mockRejectedValue(refusal(400, { error: 'board is locked' }))
 		const wrapper = mountApp()
 
 		wrapper.vm.onBoardDeleted('b-1')
@@ -529,17 +797,23 @@ describe('the board list', () => {
 		expect(wrapper.vm.activeBoardCount).toBe(1)
 	})
 
-	it('says how a deletion failed when the server sent a page rather than a reason', async () => {
+	it.each([
+		['a page rather than a reason', '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>', 500],
+		['a reason of only spaces', { error: '   ' }, 400],
+	])('says how a deletion failed when the server sent %s', async (_, answer, status) => {
 		vi.useFakeTimers()
-		const page = '<!DOCTYPE html><p>Exception: OCA\\Nuiteq\\Boom in /var/www/x.php line 42</p>'
-		axios.post.mockRejectedValue({ response: { status: 500, data: page, request: { responseText: page } } })
+		axios.post.mockRejectedValue(refusal(status, answer))
 		const wrapper = mountApp()
 
 		wrapper.vm.onBoardDeleted('b-1')
 		await vi.advanceTimersByTimeAsync(10000)
 		await flushPromises()
 
-		// the page used to be printed into the toast whole
-		expect(showError).toHaveBeenCalledWith('Failed to delete the board: The server answered 500')
+		// a page used to be printed into the toast whole, and a blank reason
+		// after the prefix
+		expect(showError).toHaveBeenCalledTimes(1)
+		expect(showError).toHaveBeenCalledWith(`Failed to delete the board: The server answered ${status}`)
+		expect(showSuccess).not.toHaveBeenCalled()
+		expect(showUndo).toHaveBeenCalledTimes(1)
 	})
 })

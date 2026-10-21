@@ -6,10 +6,11 @@ import { config, enableAutoUnmount } from '@vue/test-utils'
 import { afterEach } from 'vitest'
 
 // A component left mounted keeps its listeners and its teleported markup in the
-// document; unmounting after each test keeps them out of the next one. Calling
-// this twice throws, which is what --no-isolate does by running the setup once
-// per worker — and the hook then belongs to the file that registered it, so the
-// suite is only supported as vitest runs it by default, one file per worker.
+// document; unmounting after each test keeps them out of the next one. The
+// setup runs once per file, and calling this a second time in one process
+// throws, which is what --no-isolate does once two files share a worker; the
+// guard stops that throw, and the hook then belongs to the first file alone.
+// The suite is written for vitest's default, each file isolated.
 if (!globalThis.__nuiteqAutoUnmount) {
 	globalThis.__nuiteqAutoUnmount = true
 	enableAutoUnmount(afterEach)
