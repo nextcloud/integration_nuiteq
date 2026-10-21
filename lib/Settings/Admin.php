@@ -9,14 +9,14 @@ namespace OCA\Nuiteq\Settings;
 
 use OCA\Nuiteq\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\IConfig;
 use OCP\Settings\ISettings;
 
 class Admin implements ISettings {
 
 	public function __construct(
-		private IConfig $config,
+		private IAppConfig $appConfig,
 		private IInitialState $initialStateService,
 	) {
 	}
@@ -25,8 +25,8 @@ class Admin implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$baseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', 'https://nuiteqstage.se');
-		$clientKey = $this->config->getAppValue(Application::APP_ID, 'client_key');
+		$baseUrl = $this->appConfig->getAppValueString('base_url', 'https://nuiteqstage.se');
+		$clientKey = $this->appConfig->getAppValueString('client_key', lazy: true);
 
 		$adminConfig = [
 			'base_url' => $baseUrl,
