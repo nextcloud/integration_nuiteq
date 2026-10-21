@@ -11,6 +11,7 @@ OC.L10N.register(
     "Nuiteq" : "Nuiteq",
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "Opret og del hurtigt tavler fra NUITEQ Stage i Nextcloud",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage oprette en naturlig interaktion mellem deltagere i et moderne møde ved at sammensmelte oplevelsen af at være kreative sammen på et whiteboard og diskutere i et video opkald og chat. Forbered og upload filer og præsentationer, del dem med andre i mødet. Designet til førstehånds samarbejde for at engagere teammedlemmer - NUITEQ Stage er sikker, nemt og effektivt at anvende.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards.",
+    "NUITEQ did not answer with a list of boards" : "NUITEQ svarede ikke med en liste over tavler",
     "Failed to get boards" : "Tavlerne kunne ikke hentes",
     "New board was created in NUITEQ stage" : "Der er oprettet en ny tavle i NUITEQ Stage",
     "Failed to create new board" : "Den nye tavle kunne ikke oprettes",
@@ -67,6 +68,8 @@ OC.L10N.register(
     "Groups" : "Grupper",
     "Send" : "Send",
     "Board name" : "Tavlenavn",
+    "The server answered {status}" : "Serveren svarede med {status}",
+    "The server could not be reached" : "Serveren kunne ikke nås",
     "board name" : "tavlens navn",
     "New board" : "Ny tavle"
 },

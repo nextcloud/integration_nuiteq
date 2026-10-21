@@ -11,6 +11,7 @@ OC.L10N.register(
     "Nuiteq" : "Nuiteq",
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "Быстро создавайте доски NUITEQ Stage и делитесь ими в Nextcloud",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage обеспечивает естественное взаимодействие между участниками Modern Meeting, объединяя совместную работу на интерактивной доске с обсуждением в видеовызове и чате. Подготавливайте и загружайте файлы и презентации, делитесь ими с другими участниками встречи. NUITEQ Stage создан прежде всего для совместной работы и вовлечения участников команды — им безопасно, просто и удобно пользоваться.\n\nЭто приложение предоставляет простой интерфейс для просмотра списка, создания и публикации интерактивных досок NUITEQ Stage.",
+    "NUITEQ did not answer with a list of boards" : "NUITEQ не вернул список досок",
     "Failed to get boards" : "Не удалось получить доски",
     "New board was created in NUITEQ stage" : "В NUITEQ Stage создана новая доска",
     "Failed to create new board" : "Не удалось создать новую доску",
@@ -67,6 +68,8 @@ OC.L10N.register(
     "Groups" : "Группы",
     "Send" : "Отправить",
     "Board name" : "Название доски",
+    "The server answered {status}" : "Сервер ответил: {status}",
+    "The server could not be reached" : "Не удалось связаться с сервером",
     "board name" : "Название доски",
     "New board" : "Создать доску"
 },

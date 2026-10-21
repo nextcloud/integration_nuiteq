@@ -11,6 +11,7 @@ OC.L10N.register(
     "Nuiteq" : "Nuiteq",
     "Quickly create and share NUITEQ Stage boards in Nextcloud" : "在 Nextcloud 中快速建立與分享 NUITEQ Stage 白板",
     "NUITEQ Stage creates a natural interaction between participants in a Modern Meeting by merging the experience of creating together on a whiteboard and discussing in a video call and chat. Prepare and upload files and presentations, share them with others in the meeting. Designed for collaboration first to engage team members - NUITEQ Stage is safe, easy and efficient to use.\n\nThis app provides a simple interface to list, create and share NUITEQ Stage whiteboards." : "NUITEQ Stage 透過在白板上一起創作以及在視訊通話中進行討論的體驗結合，在現代會議的參與者之間創造了一種自然的互動。準備並上傳檔案與簡報，與會議中的其他人分享。專為首先與團隊成員協作而設計 - NUITEQ Stage 使用起來安全、簡單且有效率。\n\n此應用程式提供了一個簡單的界面來列出、建立與分享 NUITEQ Stage 白板。",
+    "NUITEQ did not answer with a list of boards" : "NUITEQ 並未回應看板清單",
     "Failed to get boards" : "取得白板失敗",
     "New board was created in NUITEQ stage" : "在 NUITEQ Stage 中建立了新白板",
     "Failed to create new board" : "建立新白板失敗",
@@ -67,6 +68,8 @@ OC.L10N.register(
     "Groups" : "群組",
     "Send" : "傳送",
     "Board name" : "佈告欄名稱",
+    "The server answered {status}" : "伺服器回應 {status}",
+    "The server could not be reached" : "無法連線至伺服器",
     "board name" : "白板名稱",
     "New board" : "新白板"
 },
