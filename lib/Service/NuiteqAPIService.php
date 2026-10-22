@@ -11,6 +11,7 @@ use Exception;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use OCA\Nuiteq\AppInfo\Application;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -29,6 +30,7 @@ class NuiteqAPIService {
 		private string $appName,
 		private LoggerInterface $logger,
 		private IL10N $l10n,
+		private IAppConfig $appConfig,
 		private IConfig $config,
 		private ICrypto $crypto,
 		IClientService $clientService,
@@ -41,7 +43,7 @@ class NuiteqAPIService {
 	 * @return string
 	 */
 	private function getClientKey(string $userId): string {
-		$adminClientKey = $this->config->getAppValue(Application::APP_ID, 'client_key', Application::DEFAULT_CLIENT_KEY) ?: Application::DEFAULT_CLIENT_KEY;
+		$adminClientKey = $this->appConfig->getAppValueString('client_key', Application::DEFAULT_CLIENT_KEY, lazy: true) ?: Application::DEFAULT_CLIENT_KEY;
 		$clientKey = $this->config->getUserValue($userId, Application::APP_ID, 'client_key', $adminClientKey) ?: $adminClientKey;
 
 		// Decrypt the clientKey if it's encrypted
@@ -73,7 +75,7 @@ class NuiteqAPIService {
 	 * @return string
 	 */
 	public function getBaseUrl(string $userId): string {
-		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
+		$adminBaseUrl = $this->appConfig->getAppValueString('base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
 		return $this->config->getUserValue($userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 	}
 

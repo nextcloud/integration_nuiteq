@@ -13,6 +13,7 @@ use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\PasswordConfirmationRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\Security\ICrypto;
@@ -22,6 +23,7 @@ class ConfigController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,
+		private IAppConfig $appConfig,
 		private IConfig $config,
 		private NuiteqAPIService $nuiteqAPIService,
 		private ICrypto $crypto,
@@ -63,6 +65,17 @@ class ConfigController extends Controller {
 	 */
 	#[PasswordConfirmationRequired]
 	public function setAdminConfig(array $values): DataResponse {
+		// only what the admin settings send: a typed write of any other key
+		// would change the type of rows Nextcloud owns, installed_version or
+		// enabled, and the next upgrade or enable fails on the conflict
+		foreach ($values as $key => $value) {
+			if (!in_array($key, ['base_url', 'client_key'], true)) {
+				return new DataResponse(['error' => 'Unknown admin setting ' . $key], Http::STATUS_BAD_REQUEST);
+			}
+			if (!is_string($value)) {
+				return new DataResponse(['error' => 'The admin setting ' . $key . ' must be a string'], Http::STATUS_BAD_REQUEST);
+			}
+		}
 		foreach ($values as $key => $value) {
 			if (in_array($key, ['client_key']) && $value !== '') {
 				if ($value === 'dummySecret') {
@@ -71,7 +84,9 @@ class ConfigController extends Controller {
 				}
 				$value = $this->crypto->encrypt($value);
 			}
-			$this->config->setAppValue(Application::APP_ID, $key, $value);
+			// the client key is read only by this app's own settings and requests,
+			// base_url on every page
+			$this->appConfig->setAppValueString($key, $value, lazy: $key === 'client_key');
 		}
 		return new DataResponse('');
 	}

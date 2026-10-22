@@ -10,6 +10,7 @@ namespace OCA\Nuiteq\Settings;
 use Exception;
 use OCA\Nuiteq\AppInfo\Application;
 use OCP\AppFramework\Http\TemplateResponse;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Security\ICrypto;
@@ -20,6 +21,7 @@ use Throwable;
 class Personal implements ISettings {
 
 	public function __construct(
+		private IAppConfig $appConfig,
 		private IConfig $config,
 		private IInitialState $initialStateService,
 		private ICrypto $crypto,
@@ -32,7 +34,7 @@ class Personal implements ISettings {
 	 * @return TemplateResponse
 	 */
 	public function getForm(): TemplateResponse {
-		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', 'https://nuiteqstage.se') ?: 'https://nuiteqstage.se';
+		$adminBaseUrl = $this->appConfig->getAppValueString('base_url', 'https://nuiteqstage.se') ?: 'https://nuiteqstage.se';
 		$baseUrl = $this->config->getUserValue($this->userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 
 		$apiKey = $this->config->getUserValue($this->userId, Application::APP_ID, 'api_key');

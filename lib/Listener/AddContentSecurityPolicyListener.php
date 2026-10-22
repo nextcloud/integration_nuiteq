@@ -9,6 +9,7 @@ namespace OCA\Nuiteq\Listener;
 
 use OCA\Nuiteq\AppInfo\Application;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IConfig;
@@ -28,8 +29,11 @@ class AddContentSecurityPolicyListener implements IEventListener {
 	 */
 	private $userId;
 
-	public function __construct(IConfig $config,
-		?string $userId) {
+	public function __construct(
+		IConfig $config,
+		private IAppConfig $appConfig,
+		?string $userId,
+	) {
 		$this->config = $config;
 		$this->userId = $userId;
 	}
@@ -39,7 +43,7 @@ class AddContentSecurityPolicyListener implements IEventListener {
 			return;
 		}
 
-		$adminBaseUrl = $this->config->getAppValue(Application::APP_ID, 'base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
+		$adminBaseUrl = $this->appConfig->getAppValueString('base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
 		if ($this->userId === null) {
 			$baseUrl = $adminBaseUrl;
 		} else {

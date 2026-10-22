@@ -12,6 +12,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\Security\CSP\AddContentSecurityPolicyEvent;
@@ -43,16 +44,17 @@ class Application extends App implements IBootstrap {
 	public function boot(IBootContext $context): void {
 		$context->injectFn(function (
 			IInitialState $initialState,
+			IAppConfig $appConfig,
 			IConfig $config,
 			?string $userId,
 		) {
-			$adminBaseUrl = $config->getAppValue(Application::APP_ID, 'base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
+			$adminBaseUrl = $appConfig->getAppValueString('base_url', Application::DEFAULT_BASE_URL) ?: Application::DEFAULT_BASE_URL;
 			if ($userId === null) {
 				$baseUrl = $adminBaseUrl;
 			} else {
 				$baseUrl = $config->getUserValue($userId, Application::APP_ID, 'base_url', $adminBaseUrl) ?: $adminBaseUrl;
 			}
-			$overrideClick = $config->getAppValue(Application::APP_ID, 'override_link_click', '0') === '1';
+			$overrideClick = $appConfig->getAppValueString('override_link_click', '0') === '1';
 
 			$initialState->provideInitialState('base_url', $baseUrl);
 			// TODO add setting to set this value

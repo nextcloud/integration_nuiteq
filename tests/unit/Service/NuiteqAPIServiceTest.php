@@ -13,6 +13,7 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use OCA\Nuiteq\AppInfo\Application;
 use OCA\Nuiteq\Service\NuiteqAPIService;
+use OCP\AppFramework\Services\IAppConfig;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\Http\Client\IResponse;
@@ -29,6 +30,14 @@ class NuiteqAPIServiceTest extends TestCase {
 	private LoggerInterface $logger;
 	private ICrypto $crypto;
 	private string $storedClientKey = 'encrypted';
+	/** the user's own Stage URL, null for none */
+	private ?string $storedBaseUrl = 'https://stage.example.com';
+	/** @var array<string, string> the admin values stored as non-lazy ones */
+	private array $adminValues = [];
+	/** @var array<string, string> the admin values stored as lazy ones */
+	private array $lazyAdminValues = [];
+	/** @var list<array{string, bool}> the admin values asked for, and whether lazily */
+	private array $adminReads = [];
 	private NuiteqAPIService $apiService;
 
 	public function setUp(): void {
@@ -49,13 +58,28 @@ class NuiteqAPIServiceTest extends TestCase {
 		$config = $this->createMock(IConfig::class);
 		$config->method('getUserValue')->willReturnCallback(
 			fn ($userId, $appName, $key, $default = '') => match ($key) {
-				'base_url' => 'https://stage.example.com',
+				'base_url' => $this->storedBaseUrl ?? $default,
 				'api_key' => 'an-api-key',
 				'client_key' => $this->storedClientKey,
 				default => $default,
 			}
 		);
-		$config->method('getAppValue')->willReturn('');
+		// the old API answers a lazy value with the default, so a read through
+		// it must not pass for the right one
+		foreach (['getAppValue', 'setAppValue', 'deleteAppValue'] as $method) {
+			$config->expects($this->never())->method($method);
+		}
+
+		// as Nextcloud answers before anything has loaded the lazy values: a
+		// non-lazy read of a lazy value gets the default, as does a read of a
+		// value never set
+		$appConfig = $this->createMock(IAppConfig::class);
+		$appConfig->method('getAppValueString')->willReturnCallback(
+			function (string $key, string $default = '', bool $lazy = false): string {
+				$this->adminReads[] = [$key, $lazy];
+				return $this->adminValues[$key] ?? ($lazy ? ($this->lazyAdminValues[$key] ?? $default) : $default);
+			}
+		);
 
 		$this->logger = $this->createMock(LoggerInterface::class);
 
@@ -63,6 +87,7 @@ class NuiteqAPIServiceTest extends TestCase {
 			'integration_nuiteq',
 			$this->logger,
 			$l10n,
+			$appConfig,
 			$config,
 			$this->crypto,
 			$clientService,
@@ -181,6 +206,79 @@ class NuiteqAPIServiceTest extends TestCase {
 
 		// the configured default, since this instance has no admin key set
 		$this->assertSame(Application::DEFAULT_CLIENT_KEY, $sent['clientKey'] ?? null);
+	}
+
+	/**
+	 * A non-lazy read of the admin key, now a lazy value, answers the default,
+	 * and every request would go out with the shipped key instead.
+	 */
+	public function testTheAdminClientKeyIsReadLazily(): void {
+		$this->storedClientKey = '';
+		$this->lazyAdminValues['client_key'] = 'the-admin-key-encrypted';
+		$sent = [];
+		$response = $this->createMock(IResponse::class);
+		$response->method('getStatusCode')->willReturn(200);
+		$response->method('getBody')->willReturn('{"apiKey":"a-fresh-api-key"}');
+		$this->client->method('post')->willReturnCallback(function ($url, $options) use (&$sent, $response) {
+			$sent = $options['json'] ?? [];
+			return $response;
+		});
+
+		$this->apiService->login('admin', 'jdoe', 'secret');
+
+		// what the crypto double decrypts every readable value to
+		$this->assertSame('a-client-key', $sent['clientKey'] ?? null);
+		$this->assertContains(['client_key', true], $this->adminReads);
+		$this->assertNotContains(['client_key', false], $this->adminReads);
+	}
+
+	/**
+	 * The Stage URL is read on every page, so it stays a non-lazy value, and a
+	 * lazy read of it would load every lazy value for nothing.
+	 */
+	public function testTheAdminBaseUrlIsReadNonLazily(): void {
+		$this->answers(['boardId' => 'b-42']);
+
+		$this->apiService->newBoard('admin', 'New board', '');
+
+		$this->assertContains(['base_url', false], $this->adminReads);
+		$this->assertNotContains(['base_url', true], $this->adminReads);
+	}
+
+	/**
+	 * Clearing the key on the admin page stores it empty, which stands for
+	 * the key the app ships with.
+	 */
+	public function testAClearedAdminClientKeyFallsBackToTheShippedOne(): void {
+		$this->storedClientKey = '';
+		$this->lazyAdminValues['client_key'] = '';
+		$sent = [];
+		$response = $this->createMock(IResponse::class);
+		$response->method('getStatusCode')->willReturn(200);
+		$response->method('getBody')->willReturn('{"apiKey":"a-fresh-api-key"}');
+		$this->client->method('post')->willReturnCallback(function ($url, $options) use (&$sent, $response) {
+			$sent = $options['json'] ?? [];
+			return $response;
+		});
+
+		$this->apiService->login('admin', 'jdoe', 'secret');
+
+		$this->assertSame(Application::DEFAULT_CLIENT_KEY, $sent['clientKey'] ?? null);
+	}
+
+	#[DataProvider('provideStageUrlsThatAreNotSet')]
+	public function testWithoutAStageUrlTheShippedOneIsUsed(array $adminValues): void {
+		$this->storedBaseUrl = null;
+		$this->adminValues = $adminValues;
+
+		$this->assertSame(Application::DEFAULT_BASE_URL, $this->apiService->getBaseUrl('admin'));
+	}
+
+	public static function provideStageUrlsThatAreNotSet(): array {
+		return [
+			'never set' => [[]],
+			'cleared on the admin page' => [['base_url' => '']],
+		];
 	}
 
 	public function testAnAnswerThatIsNotJsonIsReportedAsSuch(): void {
