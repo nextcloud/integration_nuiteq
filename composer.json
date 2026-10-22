@@ -9,7 +9,7 @@
 	},
 	"minimum-stability": "stable",
 	"require-dev": {
-		"nextcloud/ocp": "dev-master",
+		"nextcloud/ocp": "dev-stable33",
 		"nextcloud/coding-standard": "^1.1",
 		"phpunit/phpunit": "^10 || ^12.5.22",
 		"psalm/phar": "~6.20.0",
@@ -27,5 +27,10 @@
 		"psalm:clear": "psalm.phar --clear-cache && psalm.phar --clear-global-cache",
 		"psalm:update-baseline": "psalm.phar --threads=1 --update-baseline",
 		"psalm:update-baseline:force": "psalm.phar --threads=1 --update-baseline --set-baseline=tests/psalm-baseline.xml"
+	},
+	"config": {
+		"platform": {
+			"php": "8.2.35"
+		}
 	}
 }
