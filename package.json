@@ -63,12 +63,12 @@
     "@nextcloud/webpack-vue-config": "^7.0.2",
     "@playwright/test": "^1.63.0",
     "@vitejs/plugin-vue": "^6.0.9",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.12",
     "@vue/test-utils": "^2.5.1",
     "axios": "^1.12.2",
     "eslint-webpack-plugin": "^6.0.0",
     "jsdom": "^28.1.0",
     "stylelint-webpack-plugin": "^5.0.1",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   }
 }
