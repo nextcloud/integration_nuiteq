@@ -14,6 +14,7 @@ OC.L10N.register(
     "Create" : "Crează",
     "Login" : "Autentificare",
     "Password" : "Parolă",
+    "Connected as {user}" : "Conectat ca {user}",
     "You joined {name}" : "Te-ai alăturat echipei {name}",
     "Conversations" : "Conversații",
     "Users" : "Utilizatori",
