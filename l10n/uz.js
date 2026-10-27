@@ -4,6 +4,7 @@ OC.L10N.register(
     "Bad HTTP method" : "Yomon HTTP usuli",
     "Bad credentials" : "Akkaunt ma'lumotlari xato",
     "Connected accounts" : "Ulangan akkauntlar",
+    "Enabled" : "Yoqilgan",
     "Delete" : "O'chirish",
     "Cancel" : "Bekor qilish",
     "Create" : "Yaratish",

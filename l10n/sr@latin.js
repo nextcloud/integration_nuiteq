@@ -1,6 +1,7 @@
 OC.L10N.register(
     "integration_nuiteq",
     {
+    "Enabled" : "Uključeno",
     "Delete" : "Obriši",
     "Cancel" : "Otkaži",
     "Create" : "Napravi",
