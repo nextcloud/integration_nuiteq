@@ -3,6 +3,8 @@ OC.L10N.register(
     {
     "Bad HTTP method" : "Metodă HTTP nepotrivită",
     "Bad credentials" : "Credențiale greșite",
+    "Invalid response" : "Răspuns nevalid",
+    "Invalid credentials" : "Date de autentificare nevalide",
     "Connected accounts" : "Conturile conectate",
     "Public link copied!" : "Linkul public a fost copiat!",
     "Copy to clipboard" : "Copiază în clipboard",
