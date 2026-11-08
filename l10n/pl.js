@@ -4,6 +4,7 @@ OC.L10N.register(
     "Bad HTTP method" : "Zła metoda HTTP",
     "Bad credentials" : "Złe poświadczenia",
     "Connected accounts" : "Połączone konta",
+    "Nuiteq" : "Nuiteq",
     "Public link copied!" : "Skopiowano link publiczny!",
     "Copy to clipboard" : "Kopiuj do schowka",
     "Enabled" : "Włączone",
